@@ -11,4 +11,5 @@
     <color name="colorPrimaryDark">#1c223c</color>
     <color name="colorAccent">#000000</color>
     <color name="colorProfile">#1c223c</color>
+    <color name="inputBackground">#f0f0f0</color>
 </resources>
