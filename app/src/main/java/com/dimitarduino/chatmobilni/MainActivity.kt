@@ -7,26 +7,47 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import com.dimitarduino.chatmobilni.Fragments.ChatsFragment
 import com.dimitarduino.chatmobilni.Fragments.SearchFragment
 import com.dimitarduino.chatmobilni.Fragments.SettingsFragment
+import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
+    //varijabli firebase
+    var refUsers : DatabaseReference? = null
+    var firebaseUser : FirebaseUser? = null
 
+    //varijabli ui komponenti
+    private lateinit var usernameText : TextView
+    private lateinit var profileImage : de.hdodenhof.circleimageview.CircleImageView
+
+    //varijabli funkcionalnosti
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        setSupportActionBar(binding.toolbarMain)
+        //deklariraj ui komponenti
+        usernameText = findViewById(R.id.username_text)
+        profileImage = findViewById(R.id.profile_image)
+
+
+        //zemi korisnik firebase
+        firebaseUser = FirebaseAuth.getInstance().currentUser
+        refUsers = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseUser!!.uid)
+
 
         val toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -41,6 +62,21 @@ class MainActivity : AppCompatActivity() {
         viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+
+        //prikazi informacii od najaven korisnik
+        refUsers!!.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    val user : Users? = p0.getValue(Users::class.java)
+                    usernameText.text = user!!.getUsername()
+                    Picasso.get().load(user.getProfile()).into(profileImage)
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
