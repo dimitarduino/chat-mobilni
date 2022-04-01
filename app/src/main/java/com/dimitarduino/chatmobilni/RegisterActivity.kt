@@ -106,6 +106,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun proveriValidnost(username: String, password: String, email: String): Boolean {
+        //proverka dali site polinja se popolnati
         return !(username == "" || password == "" || email == "")
     }
 }

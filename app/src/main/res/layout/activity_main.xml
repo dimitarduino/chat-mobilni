@@ -8,9 +8,11 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.ChatMobilni.AppBarOverlay">
+        android:theme="@style/Theme.ChatMobilni.AppBarOverlay"
+        tools:ignore="InvalidId">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
@@ -52,11 +54,12 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
+        android:layout_below="@id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </androidx.viewpager.widget.ViewPager>
 
-<!--    <include layout="@layout/content_main" />-->
+    <!--    <include layout="@layout/content_main" />-->
 
 </RelativeLayout>

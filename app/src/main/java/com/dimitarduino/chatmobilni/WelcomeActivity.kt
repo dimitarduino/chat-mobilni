@@ -16,16 +16,20 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
+        //definiraj ui komponenti
         registerWelcomeBtn = findViewById<Button>(R.id.register_welcome_btn)
         loginWelcomeBtn = findViewById<Button>(R.id.login_welcome_btn)
 
+
         registerWelcomeBtn.setOnClickListener{
+            //smeni view vo registracija
             val intent = Intent(this, RegisterActivity::class.java)
 
             startActivity(intent)
             finish()
         }
         loginWelcomeBtn.setOnClickListener{
+            //smeni view vo registracija
             val intent = Intent(this, LoginActivity::class.java)
 
             startActivity(intent)
@@ -39,6 +43,7 @@ class WelcomeActivity : AppCompatActivity() {
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
         if (firebaseUser != null) {
+            // ako vekje e najaven odi vo MainActivity direktno
             val intent = Intent(this, MainActivity::class.java)
 
             startActivity(intent)
