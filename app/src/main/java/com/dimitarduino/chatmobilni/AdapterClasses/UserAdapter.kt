@@ -1,12 +1,14 @@
 package com.dimitarduino.chatmobilni.AdapterClasses
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
+import com.dimitarduino.chatmobilni.ChatContent
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
 import com.squareup.picasso.Picasso
@@ -34,6 +36,13 @@ class UserAdapter (
         val user : Users = mUsers[position]
         holder.usernameText.text = user!!.getUsername()
         Picasso.get().load(user.getProfile()).into(holder.profileImageView)
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(mContext, ChatContent::class.java)
+            intent.putExtra("username", user.getUsername())
+            intent.putExtra("profile", user.getProfile())
+            mContext.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {

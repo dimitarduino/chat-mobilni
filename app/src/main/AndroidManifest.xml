@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatMobilni">
         <activity
+            android:name=".ChatContent"
+            android:exported="false" />
+        <activity
             android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
@@ -28,9 +31,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.ChatMobilni.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.ChatMobilni.NoActionBar"></activity>
     </application>
 
 </manifest>
