@@ -37,16 +37,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 />
-
-            <TextView
-                android:id="@+id/username_text_conv" android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="username"
-                android:textSize="18sp"
-                android:layout_marginLeft="26dp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

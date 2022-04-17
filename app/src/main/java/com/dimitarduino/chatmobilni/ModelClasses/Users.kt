@@ -62,6 +62,14 @@ class Users {
         this.profile = profile
     }
 
+    fun getCover() : String? {
+        return cover
+    }
+
+    fun setCover(cover : String) {
+        this.cover = cover
+    }
+
     fun getStatus() : String? {
         return status
     }

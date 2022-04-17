@@ -15,13 +15,14 @@
         <entry key="app/src/main/res/layout/content_main.xml" value="0.75" />
         <entry key="app/src/main/res/layout/fragment_chats.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.32760416666666664" />
-        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.32760416666666664" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/received_message.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/sent_message.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/user_chat_item_layout.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/user_search_item_layout.xml" value="0.335" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1245" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.16893115942028986" />
       </map>
     </option>
   </component>
