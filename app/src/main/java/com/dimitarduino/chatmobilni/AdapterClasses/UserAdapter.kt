@@ -1,19 +1,19 @@
 package com.dimitarduino.chatmobilni.AdapterClasses
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
-import com.dimitarduino.chatmobilni.ChatContent
+import com.dimitarduino.chatmobilni.MessageChatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import org.w3c.dom.Text
 
 class UserAdapter (
     mContext : Context,
@@ -38,10 +38,29 @@ class UserAdapter (
         Picasso.get().load(user.getProfile()).into(holder.profileImageView)
 
         holder.itemView.setOnClickListener{
-            val intent = Intent(mContext, ChatContent::class.java)
-            intent.putExtra("username", user.getUsername())
-            intent.putExtra("profile", user.getProfile())
-            mContext.startActivity(intent)
+            val options = arrayOf<CharSequence>(
+                "Send message",
+                "Visit Profile"
+            )
+
+            val builder : AlertDialog.Builder = AlertDialog.Builder(mContext)
+            builder.setTitle("")
+            builder.setItems(options, DialogInterface.OnClickListener {dialog, which ->
+                if (which == 0) {
+                    // open chats
+                    val intent = Intent(mContext, MessageChatActivity::class.java)
+                    intent.putExtra("idNaDrugiot", user.getUID())
+                    intent.putExtra("username", user.getUsername())
+                    intent.putExtra("profile", user.getProfile())
+                    mContext.startActivity(intent)
+                } else if (which == 1) {
+                    //open profile
+                }
+            })
+
+            builder.show()
+
+
         }
     }
 
