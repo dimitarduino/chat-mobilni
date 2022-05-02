@@ -1,55 +1,105 @@
 package com.dimitarduino.chatmobilni.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.dimitarduino.chatmobilni.AdapterClasses.UserAdapter
+import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
+import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class ChatsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var userAdapter : UserAdapter? = null
+    private var korisnici : List<Users>? = null
+    private var korisniciChatList : List<Chatlist>? = null
+    lateinit var chatListRecycler : RecyclerView
+    private var firebaseKorisnik : FirebaseUser? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chats, container, false)
+        val view = inflater.inflate(R.layout.fragment_chats, container, false)
+
+        chatListRecycler = view.findViewById(R.id.chatLista_recycler)
+        chatListRecycler.setHasFixedSize(true)
+        chatListRecycler.layoutManager = LinearLayoutManager(context)
+
+        firebaseKorisnik = FirebaseAuth.getInstance().currentUser
+
+        korisniciChatList = ArrayList()
+
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chatList").child(firebaseKorisnik!!.uid)
+
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                (korisniciChatList as ArrayList).clear()
+
+                for (dataSnapshot in p0.children)
+                {
+                    val korisnik = dataSnapshot.getValue(Chatlist::class.java)
+
+
+                    Log.i("korisnikChatList", korisnik.toString())
+                    (korisniciChatList as ArrayList).add(korisnik!!)
+                    popolniChatlist()
+                }
+
+                popolniChatlist()
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+        })
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChatsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChatsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun popolniChatlist() {
+        korisnici = ArrayList()
+
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users")
+
+        ref!!.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                (korisnici as ArrayList).clear()
+
+                for (dataSnapshot in p0.children) {
+                    val korisnik = dataSnapshot.getValue(Users::class.java)
+
+                    for (sekojChatList in korisniciChatList!!) {
+                        if (korisnik!!.getUID().equals(sekojChatList.getId())) {
+                            (korisnici as ArrayList).add(korisnik!!)
+                        }
+                    }
                 }
+
+                Log.i("korisnici", korisniciChatList.toString())
+
+                userAdapter = UserAdapter(context!!, (korisnici as ArrayList<Users>), true)
+
+                chatListRecycler.adapter = userAdapter
+
             }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+        })
+
     }
 }

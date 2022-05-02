@@ -13,7 +13,7 @@
         android:theme="@style/Theme.ChatMobilni.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_conv"
+            android:id="@+id/toolbar_chatlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"

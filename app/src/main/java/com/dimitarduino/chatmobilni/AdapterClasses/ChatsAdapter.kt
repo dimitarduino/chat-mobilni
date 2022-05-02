@@ -2,6 +2,7 @@ package com.dimitarduino.chatmobilni.AdapterClasses
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,13 +43,13 @@ public class ChatsAdapter(
         }
         else
         {
+            Log.i("primena poraka", "primeno")
             val view: View = LayoutInflater.from(mContext).inflate(com.dimitarduino.chatmobilni.R.layout.received_message, parent, false)
             ViewHolder(view)
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //tuka prodolzi negde
         val poraka = mChatList[position]
 
         if (this.imageUrl.toString() != "") {
@@ -73,7 +74,8 @@ public class ChatsAdapter(
                 Picasso.get().load(poraka.getUrl()).into(holder.primenaSlika)
             }
         } else {
-        //tekst vo poraka
+            //tekst vo poraka‘
+                holder.tekstPoraka!!.visibility = View.VISIBLE
             holder.tekstPoraka!!.text = poraka.getPoraka()
         }
 

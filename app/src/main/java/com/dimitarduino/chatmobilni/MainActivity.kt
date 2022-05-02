@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.dimitarduino.chatmobilni.Fragments.ChatsFragment
 import com.dimitarduino.chatmobilni.Fragments.SearchFragment
 import com.dimitarduino.chatmobilni.Fragments.SettingsFragment
+import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
@@ -56,12 +57,43 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout : TabLayout = findViewById(R.id.tabLayout)
         val viewPager : androidx.viewpager.widget.ViewPager = findViewById(R.id.viewPager)
-        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
-        viewPagerAdapter.addFragment(SearchFragment(), "Search")
-        viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
-        viewPager.adapter = viewPagerAdapter
-        tabLayout.setupWithViewPager(viewPager)
+
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
+
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+                var brojNeProcitaniPoraki = 0
+
+                for (dataSnapshot in  p0.children) {
+                    val chat = dataSnapshot.getValue(Chat::class.java)
+
+                    Log.i("poraka", dataSnapshot.toString())
+
+                    if (chat!!.getPrimac().equals(firebaseUser!!.uid) && !chat.getSeen()) {
+                        Log.i("poraka", "vlegov brat");
+                        brojNeProcitaniPoraki += 1
+                    }
+                }
+
+                if (brojNeProcitaniPoraki == 0) {
+                    viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
+                } else {
+                    viewPagerAdapter.addFragment(ChatsFragment(), "Chats ($brojNeProcitaniPoraki)")
+                }
+
+                viewPagerAdapter.addFragment(SearchFragment(), "Search")
+                viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
+                viewPager.adapter = viewPagerAdapter
+                tabLayout.setupWithViewPager(viewPager)
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
 
         //prikazi informacii od najaven korisnik
         refUsers!!.addValueEventListener(object : ValueEventListener {

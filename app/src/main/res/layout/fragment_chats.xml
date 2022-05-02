@@ -5,13 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.ChatsFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatLista_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/chats"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="24dp"
-        />
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

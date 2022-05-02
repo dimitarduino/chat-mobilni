@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.AdapterClasses.ChatsAdapter
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
+import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -53,6 +54,19 @@ class MessageChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_chat)
+
+        val toolbar : Toolbar = findViewById(R.id.toolbar_chatlist)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = ""
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        toolbar.setNavigationOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
         intent = intent
         idNaDrugiot = intent.getStringExtra("idNaDrugiot").toString()
         firebaseKorisnik = FirebaseAuth.getInstance().currentUser
@@ -109,7 +123,11 @@ class MessageChatActivity : AppCompatActivity() {
             if (poraka != "") {
                 ispratiPorakaDoKorisnik(firebaseKorisnik!!.uid, idNaDrugiot, poraka)
             }
+
+            novaPorakaEdit.setText("")
         }
+
+        seenPoraka(idNaDrugiot)
     }
 
     private fun popolniPoraki(isprakjacId: String, primacId: String?, primacSlikaUrl: String?) {
@@ -122,11 +140,11 @@ class MessageChatActivity : AppCompatActivity() {
                 (porakiLista as ArrayList<Chat>).clear()
                 for (snapshot in p0.children)
                 {
-                    Log.i("DATA", snapshot.value.toString())
                     val poraka = snapshot.getValue(Chat::class.java)
+
                     Log.i("DATA", poraka.toString())
 
-                    if (poraka!!.getIsprakjac().equals(isprakjacId) && poraka.getIsprakjac().equals(primacId)
+                    if ((poraka!!.getPrimac().equals(isprakjacId) && poraka.getIsprakjac().equals(primacId))
                         || poraka.getPrimac().equals(primacId) && poraka.getIsprakjac().equals(isprakjacId))
                     {
                         (porakiLista as ArrayList<Chat>).add(poraka)
@@ -220,8 +238,69 @@ class MessageChatActivity : AppCompatActivity() {
         ref.child("chats").child(porakaKey!!).setValue(porakaHashMap)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    popolniPoraki(firebaseKorisnik!!.uid, idNaDrugiot, "")
+//                    popolniPoraki(firebaseKorisnik!!.uid, idNaDrugiot, "")
+
+                    val chatsListReference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
+                        .reference
+                        .child("chatList")
+                        .child(firebaseKorisnik!!.uid)
+                        .child(idNaDrugiot)
+
+                    chatsListReference.addListenerForSingleValueEvent(object : ValueEventListener{
+                        override fun onDataChange(p0: DataSnapshot) {
+                            if (!p0.exists())
+                            {
+                                chatsListReference.child("id").setValue(idNaDrugiot)
+                            }
+
+                            val chatlistaNaDrugiotRef = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
+                                .reference
+                                .child("chatList")
+                                .child(idNaDrugiot)
+                                .child(firebaseKorisnik!!.uid)
+
+                            chatlistaNaDrugiotRef.child("id").setValue(firebaseKorisnik!!.uid)
+                        }
+
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+                    })
                 }
         }
+    }
+
+
+    private var seenListener: ValueEventListener? = null
+
+    private fun seenPoraka(korisnikId: String)
+    {
+        val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("Chats")
+
+        seenListener = reference!!.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot)
+            {
+                for (dataSnapshot in p0.children)
+                {
+                    val poraka = dataSnapshot.getValue(Chat::class.java)
+
+                    if (poraka!!.getPrimac().equals(firebaseKorisnik!!.uid) && poraka!!.getIsprakjac().equals(korisnikId))
+                    {
+                        val hashMap = HashMap<String, Any>()
+                        hashMap["seen"] = true
+                        dataSnapshot.ref.updateChildren(hashMap)
+                    }
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        dbReference!!.removeEventListener(seenListener!!)
     }
 }
