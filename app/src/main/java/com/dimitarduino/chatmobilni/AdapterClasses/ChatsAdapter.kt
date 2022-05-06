@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-@Keep
-public class ChatsAdapter(
+class ChatsAdapter(
     mContext: Context,
     mChatList: List<Chat>,
     imageUrl: String
@@ -79,7 +79,35 @@ public class ChatsAdapter(
             holder.tekstPoraka!!.text = poraka.getPoraka()
         }
 
+        if (position == mChatList.size-1)
+        {
+            if (poraka.getSeen())
+            {
+                holder.porakaSeen!!.text = "Seen"
 
+                if (poraka.getPoraka().equals("sent you an image.") && !poraka.getUrl().equals(""))
+                {
+                    val porakaSeenElement: RelativeLayout.LayoutParams? = holder.porakaSeen!!.layoutParams as RelativeLayout.LayoutParams?
+                    porakaSeenElement!!.setMargins(0, 245, 10, 0)
+                    holder.porakaSeen!!.layoutParams = porakaSeenElement
+                }
+            }
+            else
+            {
+                holder.porakaSeen!!.text = "Sent"
+
+                if (poraka.getPoraka().equals("sent you an image.") && !poraka.getUrl().equals(""))
+                {
+                    val porakaSeenElement: RelativeLayout.LayoutParams? = holder.porakaSeen!!.layoutParams as RelativeLayout.LayoutParams?
+                    porakaSeenElement!!.setMargins(0, 245, 10, 0)
+                    holder.porakaSeen!!.layoutParams = porakaSeenElement
+                }
+            }
+        }
+        else
+        {
+            holder.porakaSeen!!.visibility = View.GONE
+        }
     }
 
     override fun getItemCount(): Int {
@@ -99,6 +127,9 @@ public class ChatsAdapter(
         }
     }
 
+
+
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
         var profilnaSlika: CircleImageView? = null
@@ -106,6 +137,7 @@ public class ChatsAdapter(
         var primenaSlika: ImageView? = null
         var porakaSeen: TextView? = null
         var pratenaSlika: ImageView? = null
+        var porakaRelativeLayout: RelativeLayout? = null
 
         init {
             profilnaSlika = itemView.findViewById(R.id.profilnaKorisnik)
@@ -113,6 +145,7 @@ public class ChatsAdapter(
             primenaSlika = itemView.findViewById(R.id.primenaSlika)
             porakaSeen = itemView.findViewById(R.id.seen)
             pratenaSlika = itemView.findViewById(R.id.pratenaSlika)
+            porakaRelativeLayout = itemView.findViewById(R.id.porakaRelative)
         }
     }
 }

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.AdapterClasses.ChatsAdapter
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
-import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -27,7 +26,6 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import java.lang.StringBuilder
 
 class MessageChatActivity : AppCompatActivity() {
     var idNaDrugiot : String = ""
@@ -167,7 +165,7 @@ class MessageChatActivity : AppCompatActivity() {
         resultLauncher.launch(intent)
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
 
@@ -275,7 +273,8 @@ class MessageChatActivity : AppCompatActivity() {
 
     private fun seenPoraka(korisnikId: String)
     {
-        val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("Chats")
+        Log.i("seen ke napram", "seeen")
+        val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
 
         seenListener = reference!!.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot)
@@ -284,7 +283,7 @@ class MessageChatActivity : AppCompatActivity() {
                 {
                     val poraka = dataSnapshot.getValue(Chat::class.java)
 
-                    if (poraka!!.getPrimac().equals(firebaseKorisnik!!.uid) && poraka!!.getIsprakjac().equals(korisnikId))
+                    if (poraka!!.getPrimac().equals(firebaseKorisnik!!.uid) && poraka.getIsprakjac().equals(korisnikId))
                     {
                         val hashMap = HashMap<String, Any>()
                         hashMap["seen"] = true
