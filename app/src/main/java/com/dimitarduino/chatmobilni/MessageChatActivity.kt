@@ -13,6 +13,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.AdapterClasses.ChatsAdapter
+import com.dimitarduino.chatmobilni.Fragments.APIService
+import com.dimitarduino.chatmobilni.Izvestuvanja.*
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.android.gms.tasks.Continuation
@@ -26,6 +28,8 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Response
 
 class MessageChatActivity : AppCompatActivity() {
     var idNaDrugiot : String = ""
@@ -35,6 +39,8 @@ class MessageChatActivity : AppCompatActivity() {
     var porakiLista: List<Chat>? = null
     private var dbReference : DatabaseReference? = null
     private var storageReference : StorageReference? = null
+    var notify = false
+    var apiService : APIService? = null
 
     //deklariraj ui komponenti
     private lateinit var barLayout : AppBarLayout
@@ -64,6 +70,7 @@ class MessageChatActivity : AppCompatActivity() {
             finish()
         }
 
+        apiService = Client.Client.getClient("https://fcm.googleapis.com/")!!.create(APIService::class.java)
 
         intent = intent
         idNaDrugiot = intent.getStringExtra("idNaDrugiot").toString()
@@ -110,11 +117,13 @@ class MessageChatActivity : AppCompatActivity() {
 
         //--attach na file
         prikaciFajlBtn.setOnClickListener {
+            notify = true
             pickImage()
         }
 
         //--prakjanje na poraka
         ispratiPorakaBtn.setOnClickListener {
+            notify = true
             val poraka = novaPorakaEdit.text.toString()
             Log.i("PORAKA", poraka)
 
@@ -211,10 +220,30 @@ class MessageChatActivity : AppCompatActivity() {
                     Log.i("slika", url)
 
                     ref.child("chats").child(porakaId!!).setValue(porakaSlikaHash).addOnCompleteListener {task ->
+                        if (task.isSuccessful) {
+                            progressBar.visibility = View.INVISIBLE
 
+                            //push notifikacii
+                            val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseKorisnik!!.uid)
+
+                            reference.addValueEventListener(object : ValueEventListener {
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    val korisnik = p0.getValue(Users::class.java)
+
+                                    if (notify) {
+                                        ispratiNotifikacija(idNaDrugiot, korisnik!!.getUsername(), "sent you an image.")
+                                    }
+                                    notify = false
+                                }
+
+                                override fun onCancelled(p0: DatabaseError) {
+
+                                }
+
+                            })
+                        }
                     }
 
-                    progressBar.visibility = View.INVISIBLE
                 }
             }
         }
@@ -266,6 +295,90 @@ class MessageChatActivity : AppCompatActivity() {
                     })
                 }
         }
+
+        //push notifikacii
+        val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseKorisnik!!.uid)
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                val korisnik = p0.getValue(Users::class.java)
+
+                if (notify) {
+                    Log.i("notifikacii", "kje prakjam 1")
+                    ispratiNotifikacija(idNaDrugiot, korisnik!!.getUsername(), poraka)
+                }
+                notify = false
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    private fun ispratiNotifikacija(idNaDrugiot: String, username: String?, poraka: String) {
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("tokens")
+        Log.i("notifikacii", "kje prakam 2")
+
+        val query = ref.orderByKey().equalTo(idNaDrugiot)
+
+        query.addValueEventListener(object : ValueEventListener{
+
+            override fun onDataChange(p0: DataSnapshot)
+            {
+                Log.i("notifikacii", "kje prakam 2")
+
+                for (dataSnapshot in p0.children)
+                {
+                    val token: Token? = dataSnapshot.getValue(Token::class.java)
+                            Log.i("notifikacii", "kje prakam 3")
+                    val data = Data(
+                        firebaseKorisnik!!.uid,
+                        R.mipmap.ic_launcher,
+                        "$username: $poraka",
+                        "New Message",
+                        idNaDrugiot
+                    )
+
+                    Log.i("notifikacii", poraka)
+                    Log.i("notifikacii", username!!.toString())
+                    Log.i("notifikacii", idNaDrugiot.toString())
+                    Log.i("notifikacii", firebaseKorisnik!!.uid.toString())
+
+                    val isprakjac = Isprakjac(data!!, token!!.getToken().toString())
+
+                    apiService!!.sendNotification(isprakjac)
+                        .enqueue(object : retrofit2.Callback<IResponse>
+                        {
+                            override fun onResponse(
+                                call: Call<IResponse>,
+                                response: Response<IResponse>
+                            )
+                            {
+                                if (response.code() == 200)
+                                {
+                                    if (response.body()!!.success !== 1)
+                                    {
+                                        Toast.makeText(this@MessageChatActivity, "Failed, Nothing happen.", Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(this@MessageChatActivity, "Prateno.", Toast.LENGTH_LONG).show()
+
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<IResponse>, t: Throwable) {
+
+                            }
+                        })
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
     }
 
 
@@ -300,6 +413,6 @@ class MessageChatActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        dbReference!!.removeEventListener(seenListener!!)
+//        dbReference!!.removeEventListener(seenListener!!)
     }
 }

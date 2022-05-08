@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.AdapterClasses.UserAdapter
+import com.dimitarduino.chatmobilni.Izvestuvanja.Token
+import com.dimitarduino.chatmobilni.Izvestuvanja.firebaseInstanceId
 import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
@@ -18,6 +20,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.iid.FirebaseInstanceId
 
 class ChatsFragment : Fragment() {
     private var userAdapter : UserAdapter? = null
@@ -65,7 +68,15 @@ class ChatsFragment : Fragment() {
 
         })
 
+        updateToken(FirebaseInstanceId.getInstance().token)
+
         return view
+    }
+
+    private fun updateToken(token: String?) {
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("tokens")
+        val token1 = Token(token!!)
+        ref.child(firebaseKorisnik!!.uid).setValue(token1)
     }
 
     private fun popolniChatlist() {
