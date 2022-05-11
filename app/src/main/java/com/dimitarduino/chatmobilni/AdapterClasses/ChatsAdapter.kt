@@ -1,6 +1,8 @@
 package com.dimitarduino.chatmobilni.AdapterClasses
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,12 +11,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 class ChatsAdapter(
@@ -76,7 +80,29 @@ class ChatsAdapter(
         } else {
             //tekst vo poraka‘
                 holder.tekstPoraka!!.visibility = View.VISIBLE
-            holder.tekstPoraka!!.text = poraka.getPoraka()
+                holder.tekstPoraka!!.text = poraka.getPoraka()
+
+                if (firebaseKorisnik!!.uid == poraka.getIsprakjac())
+                {
+                    holder.tekstPoraka!!.setOnClickListener {
+                        val options = arrayOf<CharSequence>(
+                            "Delete Message",
+                            "Cancel"
+                        )
+
+                        var builder: AlertDialog.Builder = AlertDialog.Builder(holder.itemView.context)
+                        builder.setTitle("What do you want?")
+
+                        builder.setItems(options, DialogInterface.OnClickListener{
+                                dialog, which ->
+                            if (which == 0)
+                            {
+                                izbrisiPratenaPoraka(position, holder)
+                            }
+                        })
+                        builder.show()
+                    }
+                }
         }
 
         if (position == mChatList.size-1)
@@ -108,6 +134,22 @@ class ChatsAdapter(
         {
             holder.porakaSeen!!.visibility = View.GONE
         }
+    }
+
+    private fun izbrisiPratenaPoraka(position: Int, holder: ChatsAdapter.ViewHolder) {
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
+            .child(mChatList.get(position).getPorakaId()!!)
+            .removeValue()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful)
+                {
+                    Toast.makeText(holder.itemView.context, "Deleted.", Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    Toast.makeText(holder.itemView.context, "Failed, please try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     override fun getItemCount(): Int {
