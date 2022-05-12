@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
 class VisitUserActivity : AppCompatActivity() {
@@ -47,9 +48,9 @@ class VisitUserActivity : AppCompatActivity() {
                 if (p0.exists()) {
                     korisnik = p0.getValue(Users::class.java)
 
-//                    korisnikname_display.text = korisnik!!.getUserName()
-//                    Picasso.get().load(korisnik!!.getProfile()).into(profile_display)
-//                    Picasso.get().load(korisnik!!.getCover()).into(cover_display)
+                    korisnickoPrikaz.text = korisnik!!.getUsername()
+                    Picasso.get().load(korisnik!!.getProfile()).into(profilnaPrikaz)
+                    Picasso.get().load(korisnik!!.getCover()).into(coverPrikaz)
                 }
             }
 
