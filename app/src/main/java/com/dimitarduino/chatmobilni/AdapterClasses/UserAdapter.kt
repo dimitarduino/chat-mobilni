@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.MessageChatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
+import com.dimitarduino.chatmobilni.VisitUserActivity
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -55,6 +56,9 @@ class UserAdapter (
                     mContext.startActivity(intent)
                 } else if (which == 1) {
                     //open profile
+                    val intent = Intent(mContext, VisitUserActivity::class.java)
+                    intent.putExtra("profilZaOtvoranje", user.getUID())
+                    mContext.startActivity(intent)
                 }
             })
 
