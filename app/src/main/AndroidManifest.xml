@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatMobilni">
         <activity
+            android:name=".VidiCelosnaSlikaActivity"
+            android:exported="false" />
+        <activity
             android:name=".VisitUserActivity"
             android:exported="false" />
         <activity

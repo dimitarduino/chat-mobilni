@@ -16,6 +16,7 @@ import androidx.annotation.Keep
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.R
+import com.dimitarduino.chatmobilni.VidiCelosnaSlikaActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
@@ -69,6 +70,12 @@ class ChatsAdapter(
                 holder.tekstPoraka!!.visibility = View.GONE
                 holder.pratenaSlika!!.visibility = View.VISIBLE
                 Picasso.get().load(poraka.getUrl()).into(holder.pratenaSlika)
+
+                holder.pratenaSlika!!.setOnClickListener {
+                    val intent = Intent(mContext, VidiCelosnaSlikaActivity::class.java)
+                    intent.putExtra("url", poraka.getUrl())
+                    mContext.startActivity(intent)
+                }
             }
             //primena slika
             else if (!poraka.getIsprakjac().equals(firebaseKorisnik!!.uid))
@@ -76,6 +83,12 @@ class ChatsAdapter(
                 holder.tekstPoraka!!.visibility = View.GONE
                 holder.primenaSlika!!.visibility = View.VISIBLE
                 Picasso.get().load(poraka.getUrl()).into(holder.primenaSlika)
+
+                holder.primenaSlika!!.setOnClickListener {
+                    val intent = Intent(mContext, VidiCelosnaSlikaActivity::class.java)
+                    intent.putExtra("url", poraka.getUrl())
+                    mContext.startActivity(intent)
+                }
             }
         } else {
             //tekst vo poraka‘
