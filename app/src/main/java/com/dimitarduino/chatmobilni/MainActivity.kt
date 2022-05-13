@@ -169,4 +169,25 @@ class MainActivity : AppCompatActivity() {
             return titles[position]
         }
     }
+
+    private fun namestiStatus(status: String)
+    {
+        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseUser!!.uid)
+
+        val hashMap = HashMap<String, Any>()
+        hashMap["status"] = status
+        ref!!.updateChildren(hashMap)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        namestiStatus("online")
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        namestiStatus("offline")
+    }
 }

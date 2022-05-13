@@ -10,9 +10,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.MessageChatActivity
+import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
 import com.dimitarduino.chatmobilni.VisitUserActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -24,6 +30,7 @@ class UserAdapter (
     private val mContext : Context = mContext
     private val mUsers : List<Users> = mUsers
     private val isChatCheck : Boolean = isChatCheck
+    var poslednaPorakaVar : String = ""
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         //implementacija i mestenje na viewholder za adapterot
@@ -37,6 +44,35 @@ class UserAdapter (
         val user : Users = mUsers[position]
         holder.usernameText.text = user!!.getUsername()
         Picasso.get().load(user.getProfile()).into(holder.profileImageView)
+
+        //online i offline status
+        if (isChatCheck)
+        {
+            zemiPoslednaPoraka(user.getUID(), holder.poslednaPorakaTekst)
+        }
+        else
+        {
+            holder.poslednaPorakaTekst.visibility = View.GONE
+        }
+
+        if (isChatCheck)
+        {
+            if (user.getStatus() == "online")
+            {
+                holder.onlineImageView.visibility = View.VISIBLE
+                holder.offlineImageView.visibility = View.GONE
+            }
+            else
+            {
+                holder.onlineImageView.visibility = View.GONE
+                holder.offlineImageView.visibility = View.VISIBLE
+            }
+        }
+        else
+        {
+            holder.onlineImageView.visibility = View.GONE
+            holder.offlineImageView.visibility = View.GONE
+        }
 
         holder.itemView.setOnClickListener{
             val options = arrayOf<CharSequence>(
@@ -68,6 +104,44 @@ class UserAdapter (
         }
     }
 
+    private fun zemiPoslednaPoraka(uid: String?, poslednaPorakaTekst: TextView) {
+        poslednaPorakaVar = "No Message"
+
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val refrence = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
+
+        refrence.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot)
+            {
+                for (dataSnapshot in p0.children)
+                {
+                    val chat: Chat? = dataSnapshot.getValue(Chat::class.java)
+
+                    if (firebaseUser!=null && chat!=null)
+                    {
+                        if (chat.getPrimac() == firebaseUser!!.uid  &&
+                            chat.getIsprakjac() == uid  ||
+                            chat.getPrimac() == uid  &&
+                            chat.getIsprakjac() == firebaseUser!!.uid)
+                        {
+                            poslednaPorakaVar = chat.getPoraka()!!
+                        }
+                    }
+                }
+                when(poslednaPorakaVar)
+                {
+                    "sent you an image." -> poslednaPorakaTekst.text = "image sent."
+                    else -> poslednaPorakaTekst.text = poslednaPorakaVar
+                }
+                poslednaPorakaVar = "No Message"
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
+    }
+
     override fun getItemCount(): Int {
         return mUsers.size
     }
@@ -77,7 +151,8 @@ class UserAdapter (
         var profileImageView : CircleImageView = itemView.findViewById(R.id.profile_image_search)
         var onlineImageView : CircleImageView = itemView.findViewById(R.id.image_online)
         var offlineImageView : CircleImageView = itemView.findViewById(R.id.image_offline)
-        var lastMessageText : TextView = itemView.findViewById(R.id.message_last)
+        var poslednaPorakaTekst : TextView = itemView.findViewById(R.id.poslednaPorakaTekst)
+        var poslednaPorakaVreme : TextView = itemView.findViewById(R.id.poslednaPorakaVreme)
 
     }
 }
