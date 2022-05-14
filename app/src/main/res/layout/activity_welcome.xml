@@ -1,44 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:paddingBottom="20dp"
     tools:context=".WelcomeActivity">
 
-    <TextView
+    <ImageView
+        android:id="@+id/welcomeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        android:text="Welcome"
-        />
+        android:layout_alignParentTop="true"
+        android:src="@drawable/wspec" />
 
-    <Button
-        android:id="@+id/register_welcome_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:text="Sign Up"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        />
+    <RelativeLayout
+        android:id="@+id/buttonsRelative"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_below="@id/welcomeImage"
+        android:layout_alignParentBottom="true">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_welcome_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_radius_bg"
+            android:text="Log In"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/register_welcome_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_welcome_btn"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/register_btn_bg"
+            android:text="Sign Up"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
+    </RelativeLayout>
 
 
-    <Button
-        android:id="@+id/login_welcome_btn"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="wrap_content"
-        android:text="Log In"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        />
-
-</LinearLayout>
+</RelativeLayout>

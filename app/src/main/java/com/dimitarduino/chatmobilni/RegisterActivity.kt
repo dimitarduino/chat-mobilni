@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -24,6 +25,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerEmailEdit : EditText
     private lateinit var registerUsernameEdit : EditText
     private lateinit var registerPasswordEdit : EditText
+    private lateinit var vratiNazad : ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,16 +37,24 @@ class RegisterActivity : AppCompatActivity() {
         registerEmailEdit = findViewById<EditText>(R.id.email_register)
         registerUsernameEdit = findViewById<EditText>(R.id.username_register)
         registerPasswordEdit = findViewById<EditText>(R.id.password_register)
+        vratiNazad = findViewById(R.id.vratiNazad)
 
-        val toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_register)
-        setSupportActionBar(toolbar)
+//        val toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_register)
+//        setSupportActionBar(toolbar)
+//
+//        //title na top menu
+//        supportActionBar!!.title = "Register"
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//
+//        //back da vrakja na welcome
+//        toolbar.setNavigationOnClickListener {
+//            val intent = Intent(this, WelcomeActivity::class.java)
+//
+//            startActivity(intent)
+//            finish()
+//        }
 
-        //title na top menu
-        supportActionBar!!.title = "Register"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        //back da vrakja na welcome
-        toolbar.setNavigationOnClickListener {
+        vratiNazad.setOnClickListener {
             val intent = Intent(this, WelcomeActivity::class.java)
 
             startActivity(intent)

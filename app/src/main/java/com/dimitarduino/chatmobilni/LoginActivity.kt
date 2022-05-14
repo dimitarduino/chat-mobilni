@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -19,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginBtn : Button
     private lateinit var loginEmailEdit : EditText
     private lateinit var loginPasswordEdit : EditText
+    private lateinit var vratiNazad : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +30,16 @@ class LoginActivity : AppCompatActivity() {
         loginBtn = findViewById<Button>(R.id.login_btn)
         loginEmailEdit = findViewById<EditText>(R.id.email_login)
         loginPasswordEdit = findViewById<EditText>(R.id.password_login)
+        vratiNazad = findViewById(R.id.vratiNazad)
 
-        val toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_login)
-        setSupportActionBar(toolbar)
-
-        supportActionBar!!.title = "Login"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        val toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_login)
+//        setSupportActionBar(toolbar)
+//
+//        supportActionBar!!.title = "Login"
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         //toolbar
-        toolbar.setNavigationOnClickListener {
+        vratiNazad.setOnClickListener {
             val intent = Intent(this, WelcomeActivity::class.java)
 
             startActivity(intent)

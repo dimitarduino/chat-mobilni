@@ -12,5 +12,6 @@
     <color name="colorAccent">#000000</color>
     <color name="colorProfile">#1c223c</color>
     <color name="inputBackground">#f0f0f0</color>
+    <color name="inputBackgroundDark">#edebeb</color>
     <color name="colorLight">#bdc3c7</color>
 </resources>

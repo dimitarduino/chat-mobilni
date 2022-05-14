@@ -7,10 +7,20 @@
     android:background="@color/common_google_signin_btn_text_dark"
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:id="@+id/vratiNazad"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/back"
+        />
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.ChatMobilni.AppBarOverlay">
+        android:visibility="gone"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_login"
@@ -32,6 +42,37 @@
         android:layout_centerInParent="true"
         >
 
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ChatX"
+                android:textColor="@color/purple_500"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:textSize="28sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textSize="32sp"
+            android:layout_marginBottom="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"
+            android:text="Login to your account"
+            />
+
         <EditText
             android:id="@+id/email_login"
             android:layout_width="match_parent"
@@ -39,10 +80,10 @@
             android:inputType="textEmailAddress"
             android:paddingVertical="11dp"
             android:paddingHorizontal="5dp"
-            android:background="@color/inputBackground"
+            android:background="@drawable/account_input_bg"
             android:hint="E-mail address"
             android:textColor="@color/black"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:textColorHint="@color/black"
             />
         <EditText
@@ -52,10 +93,10 @@
             android:inputType="textPassword"
             android:paddingVertical="11dp"
             android:paddingHorizontal="5dp"
-            android:background="@color/inputBackground"
+            android:background="@drawable/account_input_bg"
             android:hint="Password"
             android:textColor="@color/black"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="10dp"
             android:textColorHint="@color/black"
             />
 
@@ -64,7 +105,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Log In"
+            android:background="@drawable/button_radius_bg"
+            android:text="Login"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             />
