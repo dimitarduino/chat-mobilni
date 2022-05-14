@@ -4,9 +4,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dimitarduino.chatmobilni.MessageChatActivity
@@ -31,6 +33,7 @@ class UserAdapter (
     private val mUsers : List<Users> = mUsers
     private val isChatCheck : Boolean = isChatCheck
     var poslednaPorakaVar : String = ""
+    var procitanoPosledna : Boolean = true
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         //implementacija i mestenje na viewholder za adapterot
@@ -42,13 +45,14 @@ class UserAdapter (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // zemi go potrebniot korisnik i-tiot korisnik i napraj mu element so slika i tekst
         val user : Users = mUsers[position]
-        holder.usernameText.text = user!!.getUsername()
-        Picasso.get().load(user.getProfile()).into(holder.profileImageView)
+        holder.usernameText.text = user.getUsername()
+        Log.i("COVER", user.getProfile().toString())
+        Picasso.get().load(user.getProfile()).placeholder(R.drawable.profile).into(holder.profileImageView)
 
         //online i offline status
         if (isChatCheck)
         {
-            zemiPoslednaPoraka(user.getUID(), holder.poslednaPorakaTekst)
+            zemiPoslednaPoraka(user.getUID(), holder.poslednaPorakaTekst, holder.procitanoPosledna)
         }
         else
         {
@@ -104,8 +108,9 @@ class UserAdapter (
         }
     }
 
-    private fun zemiPoslednaPoraka(uid: String?, poslednaPorakaTekst: TextView) {
+    private fun zemiPoslednaPoraka(uid: String?, poslednaPorakaTekst: TextView, procitanoPoslednoImage : CircleImageView) {
         poslednaPorakaVar = "No Message"
+        procitanoPosledna = true
 
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         val refrence = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
@@ -119,12 +124,16 @@ class UserAdapter (
 
                     if (firebaseUser!=null && chat!=null)
                     {
-                        if (chat.getPrimac() == firebaseUser!!.uid  &&
+                        if (chat.getPrimac() == firebaseUser.uid  &&
                             chat.getIsprakjac() == uid  ||
                             chat.getPrimac() == uid  &&
-                            chat.getIsprakjac() == firebaseUser!!.uid)
+                            chat.getIsprakjac() == firebaseUser.uid)
                         {
                             poslednaPorakaVar = chat.getPoraka()!!
+
+                            if (!chat.getSeen() &&  chat.getPrimac() == firebaseUser.uid) {
+                                procitanoPosledna = false
+                            }
                         }
                     }
                 }
@@ -133,7 +142,13 @@ class UserAdapter (
                     "sent you an image." -> poslednaPorakaTekst.text = "image sent."
                     else -> poslednaPorakaTekst.text = poslednaPorakaVar
                 }
+                if (procitanoPosledna == false) {
+                    procitanoPoslednoImage.visibility = View.VISIBLE
+                } else {
+                    procitanoPoslednoImage.visibility = View.GONE
+                }
                 poslednaPorakaVar = "No Message"
+                procitanoPosledna = true
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -153,6 +168,6 @@ class UserAdapter (
         var offlineImageView : CircleImageView = itemView.findViewById(R.id.image_offline)
         var poslednaPorakaTekst : TextView = itemView.findViewById(R.id.poslednaPorakaTekst)
         var poslednaPorakaVreme : TextView = itemView.findViewById(R.id.poslednaPorakaVreme)
-
+        var procitanoPosledna : CircleImageView = itemView.findViewById(R.id.slika_neprocitano)
     }
 }
