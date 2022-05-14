@@ -6,9 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".VisitUserActivity">
 
+    <ImageView
+        android:id="@+id/vratiNazad"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/back" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView1"
         android:layout_width="match_parent"
+        android:layout_below="@id/vratiNazad"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         >

@@ -27,6 +27,7 @@ class VisitUserActivity : AppCompatActivity() {
     private lateinit var instaPrikaz : ImageView
     private lateinit var webPrikaz : ImageView
     private lateinit var ispratiPorakaProfil : Button
+    private lateinit var vratiNazadBtn : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,7 @@ class VisitUserActivity : AppCompatActivity() {
         instaPrikaz = findViewById<ImageView>(R.id.profil_insta)
         webPrikaz = findViewById<ImageView>(R.id.profil_web)
         ispratiPorakaProfil = findViewById<Button>(R.id.ispratiPoraka_profil)
+        vratiNazadBtn = findViewById(R.id.vratiNazad)
 
         profilOtvori = intent.getStringExtra("profilZaOtvoranje").toString()
 
@@ -58,6 +60,12 @@ class VisitUserActivity : AppCompatActivity() {
 
             }
         })
+
+        vratiNazadBtn.setOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
 
         fbPrikaz.setOnClickListener {

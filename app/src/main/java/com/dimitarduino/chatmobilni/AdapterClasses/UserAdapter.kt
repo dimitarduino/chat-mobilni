@@ -79,32 +79,18 @@ class UserAdapter (
         }
 
         holder.itemView.setOnClickListener{
-            val options = arrayOf<CharSequence>(
-                "Send message",
-                "Visit Profile"
-            )
 
-            val builder : AlertDialog.Builder = AlertDialog.Builder(mContext)
-            builder.setTitle("")
-            builder.setItems(options, DialogInterface.OnClickListener {dialog, which ->
-                if (which == 0) {
-                    // open chats
-                    val intent = Intent(mContext, MessageChatActivity::class.java)
-                    intent.putExtra("idNaDrugiot", user.getUID())
-                    intent.putExtra("username", user.getUsername())
-                    intent.putExtra("profile", user.getProfile())
-                    mContext.startActivity(intent)
-                } else if (which == 1) {
-                    //open profile
-                    val intent = Intent(mContext, VisitUserActivity::class.java)
-                    intent.putExtra("profilZaOtvoranje", user.getUID())
-                    mContext.startActivity(intent)
-                }
-            })
-
-            builder.show()
-
-
+            if (isChatCheck) {
+                val intent = Intent(mContext, MessageChatActivity::class.java)
+                intent.putExtra("idNaDrugiot", user.getUID())
+                intent.putExtra("username", user.getUsername())
+                intent.putExtra("profile", user.getProfile())
+                mContext.startActivity(intent)
+            } else {
+                val intent = Intent(mContext, VisitUserActivity::class.java)
+                intent.putExtra("profilZaOtvoranje", user.getUID())
+                mContext.startActivity(intent)
+            }
         }
     }
 

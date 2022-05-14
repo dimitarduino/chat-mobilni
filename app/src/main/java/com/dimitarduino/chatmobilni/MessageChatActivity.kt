@@ -106,6 +106,13 @@ class MessageChatActivity : AppCompatActivity() {
                 korisnickoConv.text = korisnik!!.getUsername().toString()
                 Picasso.get().load(korisnik.getProfile()).into(profilnaConv)
 
+                korisnickoConv.setOnClickListener {
+                    otvoriProfilActivity(idNaDrugiot)
+                }
+                profilnaConv.setOnClickListener {
+                    otvoriProfilActivity(idNaDrugiot)
+                }
+
                 popolniPoraki(firebaseKorisnik!!.uid, idNaDrugiot, korisnik.getProfile())
             }
 
@@ -135,6 +142,12 @@ class MessageChatActivity : AppCompatActivity() {
         }
 
         seenPoraka(idNaDrugiot)
+    }
+
+    private fun otvoriProfilActivity(idNaDrugiot: String) {
+        val intent = Intent(this, VisitUserActivity::class.java)
+        intent.putExtra("profilZaOtvoranje", idNaDrugiot)
+        startActivity(intent)
     }
 
     private fun popolniPoraki(isprakjacId: String, primacId: String?, primacSlikaUrl: String?) {

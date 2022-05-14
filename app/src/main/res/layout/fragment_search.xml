@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
+        android:paddingVertical="6dp"
+        android:paddingHorizontal="5dp"
+        android:background="@drawable/account_input_bg"
         android:hint="Search users..." />
 
     <androidx.recyclerview.widget.RecyclerView

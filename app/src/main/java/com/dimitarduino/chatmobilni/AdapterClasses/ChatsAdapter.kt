@@ -48,7 +48,6 @@ class ChatsAdapter(
         }
         else
         {
-            Log.i("primena poraka", "primeno")
             val view: View = LayoutInflater.from(mContext).inflate(com.dimitarduino.chatmobilni.R.layout.received_message, parent, false)
             ViewHolder(view)
         }
