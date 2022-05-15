@@ -44,9 +44,9 @@ class SettingsFragment : Fragment() {
     private lateinit var korisnickoImeProfil : TextView
     private lateinit var fullnameProfil : TextView
     private lateinit var naslovnaSlikaProfil : ImageView
-    private lateinit var facebookProfil : ImageView
-    private lateinit var instaProfil : ImageView
-    private lateinit var websiteProfil : ImageView
+    private lateinit var facebookProfil : LinearLayout
+    private lateinit var instaProfil : LinearLayout
+    private lateinit var websiteProfil : LinearLayout
     private lateinit var progressBar : ProgressBar
 
     override fun onCreateView(
@@ -60,9 +60,9 @@ class SettingsFragment : Fragment() {
         korisnickoImeProfil = view.findViewById(R.id.korisnickoImeProfil)
         fullnameProfil = view.findViewById(R.id.fullnameProfil)
         naslovnaSlikaProfil = view.findViewById(R.id.naslovna_slika)
-        facebookProfil = view.findViewById(R.id.namesti_fb)
-        instaProfil = view.findViewById(R.id.namesti_insta)
-        websiteProfil = view.findViewById(R.id.namesti_web)
+        facebookProfil = view.findViewById(R.id.facebookLinear)
+        instaProfil = view.findViewById(R.id.instagramLinear)
+        websiteProfil = view.findViewById(R.id.webLinear)
         progressBar = view.findViewById(R.id.progressbar)
 
         progressBar.visibility = View.INVISIBLE

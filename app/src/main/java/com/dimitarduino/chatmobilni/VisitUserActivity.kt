@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.firebase.database.DataSnapshot
@@ -24,9 +25,9 @@ class VisitUserActivity : AppCompatActivity() {
     private lateinit var fullnamePrikaz : TextView
     private lateinit var profilnaPrikaz : CircleImageView
     private lateinit var coverPrikaz : ImageView
-    private lateinit var fbPrikaz : ImageView
-    private lateinit var instaPrikaz : ImageView
-    private lateinit var webPrikaz : ImageView
+    private lateinit var fbPrikaz : LinearLayout
+    private lateinit var instaPrikaz : LinearLayout
+    private lateinit var webPrikaz : LinearLayout
     private lateinit var ispratiPorakaProfil : Button
     private lateinit var vratiNazadBtn : ImageView
 
@@ -38,9 +39,9 @@ class VisitUserActivity : AppCompatActivity() {
         fullnamePrikaz = findViewById<TextView>(R.id.fullnameVisit)
         profilnaPrikaz = findViewById<CircleImageView>(R.id.profil_profilna)
         coverPrikaz = findViewById<ImageView>(R.id.profil_naslovna)
-        fbPrikaz = findViewById<ImageView>(R.id.profil_fb)
-        instaPrikaz = findViewById<ImageView>(R.id.profil_insta)
-        webPrikaz = findViewById<ImageView>(R.id.profil_web)
+        fbPrikaz = findViewById<LinearLayout>(R.id.profil_fb)
+        instaPrikaz = findViewById<LinearLayout>(R.id.profil_insta)
+        webPrikaz = findViewById<LinearLayout>(R.id.profil_web)
         ispratiPorakaProfil = findViewById<Button>(R.id.ispratiPoraka_profil)
         vratiNazadBtn = findViewById(R.id.vratiNazad)
 

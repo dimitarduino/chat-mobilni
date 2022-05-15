@@ -6,6 +6,15 @@
     android:padding="5dp"
     tools:context=".Fragments.SettingsFragment">
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_above="@id/cardView1"
+        android:layout_marginBottom="20dp"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
     <ProgressBar
         android:id="@+id/progressbar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -68,7 +77,7 @@
                 android:layout_below="@id/fullnameProfil"
                 android:layout_centerHorizontal="true"
                 android:textSize="18sp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 />
         </RelativeLayout>
@@ -76,44 +85,90 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
+        android:id="@+id/facebookLinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cardView1"
         android:gravity="center"
-        android:background="@color/inputBackground"
-        android:layout_marginTop="0dp"
+          android:background="@drawable/account_input_bg"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="12dp">
+        <ImageView
+            android:id="@+id/namesti_fb"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/facebook"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"
+            android:text="Change Facebook username" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/instagramLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/facebookLinear"
+        android:gravity="center"
+        android:background="@drawable/account_input_bg"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:padding="12dp">
 
         <ImageView
-            android:id="@+id/namesti_fb"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/facebook"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="35dp"
-            android:layout_gravity="center"
-            />
-        <ImageView
             android:id="@+id/namesti_insta"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:src="@drawable/instagram"
             android:scaleType="centerCrop"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="35dp"
             android:layout_gravity="center"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"
+            android:text="Change instagram username" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/webLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/instagramLinear"
+        android:gravity="center"
+          android:background="@drawable/account_input_bg"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="12dp">
         <ImageView
             android:id="@+id/namesti_web"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:src="@drawable/web"
             android:scaleType="centerCrop"
             android:layout_marginTop="2dp"
-            android:layout_marginRight="35dp"
             android:layout_gravity="center"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"
+            android:text="Change website url" />
     </LinearLayout>
+        </RelativeLayout>
+
+    </ScrollView>
 </RelativeLayout>
