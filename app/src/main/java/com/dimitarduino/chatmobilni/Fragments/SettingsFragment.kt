@@ -2,23 +2,19 @@ package com.dimitarduino.chatmobilni.Fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.marginLeft
+import androidx.fragment.app.Fragment
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
 import com.google.android.gms.tasks.Continuation
@@ -31,6 +27,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+
 
 class SettingsFragment : Fragment() {
     var korisniciReference : DatabaseReference? = null
@@ -133,7 +130,7 @@ class SettingsFragment : Fragment() {
         return view
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "RestrictedApi")
     private fun namestiSocijalniMrezhi() {
         val builder : androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog_Alert)
 
@@ -148,7 +145,10 @@ class SettingsFragment : Fragment() {
         }
 
         val editMreza = EditText(context)
-        editMreza.setBackgroundColor(R.color.inputBackground)
+        editMreza.setSingleLine()
+        editMreza.setBackgroundResource(R.drawable.account_input_bg)
+        editMreza.setPadding(10, 30, 10, 30)
+
 
         if (mrezaZaIzmenvanje == "website") {
             editMreza.hint = "ex. www.google.com"
@@ -159,8 +159,7 @@ class SettingsFragment : Fragment() {
                 editMreza.hint = "ex. johndoe"
             }
         }
-
-        builder.setView(editMreza)
+        builder.setView(editMreza, 20, 20, 20, 20)
 
         builder.setPositiveButton("Save", DialogInterface.OnClickListener {
                 dialog, which ->
@@ -169,7 +168,7 @@ class SettingsFragment : Fragment() {
             if (vrednostMreza == "") {
                 Toast.makeText(context, "Username/URL is required!", Toast.LENGTH_SHORT).show()
             } else {
-                zacuvasjSocijalnaMrezha(vrednostMreza)
+                zacuvajSocijalnaMrezha(vrednostMreza)
             }
         })
 
@@ -179,7 +178,13 @@ class SettingsFragment : Fragment() {
         builder.show()
     }
 
-    private fun zacuvasjSocijalnaMrezha(vrednost: String) {
+    private fun convertPixelsToDp(i: Int, settingsFragment: SettingsFragment): Int {
+        val resources: Resources = settingsFragment!!.resources
+        val metrics: DisplayMetrics = resources.displayMetrics
+        return (i / (metrics.densityDpi / 160f)).toInt()
+    }
+
+    private fun zacuvajSocijalnaMrezha(vrednost: String) {
         val socialMap = HashMap<String, Any>()
 
         when (mrezaZaIzmenvanje) {

@@ -1,17 +1,19 @@
 package com.dimitarduino.chatmobilni
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
 import android.widget.*
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.collections.set
+
 
 class RegisterActivity : AppCompatActivity() {
     //varijabli firebase
@@ -138,12 +140,24 @@ class RegisterActivity : AppCompatActivity() {
             }
         } else {
             //prikazi poraka deka se zadolzitelni polinjata
-            Toast.makeText(this, "All fields are required!", Toast.LENGTH_LONG).show()
+                if (!isValidEmail(email)) {
+                    Toast.makeText(this, "Your Email address is not valid!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "All fields are required!", Toast.LENGTH_LONG).show()
+                }
+        }
+    }
+
+    fun isValidEmail(target: CharSequence?): Boolean {
+        return if (TextUtils.isEmpty(target)) {
+            false
+        } else {
+            Patterns.EMAIL_ADDRESS.matcher(target).matches()
         }
     }
 
     private fun proveriValidnost(username: String, password: String, email: String, fullname : String): Boolean {
         //proverka dali site polinja se popolnati
-        return !(username == "" || password == "" || email == "" || fullname == "")
+        return !(username == "" || password == "" || !isValidEmail(email) || fullname == "")
     }
 }

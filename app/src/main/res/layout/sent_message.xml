@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <RelativeLayout
         android:id="@+id/porakaRelative"
         android:layout_width="wrap_content"
-        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_marginVertical="5dp"
-        android:layout_height="wrap_content">
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -15,20 +18,22 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/profile"
-            android:visibility="gone"
-            >
-        </de.hdodenhof.circleimageview.CircleImageView>
+            android:visibility="gone"></de.hdodenhof.circleimageview.CircleImageView>
+
+
         <TextView
             android:id="@+id/tekstPoraka"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/sent_message_bg"
+            android:lineHeight="23dp"
+            android:maxWidth="300dp"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="8dp"
             android:text="Hello friend!"
             android:textColor="@color/white"
-            android:layout_alignParentRight="true"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:background="@drawable/sent_message_bg"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/pratenaSlika"
@@ -36,18 +41,17 @@
             android:layout_height="100dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
-            >
-        </ImageView>
+            android:visibility="gone"></ImageView>
 
         <TextView
             android:id="@+id/seen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/tekstPoraka"
-            />
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:text=""
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 </RelativeLayout>

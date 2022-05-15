@@ -54,7 +54,9 @@ class UserAdapter (
         // zemi go potrebniot korisnik i-tiot korisnik i napraj mu element so slika i tekst
         val user : Users = mUsers[position]
         holder.usernameText.text = user.getUsername()
-        Picasso.get().load(user.getProfile()).placeholder(R.drawable.profile).into(holder.profileImageView)
+        if (user.getProfile() != "") {
+            Picasso.get().load(user.getProfile()).placeholder(R.drawable.profile).into(holder.profileImageView)
+        }
 
         val vreme = Timestamp(user.getTimestamp()!!)
         var vremeSat = ""

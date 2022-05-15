@@ -56,7 +56,7 @@ class MessageChatActivity : AppCompatActivity() {
     private lateinit var porakiListaRecycler : RecyclerView
     private lateinit var novaPorakaCelina : RelativeLayout
     private lateinit var prikaciFajlBtn : ImageView
-    private lateinit var ispratiPorakaBtn : ImageView
+    private lateinit var ispratiPorakaBtn : CircleImageView
     private lateinit var novaPorakaEdit : EditText
     private lateinit var progressBar : ProgressBar
     private lateinit var recyclerPoraki : RecyclerView

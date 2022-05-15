@@ -64,7 +64,9 @@
         android:id="@+id/novaporaka_celina_conv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/inputBackground"
+        android:background="@drawable/input_send_message_bg"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="5dp"
         android:padding="6dp"
         android:layout_alignParentBottom="true"
         >
@@ -84,15 +86,18 @@
             android:id="@+id/novaporaka_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:autoSizeMaxTextSize="20dp"
             android:background="@color/inputBackground"
             android:hint="Message..."
             android:layout_toRightOf="@+id/prikaci_fajl_conv"
             android:layout_toLeftOf="@+id/isprati_poraka_button"
-            android:height="40dp"
+            android:minHeight="40dp"
+            android:text=""
             android:padding="6dp"
         />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/isprati_poraka_button"
             android:layout_width="34dp"
             android:layout_height="34dp"

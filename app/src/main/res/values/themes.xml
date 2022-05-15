@@ -19,6 +19,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="customInputBackgroundAlertDim">
+        <item name="background">@drawable/account_input_bg</item>
+    </style>
+
     <style name="Theme.ChatMobilni.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.ChatMobilni.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
