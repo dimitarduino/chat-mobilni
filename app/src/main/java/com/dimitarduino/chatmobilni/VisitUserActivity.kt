@@ -21,6 +21,7 @@ class VisitUserActivity : AppCompatActivity() {
 
     //deklariraj ui komponenti
     private lateinit var korisnickoPrikaz : TextView
+    private lateinit var fullnamePrikaz : TextView
     private lateinit var profilnaPrikaz : CircleImageView
     private lateinit var coverPrikaz : ImageView
     private lateinit var fbPrikaz : ImageView
@@ -34,6 +35,7 @@ class VisitUserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_visit_user)
         //definiraj ui komponenti
         korisnickoPrikaz = findViewById<TextView>(R.id.profil_korisnicko)
+        fullnamePrikaz = findViewById<TextView>(R.id.fullnameVisit)
         profilnaPrikaz = findViewById<CircleImageView>(R.id.profil_profilna)
         coverPrikaz = findViewById<ImageView>(R.id.profil_naslovna)
         fbPrikaz = findViewById<ImageView>(R.id.profil_fb)
@@ -50,7 +52,8 @@ class VisitUserActivity : AppCompatActivity() {
                 if (p0.exists()) {
                     korisnik = p0.getValue(Users::class.java)
 
-                    korisnickoPrikaz.text = korisnik!!.getUsername()
+                    korisnickoPrikaz.text = "@" + korisnik!!.getUsername()
+                    fullnamePrikaz.text = korisnik!!.getFullname()
                     Picasso.get().load(korisnik!!.getProfile()).into(profilnaPrikaz)
                     Picasso.get().load(korisnik!!.getCover()).into(coverPrikaz)
                 }

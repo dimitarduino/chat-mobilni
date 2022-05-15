@@ -85,6 +85,20 @@
             android:textColor="@color/black"
             android:layout_marginBottom="10dp"
             android:textColorHint="@color/black"/>
+
+        <EditText
+            android:id="@+id/fullname_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:paddingVertical="11dp"
+            android:paddingHorizontal="5dp"
+            android:background="@drawable/account_input_bg"
+            android:hint="Full name"
+            android:textColor="@color/black"
+            android:layout_marginBottom="10dp"
+            android:textColorHint="@color/black"/>
+
         <EditText
             android:id="@+id/email_register"
             android:layout_width="match_parent"
@@ -110,6 +124,14 @@
             android:textColor="@color/black"
             android:layout_marginBottom="10dp"
             android:textColorHint="@color/black"
+            />
+
+        <Spinner
+            android:id="@+id/pol_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/spinner_bg"
             />
 
         <Button

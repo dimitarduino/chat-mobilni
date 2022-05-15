@@ -42,6 +42,7 @@ class SettingsFragment : Fragment() {
     //ui komponenti
     private lateinit var profilnaSlikaProfil : CircleImageView
     private lateinit var korisnickoImeProfil : TextView
+    private lateinit var fullnameProfil : TextView
     private lateinit var naslovnaSlikaProfil : ImageView
     private lateinit var facebookProfil : ImageView
     private lateinit var instaProfil : ImageView
@@ -57,6 +58,7 @@ class SettingsFragment : Fragment() {
 
         profilnaSlikaProfil = view.findViewById(R.id.profilna_slika)
         korisnickoImeProfil = view.findViewById(R.id.korisnickoImeProfil)
+        fullnameProfil = view.findViewById(R.id.fullnameProfil)
         naslovnaSlikaProfil = view.findViewById(R.id.naslovna_slika)
         facebookProfil = view.findViewById(R.id.namesti_fb)
         instaProfil = view.findViewById(R.id.namesti_insta)
@@ -75,7 +77,8 @@ class SettingsFragment : Fragment() {
                 if (p0.exists()) {
                     val user : Users? = p0.getValue(Users::class.java)
                     if (context != null) {
-                        korisnickoImeProfil.text = user!!.getUsername()
+                        korisnickoImeProfil.text = "@" + user!!.getUsername()
+                        fullnameProfil.text = user!!.getFullname()
                         Picasso.get().load(user.getProfile()).into(profilnaSlikaProfil)
                         Picasso.get().load(user.getCover()).into(naslovnaSlikaProfil)
                     }

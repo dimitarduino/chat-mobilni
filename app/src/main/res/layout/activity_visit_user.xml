@@ -45,7 +45,7 @@
                 />
 
             <TextView
-                android:id="@+id/profil_korisnicko"
+                android:id="@+id/fullnameVisit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="username"
@@ -57,6 +57,19 @@
                 android:textColor="@color/black"
                 android:layout_marginBottom="10dp"
                 />
+
+            <TextView
+                android:id="@+id/profil_korisnicko"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="username"
+                android:layout_below="@id/fullnameVisit"
+                android:layout_centerHorizontal="true"
+                android:textSize="18sp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="10dp"
+                />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

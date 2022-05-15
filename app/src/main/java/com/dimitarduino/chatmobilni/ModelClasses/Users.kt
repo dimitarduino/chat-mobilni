@@ -3,6 +3,7 @@ package com.dimitarduino.chatmobilni.ModelClasses
 class Users {
     private var uid : String = ""
     private var username : String = ""
+    private var fullname : String = ""
     private var profile : String = ""
     private var cover : String = ""
     private var status : String = ""
@@ -10,6 +11,7 @@ class Users {
     private var facebook : String = ""
     private var instagram : String = ""
     private var website : String = ""
+    private var gender : String = ""
 
     constructor() {
 
@@ -18,16 +20,19 @@ class Users {
     constructor(
         uid: String,
         username: String,
+        fullname: String,
         profile: String,
         cover: String,
         status: String,
         search: String,
         facebook: String,
         instagram: String,
-        website: String
+        website: String,
+        gender: String,
     ) {
         this.uid = uid
         this.username = username
+        this.fullname = fullname
         this.profile = profile
         this.cover = cover
         this.status = status
@@ -35,6 +40,7 @@ class Users {
         this.facebook = facebook
         this.instagram = instagram
         this.website = website
+        this.gender = gender
     }
 
     fun getUID() : String? {
@@ -53,6 +59,13 @@ class Users {
         this.username = username
     }
 
+    fun getFullname() : String {
+        return fullname
+    }
+
+    fun setFullname(fullname: String) {
+        this.fullname = fullname
+    }
 
     fun getProfile() : String? {
         return profile
@@ -108,6 +121,16 @@ class Users {
 
     fun setWebsite(website: String) {
         this.website = website
+    }
+
+
+
+    fun getGender() : String {
+        return gender
+    }
+
+    fun setGender(gender: String) {
+        this.gender = gender
     }
 
 
