@@ -1,5 +1,6 @@
 package com.dimitarduino.chatmobilni.Fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
@@ -117,24 +118,46 @@ class SettingsFragment : Fragment() {
             namestiSocijalniMrezhi()
         }
 
+        korisnickoImeProfil.setOnClickListener {
+            mrezaZaIzmenvanje = "username"
+
+            namestiSocijalniMrezhi()
+        }
+
+        fullnameProfil.setOnClickListener {
+            mrezaZaIzmenvanje = "fullname"
+
+            namestiSocijalniMrezhi()
+        }
+
         return view
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun namestiSocijalniMrezhi() {
         val builder : androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog_Alert)
 
         if (mrezaZaIzmenvanje == "website") {
             builder.setTitle("Enter your link")
         } else {
-            builder.setTitle("Enter your username")
+            if (mrezaZaIzmenvanje == "fullname") {
+                builder.setTitle("Enter your name")
+            } else {
+                builder.setTitle("Enter your username")
+            }
         }
 
         val editMreza = EditText(context)
+        editMreza.setBackgroundColor(R.color.inputBackground)
 
         if (mrezaZaIzmenvanje == "website") {
             editMreza.hint = "ex. www.google.com"
         } else {
-            editMreza.hint = "ex. johndoe"
+            if (mrezaZaIzmenvanje == "fullname") {
+                editMreza.hint = "ex. John Doe"
+            } else {
+                editMreza.hint = "ex. johndoe"
+            }
         }
 
         builder.setView(editMreza)
@@ -168,6 +191,14 @@ class SettingsFragment : Fragment() {
             }
             "website" -> {
                 socialMap["website"] = "https://$vrednost"
+            }
+            "username" -> {
+                socialMap["username"] = vrednost
+
+            }
+            "fullname" -> {
+                socialMap["fullname"] = vrednost
+
             }
         }
 

@@ -90,16 +90,15 @@ class UserAdapter (
         if (isChatCheck)
         {
             if (razlika != momTimestamp) {
-                Log.i("POSLEDNA", tekstZaPoslednaPoraka)
                 holder.poslednaPorakaVreme.text = tekstZaPoslednaPoraka
-            } else {
-                Log.i("POSLEDNA", "isto se")
             }
             zemiPoslednaPoraka(user.getUID(), holder.poslednaPorakaTekst, holder.procitanoPosledna)
         }
         else
         {
-            holder.poslednaPorakaTekst.visibility = View.GONE
+            holder.usernameText.text = user.getFullname()
+            holder.poslednaPorakaTekst.text = "@" + user.getUsername().toString()
+//            holder.poslednaPorakaTekst.visibility = View.GONE
         }
 
         if (isChatCheck)

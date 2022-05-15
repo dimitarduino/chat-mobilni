@@ -212,7 +212,6 @@ class MessageChatActivity : AppCompatActivity() {
 
             slikaUri = data!!.data
 
-            Log.i("slika", slikaUri.toString())
 //            Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
 
             prikaciSlikaBaza()
