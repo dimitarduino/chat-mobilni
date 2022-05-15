@@ -18,6 +18,7 @@ import com.dimitarduino.chatmobilni.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -125,6 +126,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_logout -> {
                 FirebaseAuth.getInstance().signOut()
+                Firebase.auth.signOut()
 
                 val intent = Intent(this, WelcomeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
