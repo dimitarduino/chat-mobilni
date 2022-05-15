@@ -1,6 +1,7 @@
 package com.dimitarduino.chatmobilni
 
 import android.content.ContentProviderClient
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,8 +16,7 @@ import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -139,16 +139,35 @@ class WelcomeActivity : AppCompatActivity() {
             userHashMap["gender"] = "Male"
 
             //proveri prvo dali postoi
-            refUsers.updateChildren(userHashMap)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                        finish()
+            refUsers.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (!p0.exists())
+                    {
+                        Log.i("PROVERKA", "ne postoi")
+                        refUsers.updateChildren(userHashMap)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    vleziVoMainActivity(this@WelcomeActivity)
+                                }
+                        }
+                    } else {
+                        vleziVoMainActivity(this@WelcomeActivity)
                     }
                 }
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+            })
+
         }
+    }
+
+    private fun vleziVoMainActivity(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
     override fun onStart() {

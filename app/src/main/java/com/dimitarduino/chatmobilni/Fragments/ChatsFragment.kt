@@ -102,9 +102,12 @@ class ChatsFragment : Fragment() {
 
                 Log.i("korisnici", korisniciChatList.toString())
 
+                if (context != null) {
                 userAdapter = UserAdapter(context!!, (korisnici as ArrayList<Users>), true)
 
                 chatListRecycler.adapter = userAdapter
+
+                }
 
             }
 

@@ -89,10 +89,15 @@ class SearchFragment : Fragment() {
                         }
                     }
                     //daj mu vrednost na listata na korisnici vo userAdapter
-                    userAdapter = UserAdapter(context!!, mUsers!!, false)
 
-                    //vrzvanje na recyclerview vo ui so userAdapter
-                    recyclerView!!.adapter = userAdapter
+                            if (context != null) {
+
+                                userAdapter = UserAdapter(context!!, mUsers!!, false)
+
+                                //vrzvanje na recyclerview vo ui so userAdapter
+                                recyclerView!!.adapter = userAdapter
+                            }
+
                 }
 
             }
