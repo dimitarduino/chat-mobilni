@@ -140,7 +140,7 @@ class SettingsFragment : Fragment() {
         builder.setView(editMreza)
 
         builder.setPositiveButton("Save", DialogInterface.OnClickListener {
-            dialog, which ->
+                dialog, which ->
             val vrednostMreza = editMreza.text.toString()
 
             if (vrednostMreza == "") {
@@ -172,7 +172,7 @@ class SettingsFragment : Fragment() {
         }
 
         korisniciReference!!.updateChildren(socialMap).addOnCompleteListener {
-            task ->
+                task ->
             if (task.isSuccessful) {
                 Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
             }
