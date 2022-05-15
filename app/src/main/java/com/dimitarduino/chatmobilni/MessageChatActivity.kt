@@ -20,9 +20,13 @@ import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.AppBarLayout
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
@@ -54,15 +58,24 @@ class MessageChatActivity : AppCompatActivity() {
     private lateinit var novaPorakaEdit : EditText
     private lateinit var progressBar : ProgressBar
     private lateinit var recyclerPoraki : RecyclerView
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_chat)
 
+        firebaseAnalytics = Firebase.analytics
+
+
         val toolbar : Toolbar = findViewById(R.id.toolbar_chatlist)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = ""
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
+        //custom event firebase
+
+
 
         toolbar.setNavigationOnClickListener {
             val intent = Intent(this, WelcomeActivity::class.java)
@@ -75,6 +88,11 @@ class MessageChatActivity : AppCompatActivity() {
         intent = intent
         idNaDrugiot = intent.getStringExtra("idNaDrugiot").toString()
         firebaseKorisnik = FirebaseAuth.getInstance().currentUser
+
+        firebaseAnalytics.logEvent("otvoril_chat") {
+            param("otvoril", firebaseKorisnik!!.uid)
+            param("otvoreno_so", idNaDrugiot)
+        }
 
         recyclerPoraki = findViewById(R.id.poraki_lista_recycler)
         recyclerPoraki.setHasFixedSize(true)

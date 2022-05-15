@@ -16,11 +16,15 @@ import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
 import com.dimitarduino.chatmobilni.VisitUserActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -48,6 +52,7 @@ class UserAdapter (
         holder.usernameText.text = user.getUsername()
         Log.i("COVER", user.getProfile().toString())
         Picasso.get().load(user.getProfile()).placeholder(R.drawable.profile).into(holder.profileImageView)
+
 
         //online i offline status
         if (isChatCheck)
@@ -81,12 +86,14 @@ class UserAdapter (
         holder.itemView.setOnClickListener{
 
             if (isChatCheck) {
+
                 val intent = Intent(mContext, MessageChatActivity::class.java)
                 intent.putExtra("idNaDrugiot", user.getUID())
                 intent.putExtra("username", user.getUsername())
                 intent.putExtra("profile", user.getProfile())
                 mContext.startActivity(intent)
             } else {
+
                 val intent = Intent(mContext, VisitUserActivity::class.java)
                 intent.putExtra("profilZaOtvoranje", user.getUID())
                 mContext.startActivity(intent)
@@ -97,6 +104,7 @@ class UserAdapter (
     private fun zemiPoslednaPoraka(uid: String?, poslednaPorakaTekst: TextView, procitanoPoslednoImage : CircleImageView) {
         poslednaPorakaVar = "No Message"
         procitanoPosledna = true
+        var ispratenoOdMene = false
 
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         val refrence = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
@@ -117,6 +125,10 @@ class UserAdapter (
                         {
                             poslednaPorakaVar = chat.getPoraka()!!
 
+                            if (chat.getIsprakjac() == firebaseUser.uid) {
+                                ispratenoOdMene = true
+                            }
+
                             if (!chat.getSeen() &&  chat.getPrimac() == firebaseUser.uid) {
                                 procitanoPosledna = false
                             }
@@ -126,7 +138,13 @@ class UserAdapter (
                 when(poslednaPorakaVar)
                 {
                     "sent you an image." -> poslednaPorakaTekst.text = "image sent."
-                    else -> poslednaPorakaTekst.text = poslednaPorakaVar
+                    else ->  {
+                        if (ispratenoOdMene) {
+                            poslednaPorakaTekst.text = "Me: " + poslednaPorakaVar
+                        } else {
+                            poslednaPorakaTekst.text = poslednaPorakaVar
+                        }
+                    }
                 }
                 if (procitanoPosledna == false) {
                     procitanoPoslednoImage.visibility = View.VISIBLE
@@ -134,6 +152,7 @@ class UserAdapter (
                     procitanoPoslednoImage.visibility = View.GONE
                 }
                 poslednaPorakaVar = "No Message"
+                ispratenoOdMene = false
                 procitanoPosledna = true
             }
 

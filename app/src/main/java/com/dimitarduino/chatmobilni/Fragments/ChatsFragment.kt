@@ -14,6 +14,7 @@ import com.dimitarduino.chatmobilni.Izvestuvanja.firebaseInstanceId
 import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.ktx.Firebase
 
 class ChatsFragment : Fragment() {
     private var userAdapter : UserAdapter? = null
@@ -40,7 +42,7 @@ class ChatsFragment : Fragment() {
         chatListRecycler.layoutManager = LinearLayoutManager(context)
 
         firebaseKorisnik = FirebaseAuth.getInstance().currentUser
-
+//        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         korisniciChatList = ArrayList()
 
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chatList").child(firebaseKorisnik!!.uid)

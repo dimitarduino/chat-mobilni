@@ -9,16 +9,22 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.dimitarduino.chatmobilni.ModelClasses.Users
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
 class VisitUserActivity : AppCompatActivity() {
     private var profilOtvori: String = ""
     var korisnik: Users? = null
+    private lateinit var firebaseAnalytics : FirebaseAnalytics
 
     //deklariraj ui komponenti
     private lateinit var korisnickoPrikaz : TextView
@@ -34,6 +40,7 @@ class VisitUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_visit_user)
+        firebaseAnalytics = Firebase.analytics
         //definiraj ui komponenti
         korisnickoPrikaz = findViewById<TextView>(R.id.profil_korisnicko)
         fullnamePrikaz = findViewById<TextView>(R.id.fullnameVisit)
@@ -46,6 +53,11 @@ class VisitUserActivity : AppCompatActivity() {
         vratiNazadBtn = findViewById(R.id.vratiNazad)
 
         profilOtvori = intent.getStringExtra("profilZaOtvoranje").toString()
+
+        firebaseAnalytics.logEvent("otvoril_profil") {
+            param("otvoril", FirebaseAuth.getInstance().currentUser!!.uid)
+            param("otvoreno_so", profilOtvori)
+        }
 
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(profilOtvori)
         ref.addValueEventListener(object : ValueEventListener {
