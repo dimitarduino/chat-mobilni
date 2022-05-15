@@ -45,6 +45,7 @@ class MessageChatActivity : AppCompatActivity() {
     private var storageReference : StorageReference? = null
     var notify = false
     var apiService : APIService? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     //deklariraj ui komponenti
     private lateinit var barLayout : AppBarLayout
@@ -58,7 +59,6 @@ class MessageChatActivity : AppCompatActivity() {
     private lateinit var novaPorakaEdit : EditText
     private lateinit var progressBar : ProgressBar
     private lateinit var recyclerPoraki : RecyclerView
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -248,11 +248,17 @@ class MessageChatActivity : AppCompatActivity() {
                     porakaSlikaHash["url"] = url
                     porakaSlikaHash["porakaId"] = porakaId
 
+
                     Log.i("slika", url)
 
                     ref.child("chats").child(porakaId!!).setValue(porakaSlikaHash).addOnCompleteListener {task ->
                         if (task.isSuccessful) {
                             progressBar.visibility = View.INVISIBLE
+
+                            firebaseAnalytics.logEvent("pratil_slika") {
+                                param("pratil", FirebaseAuth.getInstance().currentUser!!.uid)
+                                param("pratil_na", idNaDrugiot)
+                            }
 
                             //push notifikacii
                             val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseKorisnik!!.uid)
@@ -296,6 +302,10 @@ class MessageChatActivity : AppCompatActivity() {
         ref.child("chats").child(porakaKey!!).setValue(porakaHashMap)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    firebaseAnalytics.logEvent("pratil_tekst") {
+                        param("pratil", FirebaseAuth.getInstance().currentUser!!.uid)
+                        param("pratil_na", idNaDrugiot)
+                    }
 //                    popolniPoraki(firebaseKorisnik!!.uid, idNaDrugiot, "")
 
                     val chatsListReference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
