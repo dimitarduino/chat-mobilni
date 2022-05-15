@@ -12,6 +12,7 @@ class Users {
     private var instagram : String = ""
     private var website : String = ""
     private var gender : String = ""
+    private var timestamp : Long? = 0
 
     constructor() {
 
@@ -29,6 +30,7 @@ class Users {
         instagram: String,
         website: String,
         gender: String,
+        timestamp : Long = 0
     ) {
         this.uid = uid
         this.username = username
@@ -41,6 +43,7 @@ class Users {
         this.instagram = instagram
         this.website = website
         this.gender = gender
+        this.timestamp = timestamp
     }
 
     fun getUID() : String? {
@@ -131,6 +134,14 @@ class Users {
 
     fun setGender(gender: String) {
         this.gender = gender
+    }
+
+    fun getTimestamp() : Long? {
+        return timestamp
+    }
+
+    fun setTimestamp(timestamp: Long?) {
+        this.timestamp = timestamp
     }
 
 

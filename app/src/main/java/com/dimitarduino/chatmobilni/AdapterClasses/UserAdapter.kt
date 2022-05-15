@@ -27,6 +27,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import java.sql.Date
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 
 class UserAdapter (
     mContext : Context,
@@ -34,7 +38,7 @@ class UserAdapter (
     isChatCheck : Boolean
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder?>() {
     private val mContext : Context = mContext
-    private val mUsers : List<Users> = mUsers
+    private val mUsers : List<Users> = mUsers.sortedBy { it.getTimestamp() }.reversed()
     private val isChatCheck : Boolean = isChatCheck
     var poslednaPorakaVar : String = ""
     var procitanoPosledna : Boolean = true
@@ -50,13 +54,47 @@ class UserAdapter (
         // zemi go potrebniot korisnik i-tiot korisnik i napraj mu element so slika i tekst
         val user : Users = mUsers[position]
         holder.usernameText.text = user.getUsername()
-        Log.i("COVER", user.getProfile().toString())
         Picasso.get().load(user.getProfile()).placeholder(R.drawable.profile).into(holder.profileImageView)
 
+        val vreme = Timestamp(user.getTimestamp()!!)
+        var vremeSat = ""
+
+        var formatDatum = SimpleDateFormat("dd/MM/yyyy k:m:s")
+        var vrednostDatum = Date(user.getTimestamp()!!)
+        var datumPratenaPoraka = formatDatum.format(vrednostDatum)
+
+        val momTimestamp = java.sql.Timestamp(System.currentTimeMillis()).time
+        var momentVremeTemp = Date(momTimestamp)
+        var momentVreme = formatDatum.format(momentVremeTemp)
+
+        val razlika = momTimestamp - user.getTimestamp()!!
+        Log.i("RAZLIKA", razlika.toString())
+        val sekundiRazlika = (razlika / 1000).toInt()
+        val minutiRazlika = (sekundiRazlika / 60).toInt()
+        val satiRazlika = (minutiRazlika / 60).toInt()
+        val denoviRazlika = (satiRazlika / 24).toInt()
+        val nedeliRazlika = (denoviRazlika / 7).toInt()
+        val meseciRazlika = (denoviRazlika / 30).toInt()
+        val godiniRazlika = (denoviRazlika / 365).toInt()
+
+        var tekstZaPoslednaPoraka = ""
+        if (godiniRazlika > 0) tekstZaPoslednaPoraka = godiniRazlika.toString() + "y"
+        else if (meseciRazlika > 0) tekstZaPoslednaPoraka = meseciRazlika.toString() + "mo"
+        else if (nedeliRazlika > 0) tekstZaPoslednaPoraka = nedeliRazlika.toString() + "w"
+        else if (denoviRazlika > 0) tekstZaPoslednaPoraka = denoviRazlika.toString() + "d"
+        else if (satiRazlika > 0) tekstZaPoslednaPoraka = satiRazlika.toString() + "h"
+        else if (minutiRazlika > 0) tekstZaPoslednaPoraka = minutiRazlika.toString() + "m"
+        else if (sekundiRazlika > 0) tekstZaPoslednaPoraka = sekundiRazlika.toString() + "s"
 
         //online i offline status
         if (isChatCheck)
         {
+            if (razlika != momTimestamp) {
+                Log.i("POSLEDNA", tekstZaPoslednaPoraka)
+                holder.poslednaPorakaVreme.text = tekstZaPoslednaPoraka
+            } else {
+                Log.i("POSLEDNA", "isto se")
+            }
             zemiPoslednaPoraka(user.getUID(), holder.poslednaPorakaTekst, holder.procitanoPosledna)
         }
         else

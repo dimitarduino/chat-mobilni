@@ -95,18 +95,16 @@ class ChatsFragment : Fragment() {
 
                     for (sekojChatList in korisniciChatList!!) {
                         if (korisnik!!.getUID().equals(sekojChatList.getId())) {
+                            korisnik.setTimestamp(sekojChatList.getTimestamp())
                             (korisnici as ArrayList).add(korisnik!!)
                         }
                     }
                 }
 
-                Log.i("korisnici", korisniciChatList.toString())
-
                 if (context != null) {
-                userAdapter = UserAdapter(context!!, (korisnici as ArrayList<Users>), true)
+                    userAdapter = UserAdapter(context!!, (korisnici as ArrayList<Users>), true)
 
-                chatListRecycler.adapter = userAdapter
-
+                    chatListRecycler.adapter = userAdapter
                 }
 
             }

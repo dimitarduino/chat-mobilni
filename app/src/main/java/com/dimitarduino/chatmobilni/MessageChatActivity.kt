@@ -16,6 +16,7 @@ import com.dimitarduino.chatmobilni.AdapterClasses.ChatsAdapter
 import com.dimitarduino.chatmobilni.Fragments.APIService
 import com.dimitarduino.chatmobilni.Izvestuvanja.*
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
+import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -314,11 +315,18 @@ class MessageChatActivity : AppCompatActivity() {
                         .child(firebaseKorisnik!!.uid)
                         .child(idNaDrugiot)
 
+                    val momTimestamp = java.sql.Timestamp(System.currentTimeMillis()).time
+
+                    val chatListTvoj = Chatlist(idNaDrugiot, momTimestamp)
+                    val chatListNadrug = Chatlist(firebaseKorisnik!!.uid, momTimestamp)
+
                     chatsListReference.addListenerForSingleValueEvent(object : ValueEventListener{
                         override fun onDataChange(p0: DataSnapshot) {
                             if (!p0.exists())
                             {
-                                chatsListReference.child("id").setValue(idNaDrugiot)
+                                chatsListReference.setValue(chatListTvoj)
+                            } else {
+                                chatsListReference.child("timestamp").setValue(momTimestamp)
                             }
 
                             val chatlistaNaDrugiotRef = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
@@ -327,7 +335,7 @@ class MessageChatActivity : AppCompatActivity() {
                                 .child(idNaDrugiot)
                                 .child(firebaseKorisnik!!.uid)
 
-                            chatlistaNaDrugiotRef.child("id").setValue(firebaseKorisnik!!.uid)
+                            chatlistaNaDrugiotRef.setValue(chatListNadrug)
                         }
 
                         override fun onCancelled(p0: DatabaseError) {

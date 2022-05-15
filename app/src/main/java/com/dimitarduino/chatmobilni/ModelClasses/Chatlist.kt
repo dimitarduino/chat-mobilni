@@ -1,13 +1,16 @@
 package com.dimitarduino.chatmobilni.ModelClasses
 
+
 class Chatlist {
     private var id: String = ""
+    private var timestamp: Long = 0
 
     constructor()
 
 
-    constructor(id: String) {
+    constructor(id: String, timestamp: Long) {
         this.id = id
+        this.timestamp = timestamp
     }
 
 
@@ -17,5 +20,13 @@ class Chatlist {
 
     fun setId(id: String?) {
         this.id = id!!
+    }
+
+    fun getTimestamp(): Long? {
+        return timestamp
+    }
+
+    fun setTimestamp(timestamp: Long?) {
+        this.timestamp = timestamp!!
     }
 }
