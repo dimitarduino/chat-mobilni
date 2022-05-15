@@ -410,7 +410,7 @@ class MessageChatActivity : AppCompatActivity() {
                                     {
                                         Toast.makeText(this@MessageChatActivity, "Failed, Nothing happen.", Toast.LENGTH_LONG).show()
                                     } else {
-                                        Toast.makeText(this@MessageChatActivity, "Prateno.", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(this@MessageChatActivity, "Sent.", Toast.LENGTH_LONG).show()
 
                                     }
                                 }

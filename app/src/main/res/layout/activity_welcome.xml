@@ -47,7 +47,7 @@
             android:textColorHint="@color/black" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
+        <ImageButton
             android:id="@+id/googleSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,8 +56,10 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/google_button_bg"
-            android:text="Sign in with Google"
             android:gravity="center"
+            android:paddingVertical="5dp"
+            android:src="@drawable/google"
+            android:text="Sign in with Google"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 

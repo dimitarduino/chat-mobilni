@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -24,7 +25,7 @@ class WelcomeActivity : AppCompatActivity() {
     var firebaseUser : FirebaseUser? = null
     private lateinit var registerWelcomeBtn : Button
     private lateinit var loginWelcomeBtn : Button
-    private lateinit var googleSignInBtn : Button
+    private lateinit var googleSignInBtn : ImageButton
 
     private lateinit var googleSignInClient : GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
@@ -43,7 +44,7 @@ class WelcomeActivity : AppCompatActivity() {
         //definiraj ui komponenti
         registerWelcomeBtn = findViewById<Button>(R.id.register_welcome_btn)
         loginWelcomeBtn = findViewById<Button>(R.id.login_welcome_btn)
-        googleSignInBtn = findViewById<Button>(R.id.googleSignIn)
+        googleSignInBtn = findViewById<ImageButton>(R.id.googleSignIn)
 
 
         // Configure Google Sign In
