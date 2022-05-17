@@ -4,30 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingBottom="20dp"
     tools:context=".WelcomeActivity">
 
     <ImageView
         android:id="@+id/welcomeImage"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="250dp"
+        android:layout_marginVertical="10dp"
         android:layout_alignParentTop="true"
         android:src="@drawable/wspec" />
 
     <RelativeLayout
         android:id="@+id/buttonsRelative"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/welcomeImage"
         android:layout_alignParentBottom="true">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebookLoginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="10dp"
+            android:visibility="gone"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/facebookLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/google_button_bg"
+            android:text="Continue with Facebook"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_x"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/facebookLogin"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/google_button_bg"
             android:text="Continue as guest"
             android:textColor="@color/white"
@@ -39,13 +64,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/login_x"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/google_button_bg"
             android:gravity="center"
             android:paddingVertical="5dp"
             android:src="@drawable/google"
-            android:text="Sign in with Google"
+            android:text="Continue with Google"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 
@@ -53,11 +78,11 @@
             android:id="@+id/login_welcome_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_radius_bg"
             android:layout_below="@+id/googleSignIn"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_radius_bg"
             android:text="Log In"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
@@ -74,7 +99,6 @@
             android:text="Sign Up"
             android:textColor="@color/black"
             android:textColorHint="@color/black" />
-
 
 
     </RelativeLayout>
