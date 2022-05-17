@@ -21,4 +21,10 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string-array name="dostapnost_array">
+        <item>Public</item>
+        <item>Verified users only</item>
+        <item>Private</item>
+    </string-array>
 </resources>

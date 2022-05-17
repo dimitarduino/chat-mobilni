@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
+import java.sql.Timestamp
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -25,14 +27,14 @@ class WelcomeActivity : AppCompatActivity() {
     var firebaseUser : FirebaseUser? = null
     private lateinit var registerWelcomeBtn : Button
     private lateinit var loginWelcomeBtn : Button
-    private lateinit var googleSignInBtn : ImageButton
+    private lateinit var googleSignInBtn : Button
+    private lateinit var loginX : Button
 
     private lateinit var googleSignInClient : GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
     private lateinit var refUsers : DatabaseReference
     companion object {
         const val RC_SIGN_IN = 1001
-        const val EXTRA_NAME = "EXTRA_NAME"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +46,25 @@ class WelcomeActivity : AppCompatActivity() {
         //definiraj ui komponenti
         registerWelcomeBtn = findViewById<Button>(R.id.register_welcome_btn)
         loginWelcomeBtn = findViewById<Button>(R.id.login_welcome_btn)
-        googleSignInBtn = findViewById<ImageButton>(R.id.googleSignIn)
+        googleSignInBtn = findViewById(R.id.googleSignIn)
+        loginX = findViewById(R.id.login_x)
 
+
+        //guest login
+        loginX.setOnClickListener {
+            mAuth.signInAnonymously()
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val user = mAuth.currentUser
+                        updateUIGuest(user)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("SIGNIN_X", "signInAnonymously:failure", task.exception)
+                        Toast.makeText(baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -75,6 +94,48 @@ class WelcomeActivity : AppCompatActivity() {
 
             startActivity(intent)
             finish()
+        }
+    }
+
+    private fun updateUIGuest(user: FirebaseUser?) {
+        if (user != null) {
+            val momentalenKorisnik = mAuth.currentUser!!.uid
+
+            refUsers = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference
+                .child("users")
+                .child(momentalenKorisnik)
+
+            val userHashMap = HashMap<String, Any>()
+            userHashMap["uid"] = momentalenKorisnik
+            val momTimestamp : Long = java.sql.Timestamp(System.currentTimeMillis()).time
+
+            userHashMap["status"] = "online"
+            userHashMap["username"] = "u" + momTimestamp
+            userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/cover.jpg?alt=media&token=590ea2bd-1f43-40af-9f85-db1d44f3623f"
+            userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/m1.jpg?alt=media&token=14b1ea15-8f83-46ff-8edb-9e25b3060a38"
+            userHashMap["search"] = "u" + momTimestamp
+            userHashMap["facebook"] = "https://facebook.com"
+            userHashMap["instagram"] = "https://instagram.com"
+            userHashMap["website"] = "https://google.com"
+            userHashMap["fullname"] = "u" + momTimestamp
+            userHashMap["gender"] = "Male"
+            userHashMap["dostapnost"] = 2
+            userHashMap["gostin"] = 1
+
+            refUsers.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(p0: DataSnapshot) {
+                    refUsers.updateChildren(userHashMap)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                vleziVoMainActivity(this@WelcomeActivity)
+                            }
+                        }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+            })
         }
     }
 
@@ -108,16 +169,16 @@ class WelcomeActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("GOOGLE_SIGNIN", "signInWithCredential:success")
                     val user = mAuth.currentUser
-                    updateUI(user)
+                    updateUIGoogle(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("GOOGLE_SIGNIN", "signInWithCredential:failure", task.exception)
-                    updateUI(null)
+                    updateUIGoogle(null)
                 }
             }
     }
 
-    private fun updateUI(user: FirebaseUser?) {
+    private fun updateUIGoogle(user: FirebaseUser?) {
         if (user != null) {
             val momentalenKorisnik = mAuth.currentUser!!.uid
 
@@ -138,13 +199,14 @@ class WelcomeActivity : AppCompatActivity() {
             userHashMap["website"] = "https://google.com"
             userHashMap["fullname"] = user.displayName.toString()
             userHashMap["gender"] = "Male"
+            userHashMap["dostapnost"] = 0
+            userHashMap["gostin"] = 0
 
             //proveri prvo dali postoi
             refUsers.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(p0: DataSnapshot) {
                     if (!p0.exists())
                     {
-                        Log.i("PROVERKA", "ne postoi")
                         refUsers.updateChildren(userHashMap)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {

@@ -34,7 +34,6 @@ class firebaseMessaging : FirebaseMessagingService() {
                 //proveri dali e oreo
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     //oreo+
-                        Log.i("notifikacii", "oreo kje bidi")
                     ispratiNotifikacijaOreo(mRemoteMessage)
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -62,7 +61,6 @@ class firebaseMessaging : FirebaseMessagingService() {
         val bundle = Bundle()
         bundle.putString("korisnikId", korisnik)
         intent.putExtras(bundle)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         var pendingIntent : PendingIntent = PendingIntent.getActivity(this, kBr, intent, PendingIntent.FLAG_IMMUTABLE)
 
@@ -93,9 +91,8 @@ class firebaseMessaging : FirebaseMessagingService() {
         val bundle = Bundle()
         bundle.putString("korisnikId", korisnik)
         intent.putExtras(bundle)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        var pendingIntent : PendingIntent = PendingIntent.getActivity(this, kBr, intent, PendingIntent.FLAG_ONE_SHOT)
+        var pendingIntent : PendingIntent = PendingIntent.getActivity(this, kBr, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val oreoNotification = OreoNotification(this)

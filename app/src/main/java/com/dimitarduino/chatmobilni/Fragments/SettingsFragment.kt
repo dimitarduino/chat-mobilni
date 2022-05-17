@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +34,8 @@ class SettingsFragment : Fragment() {
     private var storageReference : StorageReference? = null
     private var daliECover : String = ""
     private var mrezaZaIzmenvanje : String = ""
+    private var smenatoDostapnost = false
+    private var nacrtanoDostapnost = false
 
     //ui komponenti
     private lateinit var profilnaSlikaProfil : CircleImageView
@@ -46,6 +46,8 @@ class SettingsFragment : Fragment() {
     private lateinit var instaProfil : LinearLayout
     private lateinit var websiteProfil : LinearLayout
     private lateinit var progressBar : ProgressBar
+    private lateinit var zacuvajDostapnostBtn : Button
+    private lateinit var dostapnostSpinner : Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +64,8 @@ class SettingsFragment : Fragment() {
         instaProfil = view.findViewById(R.id.instagramLinear)
         websiteProfil = view.findViewById(R.id.webLinear)
         progressBar = view.findViewById(R.id.progressbar)
+        dostapnostSpinner = view.findViewById(R.id.dostapnost_spinner)
+        zacuvajDostapnostBtn = view.findViewById(R.id.zacuvajDostapnost)
 
         progressBar.visibility = View.INVISIBLE
 
@@ -69,6 +73,24 @@ class SettingsFragment : Fragment() {
         najavenKorisnik = FirebaseAuth.getInstance().currentUser
         korisniciReference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(najavenKorisnik!!.uid)
         storageReference = FirebaseStorage.getInstance().reference.child("user_images")
+
+        // init na dostapnost select
+        context?.let {
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.dostapnost_array,
+                android.R.layout.simple_spinner_dropdown_item
+            ).also { adapter ->
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                dostapnostSpinner.adapter = adapter
+            }
+        }
+
+        zacuvajDostapnostBtn.setOnClickListener {
+            zacuvajDostapnost(dostapnostSpinner.selectedItemPosition)
+        }
 
         korisniciReference!!.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
@@ -79,6 +101,13 @@ class SettingsFragment : Fragment() {
                         fullnameProfil.text = user!!.getFullname()
                         Picasso.get().load(user.getProfile()).into(profilnaSlikaProfil)
                         Picasso.get().load(user.getCover()).into(naslovnaSlikaProfil)
+                        Log.i("proverkaDostapnost", dostapnostSpinner.selectedItemPosition.toString())
+                        Log.i("proverkaDostapnost", user.getDostapnost().toString())
+                        if (dostapnostSpinner.selectedItemPosition != user.getDostapnost()) {
+                            dostapnostSpinner.setSelection(user.getDostapnost())
+                        }
+
+                        nacrtanoDostapnost = true
                     }
                 }
             }
@@ -178,10 +207,15 @@ class SettingsFragment : Fragment() {
         builder.show()
     }
 
-    private fun convertPixelsToDp(i: Int, settingsFragment: SettingsFragment): Int {
-        val resources: Resources = settingsFragment!!.resources
-        val metrics: DisplayMetrics = resources.displayMetrics
-        return (i / (metrics.densityDpi / 160f)).toInt()
+    private fun zacuvajDostapnost(dostapnost: Int) {
+        val dostapnostHash = HashMap<String, Any>()
+        dostapnostHash["dostapnost"] = dostapnost
+        korisniciReference!!.updateChildren(dostapnostHash).addOnCompleteListener {
+                task ->
+            if (task.isSuccessful) {
+                Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun zacuvajSocijalnaMrezha(vrednost: String) {
@@ -222,8 +256,6 @@ class SettingsFragment : Fragment() {
         intent.action = Intent.ACTION_GET_CONTENT
         resultLauncher.launch(intent)
     }
-
-
 
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {

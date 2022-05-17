@@ -23,12 +23,41 @@
         android:layout_alignParentBottom="true">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_x"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/google_button_bg"
+            android:text="Continue as guest"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/googleSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_x"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/google_button_bg"
+            android:gravity="center"
+            android:paddingVertical="5dp"
+            android:src="@drawable/google"
+            android:text="Sign in with Google"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_welcome_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/button_radius_bg"
+            android:layout_below="@+id/googleSignIn"
             android:text="Log In"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
@@ -47,21 +76,6 @@
             android:textColorHint="@color/black" />
 
 
-        <ImageButton
-            android:id="@+id/googleSignIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/register_welcome_btn"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/google_button_bg"
-            android:gravity="center"
-            android:paddingVertical="5dp"
-            android:src="@drawable/google"
-            android:text="Sign in with Google"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
 
     </RelativeLayout>
 
