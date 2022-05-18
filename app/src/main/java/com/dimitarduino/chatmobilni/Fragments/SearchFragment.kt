@@ -72,38 +72,58 @@ class SearchFragment : Fragment() {
 
         // zemi ja tabelata/kolekcijata ko varijabla za ponatamoshen listener na istata
         val refUsers = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users")
+        val momentalenKorisnikRef = refUsers.child(firebaseUserId)
 
-        //listener za podatoci vo kolekcijata users
-        refUsers.addValueEventListener(object : ValueEventListener {
-            //pri dobivanje na sekoj nov podatok od firebase azuriraj lista na korisnici sho se prikazhva pri otvoranje na search tabot
+        momentalenKorisnikRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                (mUsers as ArrayList<Users>).clear()
-                if (searchUsersEdit.text.toString() == "") {
-                    for (snapshot in p0.children) {
-                        Log.i("TEST", snapshot.getValue(Users::class.java).toString())
-                        val user = snapshot.getValue(Users::class.java)
+                if (p0.exists()) {
+                    val momentalnoNajaven : Users? = p0.getValue(Users::class.java)
+                    //listener za podatoci vo kolekcijata users
+                    refUsers.addValueEventListener(object : ValueEventListener {
+                        //pri dobivanje na sekoj nov podatok od firebase azuriraj lista na korisnici sho se prikazhva pri otvoranje na search tabot
+                        override fun onDataChange(p0: DataSnapshot) {
+                            (mUsers as ArrayList<Users>).clear()
+                            if (searchUsersEdit.text.toString() == "") {
+                                for (snapshot in p0.children) {
+                                    val user = snapshot.getValue(Users::class.java)
 
-                        if (!(user!!.getUID()).equals(firebaseUserId)) {
-                            // ako ne sum jas dodaj vo userLista za search
-                            (mUsers as ArrayList<Users>).add(user)
-                        }
-                    }
-                    //daj mu vrednost na listata na korisnici vo userAdapter
+                                    // ako ne sum jas dodaj vo userLista za search
+                                    if (!(user!!.getUID()).equals(firebaseUserId)) {
+                                        //ako e privaten profil ne prikazvaj
+                                        if (user!!.getDostapnost() != 2) {
+                                            //ako najaveniot e gostin da ne gi gleda i only verifed view userite
+                                                    if (momentalnoNajaven!!.getGostin() == 1) {
+                                                        if (user!!.getDostapnost() != 1) {
+                                                            (mUsers as ArrayList<Users>).add(user)
+                                                        }
+                                                    } else {
+                                                        (mUsers as ArrayList<Users>).add(user)
+                                                    }
+                                        }
+                                    }
+                                }
+                                //daj mu vrednost na listata na korisnici vo userAdapter
 
-                            if (context != null) {
+                                if (context != null) {
 
-                                userAdapter = UserAdapter(context!!, mUsers!!, false)
+                                    userAdapter = UserAdapter(context!!, mUsers!!, false)
 
-                                //vrzvanje na recyclerview vo ui so userAdapter
-                                recyclerView!!.adapter = userAdapter
+                                    //vrzvanje na recyclerview vo ui so userAdapter
+                                    recyclerView!!.adapter = userAdapter
+                                }
                             }
 
-                }
+                        }
 
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                    })
+                }
             }
 
             override fun onCancelled(p0: DatabaseError) {
-
             }
 
         })
