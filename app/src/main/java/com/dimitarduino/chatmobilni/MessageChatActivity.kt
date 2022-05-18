@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Response
+import java.sql.Timestamp
 
 class MessageChatActivity : AppCompatActivity() {
     var idNaDrugiot : String = ""
@@ -117,7 +118,7 @@ class MessageChatActivity : AppCompatActivity() {
         progressBar.visibility = View.INVISIBLE
 
         //listeners
-//        --listener baza vlecenje na informacii za drugiot korisnik
+        //        --listener baza vlecenje na informacii za drugiot korisnik
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 val korisnik : Users? = p0.getValue(Users::class.java)
@@ -291,10 +292,13 @@ class MessageChatActivity : AppCompatActivity() {
         val porakaKey = ref.push().key
 
         val porakaHashMap = HashMap<String, Any?>()
+        var enkripcija : Enkripcija
+        enkripcija = Enkripcija()
+        val enkriptiranaPoraka = enkripcija.encrypt(poraka).toString()
 
         porakaHashMap["isprakjac"] = najavenKorisnik
         porakaHashMap["primac"] = idNaDrugiot
-        porakaHashMap["poraka"] = poraka
+        porakaHashMap["poraka"] = enkriptiranaPoraka
         porakaHashMap["seen"] = false
         porakaHashMap["url"] = ""
         porakaHashMap["porakaId"] = porakaKey
@@ -306,7 +310,6 @@ class MessageChatActivity : AppCompatActivity() {
                         param("pratil", FirebaseAuth.getInstance().currentUser!!.uid)
                         param("pratil_na", idNaDrugiot)
                     }
-//                    popolniPoraki(firebaseKorisnik!!.uid, idNaDrugiot, "")
 
                     val chatsListReference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
                         .reference
@@ -314,7 +317,7 @@ class MessageChatActivity : AppCompatActivity() {
                         .child(firebaseKorisnik!!.uid)
                         .child(idNaDrugiot)
 
-                    val momTimestamp = java.sql.Timestamp(System.currentTimeMillis()).time
+                    val momTimestamp = Timestamp(System.currentTimeMillis()).time
 
                     val chatListTvoj = Chatlist(idNaDrugiot, momTimestamp)
                     val chatListNadrug = Chatlist(firebaseKorisnik!!.uid, momTimestamp)

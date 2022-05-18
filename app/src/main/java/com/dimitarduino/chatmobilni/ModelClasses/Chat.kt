@@ -2,6 +2,7 @@ package com.dimitarduino.chatmobilni.ModelClasses
 
 import android.util.Log
 import androidx.annotation.Keep
+import com.dimitarduino.chatmobilni.Enkripcija
 
 @Keep
 public class Chat {
@@ -23,12 +24,7 @@ public class Chat {
         url: String,
         porakaId: String
     ) {
-        Log.i("isprakjac", isprakjac)
-        Log.i("poraka", poraka)
-        Log.i("primac", primac)
-        Log.i("seen", seen.toString())
-        Log.i("url", url)
-        Log.i("porakaId", porakaId)
+
         this.isprakjac = isprakjac
         this.poraka = poraka
         this.primac = primac
@@ -48,7 +44,10 @@ public class Chat {
     }
 
     fun getPoraka(): String? {
-        return poraka
+        val enkripcijaDek = Enkripcija()
+        Log.i("ENKRIPCIJA", poraka)
+        Log.i("ENKRIPCIJA", enkripcijaDek.decrypt(poraka).toString())
+        return enkripcijaDek.decrypt(poraka)
     }
 
     fun setPoraka(poraka: String?) {
