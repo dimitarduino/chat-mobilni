@@ -7,9 +7,13 @@ import android.util.Log
 import android.util.Patterns
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.set
@@ -20,6 +24,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var mAuth : FirebaseAuth
     private lateinit var refUsers : DatabaseReference
     private var firebaseUserId : String = ""
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
 
     //varijabli ui komponenti
     private lateinit var registerBtn : Button
@@ -34,6 +40,8 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        firebaseAnalytics = Firebase.analytics
+
 
         //deklariraj elementi del
         registerBtn = findViewById<Button>(R.id.register_btn)
@@ -128,10 +136,15 @@ class RegisterActivity : AppCompatActivity() {
                     userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/cover.jpg?alt=media&token=590ea2bd-1f43-40af-9f85-db1d44f3623f"
 
                     refUsers.updateChildren(userHashMap)
-                        .addOnCompleteListener {task ->
-                            if (task.isSuccessful) {
+                        .addOnCompleteListener {task1 ->
+                            if (task1.isSuccessful) {
                                 val intent = Intent(this, MainActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                                firebaseAnalytics.logEvent("registracija") {
+                                    param("registriran", userHashMap["uid"].toString())
+                                }
+
                                 startActivity(intent)
                                 finish()
                             }
@@ -154,7 +167,7 @@ class RegisterActivity : AppCompatActivity() {
         return if (TextUtils.isEmpty(target)) {
             false
         } else {
-            Patterns.EMAIL_ADDRESS.matcher(target).matches()
+            Patterns.EMAIL_ADDRESS.matcher(target.toString()).matches()
         }
     }
 

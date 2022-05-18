@@ -18,11 +18,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import java.sql.Timestamp
 import java.util.*
 import kotlin.collections.HashMap
@@ -35,6 +39,7 @@ class WelcomeActivity : AppCompatActivity() {
     private lateinit var loginX : Button
     private lateinit var facebookBtn : Button
     private lateinit var facebookLoginBtn : com.facebook.login.widget.LoginButton
+    private lateinit var firebaseAnalytics : FirebaseAnalytics
 
     private lateinit var googleSignInClient : GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
@@ -52,6 +57,7 @@ class WelcomeActivity : AppCompatActivity() {
 //        AppEventsLogger.activateApp(this@WelcomeActivity);
 
         mAuth = FirebaseAuth.getInstance()
+        firebaseAnalytics = Firebase.analytics
 
         //definiraj ui komponenti
         registerWelcomeBtn = findViewById<Button>(R.id.register_welcome_btn)
@@ -90,6 +96,9 @@ class WelcomeActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
+                        firebaseAnalytics.logEvent("logiran_guest") {
+                            param("user", user!!.uid)
+                        }
                         updateUIGuest(user)
                     } else {
                         // If sign in fails, display a message to the user.
@@ -143,9 +152,9 @@ class WelcomeActivity : AppCompatActivity() {
                     Log.d("FACEBOOK_SIGNIN", "signInWithCredential:success")
                     val user = mAuth.currentUser
 
-                    Log.i("FACEBOOK_SIGNIN", user!!.email.toString())
-                    Log.i("FACEBOOK_SIGNIN", user!!.displayName.toString())
-                    Log.i("FACEBOOK_SIGNIN", user!!.uid)
+                    firebaseAnalytics.logEvent("logiran_facebook") {
+                        param("user", user!!.uid)
+                    }
                     updateUIGoogle(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -235,6 +244,9 @@ class WelcomeActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("GOOGLE_SIGNIN", "signInWithCredential:success")
                     val user = mAuth.currentUser
+                    firebaseAnalytics.logEvent("logiran_google") {
+                        param("user", user!!.uid)
+                    }
                     updateUIGoogle(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -280,6 +292,7 @@ class WelcomeActivity : AppCompatActivity() {
                         refUsers.updateChildren(userHashMap)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
+
                                     vleziVoMainActivity(this@WelcomeActivity)
                                 }
                         }

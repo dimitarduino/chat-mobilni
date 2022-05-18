@@ -7,14 +7,19 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
     //varijabli firebase
     private lateinit var mAuth : FirebaseAuth
     private lateinit var refUsers : DatabaseReference
     private var firebaseUserId : String = ""
+    private lateinit var firebaseAnalytics : FirebaseAnalytics
 
     //varijabli ui komponenti
     private lateinit var loginBtn : Button
@@ -25,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        firebaseAnalytics = Firebase.analytics
         //deklariraj lateinit varijabli
         loginBtn = findViewById<Button>(R.id.login_btn)
         loginEmailEdit = findViewById<EditText>(R.id.email_login)
@@ -65,6 +70,9 @@ class LoginActivity : AppCompatActivity() {
             mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {task ->
                     if (task.isSuccessful) {
+                        firebaseAnalytics.logEvent("logiran") {
+                            param("user", mAuth.currentUser!!.uid)
+                        }
                         val intent = Intent(this, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
