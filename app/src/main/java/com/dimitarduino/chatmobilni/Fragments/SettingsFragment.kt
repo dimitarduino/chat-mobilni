@@ -164,12 +164,12 @@ class SettingsFragment : Fragment() {
         val builder : androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog_Alert)
 
         if (mrezaZaIzmenvanje == "website") {
-            builder.setTitle("Enter your link")
+            builder.setTitle(R.string.vnesiLink)
         } else {
             if (mrezaZaIzmenvanje == "fullname") {
-                builder.setTitle("Enter your name")
+                builder.setTitle(R.string.vnesiIme)
             } else {
-                builder.setTitle("Enter your username")
+                builder.setTitle(R.string.vnesiUsername)
             }
         }
 
@@ -190,18 +190,18 @@ class SettingsFragment : Fragment() {
         }
         builder.setView(editMreza, 20, 20, 20, 20)
 
-        builder.setPositiveButton("Save", DialogInterface.OnClickListener {
+        builder.setPositiveButton(R.string.zacuvaj.toString(), DialogInterface.OnClickListener {
                 dialog, which ->
             val vrednostMreza = editMreza.text.toString()
 
             if (vrednostMreza == "") {
-                Toast.makeText(context, "Username/URL is required!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.korisnickourlzadolzitelno.toString(), Toast.LENGTH_SHORT).show()
             } else {
                 zacuvajSocijalnaMrezha(vrednostMreza)
             }
         })
 
-        builder.setNegativeButton("Cancel", DialogInterface.OnClickListener {
+        builder.setNegativeButton(R.string.zacuvaj.toString(), DialogInterface.OnClickListener {
                 dialog, which -> dialog.cancel() })
 
         builder.show()
@@ -213,7 +213,7 @@ class SettingsFragment : Fragment() {
         korisniciReference!!.updateChildren(dostapnostHash).addOnCompleteListener {
                 task ->
             if (task.isSuccessful) {
-                Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.zacuvano.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -244,7 +244,7 @@ class SettingsFragment : Fragment() {
         korisniciReference!!.updateChildren(socialMap).addOnCompleteListener {
                 task ->
             if (task.isSuccessful) {
-                Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.zacuvano.toString(), Toast.LENGTH_SHORT).show()
             }
         }
         mrezaZaIzmenvanje = ""
@@ -264,7 +264,7 @@ class SettingsFragment : Fragment() {
             slikaUri = data!!.data
 
             Log.i("slika", slikaUri.toString())
-            Toast.makeText(context, "Uploading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, R.string.prikacuva.toString(), Toast.LENGTH_LONG).show()
 
             prikaciSlikaBaza()
         }

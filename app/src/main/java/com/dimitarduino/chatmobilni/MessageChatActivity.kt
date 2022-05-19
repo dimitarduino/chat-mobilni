@@ -412,9 +412,9 @@ class MessageChatActivity : AppCompatActivity() {
                                     Log.i("notifikacii", response.body().toString())
                                     if (response.body()!!.success !== 1)
                                     {
-                                        Toast.makeText(this@MessageChatActivity, "Failed, Nothing happen.", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(this@MessageChatActivity, R.string.greskaProbaj.toString(), Toast.LENGTH_LONG).show()
                                     } else {
-                                        Toast.makeText(this@MessageChatActivity, "Sent.", Toast.LENGTH_LONG).show()
+//                                        Toast.makeText(this@MessageChatActivity, "Sent.", Toast.LENGTH_LONG).show()
 
                                     }
                                 }

@@ -93,7 +93,7 @@
                 android:shadowColor="@color/white"
                 android:background="@color/white"
                 android:textColor="@color/purple_700"
-                android:text="Save"
+                android:text="@string/zacuvaj"
                 style="?android:attr/borderlessButtonStyle"
 
                 />
@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:layout_marginBottom="8dp"
-                    android:text="Visibility:" />
+                    android:text="@string/vidlivost" />
 
 
 
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_marginLeft="10dp"
-            android:text="Change Facebook username" />
+            android:text="@string/promeniFacebook" />
     </LinearLayout>
 
     <LinearLayout
@@ -177,7 +177,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_marginLeft="10dp"
-            android:text="Change instagram username" />
+            android:text="@string/promeniInstagram" />
     </LinearLayout>
 
 
@@ -207,7 +207,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_marginLeft="10dp"
-            android:text="Change website url" />
+            android:text="@string/promeniWeb" />
     </LinearLayout>
         </RelativeLayout>
 

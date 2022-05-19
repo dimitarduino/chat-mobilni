@@ -41,7 +41,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/google_button_bg"
-            android:text="Continue with Facebook"
+            android:text="@string/prodolziFb"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 
@@ -54,7 +54,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/google_button_bg"
-            android:text="Continue as guest"
+            android:text="@string/prodolziGostin"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 
@@ -70,7 +70,7 @@
             android:gravity="center"
             android:paddingVertical="5dp"
             android:src="@drawable/google"
-            android:text="Continue with Google"
+            android:text="@string/prodolziGoogle"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 
@@ -83,7 +83,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/button_radius_bg"
-            android:text="Log In"
+            android:text="@string/login"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 
@@ -96,7 +96,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/register_btn_bg"
-            android:text="Sign Up"
+            android:text="@string/signup"
             android:textColor="@color/black"
             android:textColorHint="@color/black" />
 

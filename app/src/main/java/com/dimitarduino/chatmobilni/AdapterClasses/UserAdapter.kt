@@ -141,7 +141,7 @@ class UserAdapter (
     }
 
     private fun zemiPoslednaPoraka(uid: String?, poslednaPorakaTekst: TextView, procitanoPoslednoImage : CircleImageView) {
-        poslednaPorakaVar = "No Message"
+        poslednaPorakaVar = R.string.nemaPoraka.toString()
         procitanoPosledna = true
         var ispratenoOdMene = false
 
@@ -190,7 +190,7 @@ class UserAdapter (
                 } else {
                     procitanoPoslednoImage.visibility = View.GONE
                 }
-                poslednaPorakaVar = "No Message"
+                poslednaPorakaVar = R.string.nemaPoraka.toString()
                 ispratenoOdMene = false
                 procitanoPosledna = true
             }

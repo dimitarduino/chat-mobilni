@@ -156,9 +156,9 @@ class RegisterActivity : AppCompatActivity() {
         } else {
             //prikazi poraka deka se zadolzitelni polinjata
                 if (!isValidEmail(email)) {
-                    Toast.makeText(this, "Your Email address is not valid!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.emailNevaliden, Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(this, "All fields are required!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.siteZadolzitelni.toString(), Toast.LENGTH_LONG).show()
                 }
         }
     }

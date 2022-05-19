@@ -21,13 +21,41 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="porakaHint">Message...</string>
-
+    <string name="naprajAkaunt">Create your account</string>
+    <string name="korisnickoIme">Username</string>
+    <string name="fullname">Fullname</string>
+    <string name="signup">Sign up</string>
+    <string name="kontaktirajFb">Contact me on Facebook</string>
+    <string name="instagramFollow">Follow me on Instagram</string>
+    <string name="websiteCheck">Check out my website</string>
+    <string name="ispratiPoraka">Send Message</string>
+    <string name="prodolziFb">Continue with Facebook</string>
+    <string name="prodolziGoogle">Continue with Google</string>
+    <string name="prodolziGostin">Continue as Guest</string>
+    <string name="zacuvaj">Save</string>
+    <string name="vidlivost">Visibility:</string>
+    <string name="promeniFacebook">Change Facebook username</string>
+    <string name="promeniInstagram">Change Instagram username</string>
+    <string name="promeniWeb">Change website url</string>
 
     <string name="google_client_id">841672580009-2734t6ifjli3kj01admfcoefaoqjsmgg.apps.googleusercontent.com</string>
     <string name="facebook_app_id">2186720588154409</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">8d649ad1582904b91e8549472760e206</string>
-
+    <string name="izbrisiPoraka">Delete Message</string>
+    <string name="otkazi">Cancel</string>
+    <string name="shosakash">What do you want?</string>
+    <string name="izbrisano">Deleted</string>
+    <string name="greskaProbaj">Failed, please try again.</string>
+    <string name="nemaPoraka">No Message</string>
+    <string name="vnesiLink">Enter your link</string>
+    <string name="vnesiIme">Enter your name</string>
+    <string name="vnesiUsername">Enter your username</string>
+    <string name="korisnickourlzadolzitelno">Username/URL is required!</string>
+    <string name="zacuvano">Saved!</string>
+    <string name="prikacuva">Uploading...</string>
+    <string name="siteZadolzitelni">All fields are required!</string>
+    <string name="emailNevaliden">Your Email address is not valid!</string>
     <string-array name="pol_array">
         <item>Male</item>
         <item>Female</item>
