@@ -56,6 +56,8 @@
     <string name="prikacuva">Uploading...</string>
     <string name="siteZadolzitelni">All fields are required!</string>
     <string name="emailNevaliden">Your Email address is not valid!</string>
+    <string name="procitano">Seen</string>
+    <string name="isprateno">Sent</string>
     <string-array name="pol_array">
         <item>Male</item>
         <item>Female</item>

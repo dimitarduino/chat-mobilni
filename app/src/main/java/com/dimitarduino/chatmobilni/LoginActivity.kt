@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
                 }
         } else {
             //prikazi poraka deka se zadolzitelni polinjata
-            Toast.makeText(this, R.string.siteZadolzitelni.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.siteZadolzitelni), Toast.LENGTH_LONG).show()
         }
     }
 

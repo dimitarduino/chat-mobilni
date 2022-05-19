@@ -95,12 +95,12 @@ class ChatsAdapter(
                 {
                     holder.tekstPoraka!!.setOnClickListener {
                         val options = arrayOf<CharSequence>(
-                            R.string.izbrisiPoraka.toString(),
-                            R.string.otkazi.toString()
+                            mContext.getString(R.string.izbrisiPoraka),
+                            mContext.getString(R.string.otkazi)
                         )
 
                         var builder: AlertDialog.Builder = AlertDialog.Builder(holder.itemView.context)
-                        builder.setTitle(R.string.shosakash.toString())
+                        builder.setTitle(mContext.getString(R.string.shosakash))
 
                         builder.setItems(options, DialogInterface.OnClickListener{
                                 dialog, which ->
@@ -118,7 +118,7 @@ class ChatsAdapter(
         {
             if (poraka.getSeen())
             {
-                holder.porakaSeen!!.text = "Seen"
+                holder.porakaSeen!!.text = mContext.getString(R.string.procitano)
 
                 if (poraka.getPoraka().equals("sent you an image.") && !poraka.getUrl().equals(""))
                 {
@@ -129,7 +129,7 @@ class ChatsAdapter(
             }
             else
             {
-                holder.porakaSeen!!.text = "Sent"
+                holder.porakaSeen!!.text = mContext.getString(R.string.isprateno)
 
                 if (poraka.getPoraka().equals("sent you an image.") && !poraka.getUrl().equals(""))
                 {
@@ -152,11 +152,11 @@ class ChatsAdapter(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful)
                 {
-                    Toast.makeText(holder.itemView.context, R.string.izbrisano, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(holder.itemView.context, mContext.getString(R.string.izbrisano), Toast.LENGTH_SHORT).show()
                 }
                 else
                 {
-                    Toast.makeText(holder.itemView.context, R.string.greskaProbaj, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(holder.itemView.context, mContext.getString(R.string.greskaProbaj), Toast.LENGTH_SHORT).show()
                 }
             }
     }
