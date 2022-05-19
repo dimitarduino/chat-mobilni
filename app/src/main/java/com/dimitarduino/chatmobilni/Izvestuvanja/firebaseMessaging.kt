@@ -19,7 +19,6 @@ import com.google.firebase.messaging.RemoteMessage
 
 class firebaseMessaging : FirebaseMessagingService() {
     override fun onMessageReceived(mRemoteMessage: RemoteMessage) {
-        Log.i("notifikacii", "received")
         super.onMessageReceived(mRemoteMessage)
 
         val isprateno = mRemoteMessage.data["sented"]
@@ -59,7 +58,8 @@ class firebaseMessaging : FirebaseMessagingService() {
         val intent = Intent(this, MessageChatActivity::class.java)
 
         val bundle = Bundle()
-        bundle.putString("korisnikId", korisnik)
+        bundle.putString("idNaDrugiot", korisnik)
+//        bundle.putString("idNa", korisnik)
         intent.putExtras(bundle)
 
         var pendingIntent : PendingIntent = PendingIntent.getActivity(this, kBr, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -89,7 +89,7 @@ class firebaseMessaging : FirebaseMessagingService() {
         val intent = Intent(this, MessageChatActivity::class.java)
 
         val bundle = Bundle()
-        bundle.putString("korisnikId", korisnik)
+        bundle.putString("idNaDrugiot", korisnik)
         intent.putExtras(bundle)
 
         var pendingIntent : PendingIntent = PendingIntent.getActivity(this, kBr, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -118,7 +118,7 @@ class firebaseMessaging : FirebaseMessagingService() {
         val intent = Intent(this, MessageChatActivity::class.java)
 
         val bundle = Bundle()
-        bundle.putString("korisnikId", korisnik)
+        bundle.putString("idNaDrugiot", korisnik)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 

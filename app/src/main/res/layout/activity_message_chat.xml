@@ -57,7 +57,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/novaporaka_celina_conv"
         android:layout_below="@+id/barLayout_conv"
-        android:background="@color/white"></androidx.recyclerview.widget.RecyclerView>
+        android:background="@color/white" />
 
 
     <RelativeLayout
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:maxLines="10"
             android:background="@color/inputBackground"
-            android:hint="Message..."
+            android:hint="@string/porakaHint"
             android:layout_toRightOf="@+id/prikaci_fajl_conv"
             android:layout_toLeftOf="@+id/isprati_poraka_button"
             android:minHeight="10dp"

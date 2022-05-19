@@ -409,6 +409,7 @@ class MessageChatActivity : AppCompatActivity() {
                             {
                                 if (response.code() == 200)
                                 {
+                                    Log.i("notifikacii", response.body().toString())
                                     if (response.body()!!.success !== 1)
                                     {
                                         Toast.makeText(this@MessageChatActivity, "Failed, Nothing happen.", Toast.LENGTH_LONG).show()
