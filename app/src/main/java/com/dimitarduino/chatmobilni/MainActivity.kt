@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.exists()) {
                     val user : Users? = p0.getValue(Users::class.java)
-                    usernameText.text = user!!.getUsername()
+                    usernameText.text = user!!.getFullname()
                     Log.i("PROFIL", user.getProfile().toString())
                     if (user.getProfile() != "") {
                         Picasso.get().load(user.getProfile()).placeholder(R.drawable.ic_profile).into(profileImage)
