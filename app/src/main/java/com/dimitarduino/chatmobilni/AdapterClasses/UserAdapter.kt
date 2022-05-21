@@ -159,6 +159,7 @@ class UserAdapter (
             {
                 for (dataSnapshot in p0.children)
                 {
+                    ispratenoOdMene = false
                     val chat: Chat? = dataSnapshot.getValue(Chat::class.java)
 
                     if (firebaseUser!=null && chat!=null)
@@ -180,6 +181,8 @@ class UserAdapter (
                         }
                     }
                 }
+
+                Log.i("ispratenoodkoj", ispratenoOdMene.toString())
                 when(poslednaPorakaVar)
                 {
                     "sent you an image." -> poslednaPorakaTekst.text = "image sent."

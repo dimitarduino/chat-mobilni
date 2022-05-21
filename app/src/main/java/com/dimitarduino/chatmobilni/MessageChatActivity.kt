@@ -465,6 +465,6 @@ class MessageChatActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-//        dbReference!!.removeEventListener(seenListener!!)
+        dbReference!!.removeEventListener(seenListener!!)
     }
 }
