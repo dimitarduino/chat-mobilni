@@ -58,6 +58,11 @@
     <string name="emailNevaliden">Your Email address is not valid!</string>
     <string name="procitano">Seen</string>
     <string name="isprateno">Sent</string>
+    <string name="preporacani">Recommended</string>
+    <string name="prabarani">Recent searches</string>
+    <string name="rezultati">Results</string>
+    <string name="nemarezultat">No results</string>
+    <string name="izbrisiBaranja">Clear</string>
     <string-array name="pol_array">
         <item>Male</item>
         <item>Female</item>

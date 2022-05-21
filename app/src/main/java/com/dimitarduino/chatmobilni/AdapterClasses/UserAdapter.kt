@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.dimitarduino.chatmobilni.Fragments.SearchFragment
 import com.dimitarduino.chatmobilni.MessageChatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Users
@@ -24,6 +26,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -42,6 +46,7 @@ class UserAdapter (
     private val isChatCheck : Boolean = isChatCheck
     var poslednaPorakaVar : String = ""
     var procitanoPosledna : Boolean = true
+    private var firestoreDb : FirebaseFirestore? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         //implementacija i mestenje na viewholder za adapterot
@@ -51,6 +56,7 @@ class UserAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        firestoreDb = Firebase.firestore
         // zemi go potrebniot korisnik i-tiot korisnik i napraj mu element so slika i tekst
         val user : Users = mUsers[position]
         holder.usernameText.text = user.getUsername()

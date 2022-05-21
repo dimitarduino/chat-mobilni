@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "841672580009",
+    "firebase_url": "https://chatmobilni-default-rtdb.firebaseio.com",
     "project_id": "chatmobilni",
     "storage_bucket": "chatmobilni.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "841672580009-7sdtj3im8jc8lg2nkh88vi0k323faeb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dimitarduino.chatmobilni",
+            "certificate_hash": "79e0611d2505616b064cb24845db580b45c5373d"
+          }
+        },
         {
           "client_id": "841672580009-2734t6ifjli3kj01admfcoefaoqjsmgg.apps.googleusercontent.com",
           "client_type": 3

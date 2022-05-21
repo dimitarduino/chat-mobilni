@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -17,6 +18,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -36,6 +39,7 @@ class VisitUserActivity : AppCompatActivity() {
     private lateinit var webPrikaz : LinearLayout
     private lateinit var ispratiPorakaProfil : Button
     private lateinit var vratiNazadBtn : ImageView
+    private lateinit var firestoreDb : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,7 @@ class VisitUserActivity : AppCompatActivity() {
         webPrikaz = findViewById<LinearLayout>(R.id.profil_web)
         ispratiPorakaProfil = findViewById<Button>(R.id.ispratiPoraka_profil)
         vratiNazadBtn = findViewById(R.id.vratiNazad)
+        firestoreDb = Firebase.firestore
 
         profilOtvori = intent.getStringExtra("profilZaOtvoranje").toString()
 
@@ -58,6 +63,25 @@ class VisitUserActivity : AppCompatActivity() {
             param("otvoril", FirebaseAuth.getInstance().currentUser!!.uid)
             param("otvoreno_so", profilOtvori)
         }
+
+        val otvorenoOd = FirebaseAuth.getInstance().currentUser!!.uid
+
+        val idBaza = otvorenoOd.toString() + profilOtvori
+
+        val posetaBaza = hashMapOf(
+            "otvoreno_od" to FirebaseAuth.getInstance().currentUser!!.uid,
+            "otvoreno_na" to profilOtvori
+        )
+
+        firestoreDb.collection("visits")
+            .document(idBaza)
+            .set(posetaBaza)
+            .addOnSuccessListener { documentRef ->
+                Log.d("FIRESTORE", "Vneseno i e so id: ${idBaza}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("FIRESTORE", "Error adding document", e)
+            }
 
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(profilOtvori)
         ref.addValueEventListener(object : ValueEventListener {
