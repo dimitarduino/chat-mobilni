@@ -21,7 +21,7 @@ class Enkripcija {
             val ivParameterSpec = IvParameterSpec(Base64.decode(iv, Base64.DEFAULT))
 
             val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
-            val spec =  PBEKeySpec(secretKey.toCharArray(), Base64.decode(salt, Base64.DEFAULT), 10000, 256)
+            val spec =  PBEKeySpec(secretKey.toCharArray(), Base64.decode(salt, Base64.DEFAULT), 1, 256)
             val tmp = factory.generateSecret(spec)
             val secretKey =  SecretKeySpec(tmp.encoded, "AES")
 
@@ -42,7 +42,7 @@ class Enkripcija {
             val ivParameterSpec =  IvParameterSpec(Base64.decode(iv, Base64.DEFAULT))
 
             val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
-            val spec =  PBEKeySpec(secretKey.toCharArray(), Base64.decode(salt, Base64.DEFAULT), 10000, 256)
+            val spec =  PBEKeySpec(secretKey.toCharArray(), Base64.decode(salt, Base64.DEFAULT), 1, 256)
             val tmp = factory.generateSecret(spec);
             val secretKey =  SecretKeySpec(tmp.encoded, "AES")
 
@@ -51,7 +51,7 @@ class Enkripcija {
             return  String(cipher.doFinal(Base64.decode(strToDecrypt, Base64.DEFAULT)))
         }
         catch (e : Exception) {
-            println("Error while decrypting: $e");
+            return strToDecrypt
         }
         return null
     }

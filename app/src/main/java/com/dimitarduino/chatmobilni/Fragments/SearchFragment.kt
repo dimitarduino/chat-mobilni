@@ -117,6 +117,8 @@ class SearchFragment : Fragment() {
                     (mUsers as ArrayList<String>).clear()
 
                 if (documents.size() > 0) {
+                    (mUsers as ArrayList<String>).clear()
+
                     tipRezultati.setText(getString(R.string.prabarani))
                     izbrisiBaranja.visibility = View.VISIBLE
                     for (document in documents) {
