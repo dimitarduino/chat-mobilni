@@ -144,11 +144,11 @@ class SettingsFragment : Fragment() {
             namestiSocijalniMrezhi()
         }
 
-        korisnickoImeProfil.setOnClickListener {
-            mrezaZaIzmenvanje = "username"
-
-            namestiSocijalniMrezhi()
-        }
+//        korisnickoImeProfil.setOnClickListener {
+//            mrezaZaIzmenvanje = "username"
+//
+//            namestiSocijalniMrezhi()
+//        }
 
         fullnameProfil.setOnClickListener {
             mrezaZaIzmenvanje = "fullname"

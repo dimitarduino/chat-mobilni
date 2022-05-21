@@ -101,7 +101,8 @@ class SearchFragment : Fragment() {
     }
 
     fun retrieveAllUsers() {
-
+        (najdeniBaranja as ArrayList<String>).clear()
+        (mUsers as ArrayList<String>).clear()
         //zemi momentalen korisnik id
         var firebaseUserId  = FirebaseAuth.getInstance().currentUser!!.uid
         firestoreDb = Firebase.firestore
@@ -132,12 +133,22 @@ class SearchFragment : Fragment() {
                                 if (p0.exists()) {
                                     val otvorenProfilDb : Users? = p0.getValue(Users::class.java)
                                     if (otvorenProfilDb != null) {
-                                        Log.i("SEARCH", otvorenProfilDb.getUsername().toString())
-                                        (mUsers as ArrayList<Users>).add(otvorenProfilDb)
+                                        var najden = false
+                                        if (mUsers != null) {
+                                            for (userSearchnat in mUsers!!) {
+                                                if (userSearchnat.getUsername() == otvorenProfilDb.getUsername()) {
+                                                    najden = true
+                                                }
+                                            }
+                                            Log.i("OTVORENPROFIL", najden.toString())
+
+                                            if (najden == false) {
+                                                (mUsers as ArrayList<Users>).add(otvorenProfilDb)
+                                            }
+                                        }
 
                                         if (context != null) {
                                             Log.i("SEARCH", "context ne e null")
-
                                             userAdapter = UserAdapter(requireContext(), mUsers!!, false)
 
                                             //vrzvanje na recyclerview vo ui so userAdapter
@@ -235,7 +246,6 @@ class SearchFragment : Fragment() {
         //pri dobivanje na nov podatok od firebase azuriraj najdeni rezultati od searchot
         queryUsers.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-                (mUsers as ArrayList<Users>).clear()
                 if (p0.exists()) {
                     tipRezultati.setText(getString(R.string.rezultati))
                     izbrisiBaranja.visibility = View.GONE
@@ -243,7 +253,6 @@ class SearchFragment : Fragment() {
                 }else {
                     tipRezultati.setText(getString(R.string.nemarezultat))
                     izbrisiBaranja.visibility = View.GONE
-
                 }
                 for (snapshot in p0.children) {
                     val user : Users? = snapshot.getValue(Users::class.java)

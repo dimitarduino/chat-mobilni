@@ -63,6 +63,7 @@
     <string name="rezultati">Results</string>
     <string name="nemarezultat">No results</string>
     <string name="izbrisiBaranja">Clear</string>
+    <string name="vekjepostoiUser">A user with this username already exists</string>
     <string-array name="pol_array">
         <item>Male</item>
         <item>Female</item>

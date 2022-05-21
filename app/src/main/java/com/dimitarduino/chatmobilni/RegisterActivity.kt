@@ -11,8 +11,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.HashMap
@@ -108,51 +107,70 @@ class RegisterActivity : AppCompatActivity() {
         if (daliEValidno) {
             // validen korisnik i dodaj vo baza i vo firebase authentication
 
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                task ->
-                if (task.isSuccessful) {
-                    firebaseUserId = mAuth.currentUser!!.uid
-                    refUsers = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseUserId)
+            //proveri username
+            val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference
+                .child("users").orderByChild("username").equalTo(username)
 
-                    val userHashMap = HashMap<String, Any>()
-                    userHashMap["uid"] = firebaseUserId
 
-                    userHashMap["status"] = "offline"
-                    userHashMap["username"] = username
-                    userHashMap["search"] = username.lowercase(Locale.getDefault())
-                    userHashMap["facebook"] = "https://facebook.com"
-                    userHashMap["instagram"] = "https://instagram.com"
-                    userHashMap["website"] = "https://google.com"
-                    userHashMap["fullname"] = fullname
-                    userHashMap["gender"] = odbranPol
-                    userHashMap["dostapnost"] = 0
-                    userHashMap["gostin"] = 0
+            val intentActivity = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
 
-                    if (odbranPol == "Male") {
-                    userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/m1.jpg?alt=media&token=14b1ea15-8f83-46ff-8edb-9e25b3060a38"
-                    } else {
-                        userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/f1.jpg?alt=media&token=5ef51edc-66fa-4a99-9cd7-5c443ab48e6e"
-                    }
-                    userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/cover.jpg?alt=media&token=590ea2bd-1f43-40af-9f85-db1d44f3623f"
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (!p0.exists()) {
 
-                    refUsers.updateChildren(userHashMap)
-                        .addOnCompleteListener {task1 ->
-                            if (task1.isSuccessful) {
-                                val intent = Intent(this, MainActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                                task ->
+                            if (task.isSuccessful) {
+                                firebaseUserId = mAuth.currentUser!!.uid
+                                refUsers = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseUserId)
 
-                                firebaseAnalytics.logEvent("registracija") {
-                                    param("registriran", userHashMap["uid"].toString())
+                                val userHashMap = HashMap<String, Any>()
+                                userHashMap["uid"] = firebaseUserId
+
+                                userHashMap["status"] = "offline"
+                                userHashMap["username"] = username
+                                userHashMap["search"] = username.lowercase(Locale.getDefault())
+                                userHashMap["facebook"] = "https://facebook.com"
+                                userHashMap["instagram"] = "https://instagram.com"
+                                userHashMap["website"] = "https://google.com"
+                                userHashMap["fullname"] = fullname
+                                userHashMap["gender"] = odbranPol
+                                userHashMap["dostapnost"] = 0
+                                userHashMap["gostin"] = 0
+
+                                if (odbranPol == "Male") {
+                                    userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/m1.jpg?alt=media&token=14b1ea15-8f83-46ff-8edb-9e25b3060a38"
+                                } else {
+                                    userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/f1.jpg?alt=media&token=5ef51edc-66fa-4a99-9cd7-5c443ab48e6e"
                                 }
+                                userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/cover.jpg?alt=media&token=590ea2bd-1f43-40af-9f85-db1d44f3623f"
 
-                                startActivity(intent)
-                                finish()
+                                refUsers.updateChildren(userHashMap)
+                                    .addOnCompleteListener {task1 ->
+                                        if (task1.isSuccessful) {
+                                            firebaseAnalytics.logEvent("registracija") {
+                                                param("registriran", userHashMap["uid"].toString())
+                                            }
+
+                                            startActivity(intentActivity)
+                                            finish()
+                                        }
+                                    }
+                            } else {
+                                Toast.makeText(this@RegisterActivity, "Error: " + task.exception!!.message.toString(), Toast.LENGTH_SHORT).show()
                             }
                         }
-                } else {
-                    Toast.makeText(this, "Error: " + task.exception!!.message.toString(), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@RegisterActivity, getString(R.string.vekjepostoiUser), Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+            })
+
         } else {
             //prikazi poraka deka se zadolzitelni polinjata
                 if (!isValidEmail(email)) {
