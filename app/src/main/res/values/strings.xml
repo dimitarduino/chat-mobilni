@@ -64,6 +64,9 @@
     <string name="nemarezultat">No results</string>
     <string name="izbrisiBaranja">Clear</string>
     <string name="vekjepostoiUser">A user with this username already exists</string>
+    <string name="potvrdiAkaunt">Confirm your account</string>
+    <string name="emailKod">E-mail code</string>
+    <string name="submit">Submit</string>
     <string-array name="pol_array">
         <item>Male</item>
         <item>Female</item>

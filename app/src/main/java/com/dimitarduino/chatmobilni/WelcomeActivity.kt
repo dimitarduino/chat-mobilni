@@ -1,14 +1,14 @@
 package com.dimitarduino.chatmobilni
 
-import android.content.ContentProviderClient
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginResult
@@ -27,9 +27,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import java.sql.Timestamp
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
-import kotlin.collections.HashMap
+
 
 class WelcomeActivity : AppCompatActivity() {
     var firebaseUser : FirebaseUser? = null
@@ -53,7 +54,7 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
-//        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this@WelcomeActivity);
 
         mAuth = FirebaseAuth.getInstance()

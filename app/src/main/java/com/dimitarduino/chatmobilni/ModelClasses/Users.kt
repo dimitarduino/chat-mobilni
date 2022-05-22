@@ -15,6 +15,7 @@ class Users {
     private var timestamp : Long? = 0
     private var dostapnost : Int = 0
     private var gostin : Int = 0
+    private var kodPotvrda : String = ""
 
     constructor() {
 
@@ -34,6 +35,7 @@ class Users {
         gender: String,
         dostapnost: Int,
         gostin: Int,
+        kodPotvrda: String = "",
         timestamp : Long = 0
     ) {
         this.uid = uid
@@ -49,6 +51,7 @@ class Users {
         this.gender = gender
         this.dostapnost = dostapnost
         this.gostin = gostin
+        this.kodPotvrda = kodPotvrda
         this.timestamp = timestamp
     }
 
@@ -66,6 +69,14 @@ class Users {
 
     fun setUsername(username : String) {
         this.username = username
+    }
+
+    fun getKodPotvrda() : String? {
+        return kodPotvrda
+    }
+
+    fun setKodPotvrda(kodPotvrda : String) {
+        this.kodPotvrda = kodPotvrda
     }
 
     fun getFullname() : String {

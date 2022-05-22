@@ -13,8 +13,8 @@ import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import java.sql.Timestamp
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 
@@ -94,6 +94,14 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun ispratiPorakaMail(email : String, subject : String, message : String) {
+        val mEmail: String = email.toString()
+        val mSubject: String = subject.toString()
+        val mMessage: String = message.toString()
+        val javaMailAPI = MailApi(this, mEmail, mSubject, mMessage)
+        javaMailAPI.execute()
+    }
+
     private fun registerUser() {
         val username : String = registerUsernameEdit.text.toString()
         val password : String = registerPasswordEdit.text.toString()
@@ -101,6 +109,7 @@ class RegisterActivity : AppCompatActivity() {
         val fullname : String = registerFullname.text.toString()
         val odbranPol : String = polOdberi.selectedItem.toString()
         Log.i("POL", odbranPol)
+
 
         val daliEValidno : Boolean = proveriValidnost(username, password, email, fullname)
 
@@ -112,7 +121,7 @@ class RegisterActivity : AppCompatActivity() {
                 .child("users").orderByChild("username").equalTo(username)
 
 
-            val intentActivity = Intent(this, MainActivity::class.java)
+            val intentActivity = Intent(this, VerificationActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
 
             ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -146,6 +155,12 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                                 userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/cover.jpg?alt=media&token=590ea2bd-1f43-40af-9f85-db1d44f3623f"
 
+
+                                val momTimestamp = Timestamp(System.currentTimeMillis()).time.toString()
+                                val kodPotvrda = momTimestamp.substring(momTimestamp.length - 6, momTimestamp.length)
+
+                                userHashMap["kodPotvrda"] = kodPotvrda
+
                                 refUsers.updateChildren(userHashMap)
                                     .addOnCompleteListener {task1 ->
                                         if (task1.isSuccessful) {
@@ -153,6 +168,7 @@ class RegisterActivity : AppCompatActivity() {
                                                 param("registriran", userHashMap["uid"].toString())
                                             }
 
+                                            ispratiPorakaMail(email, getString(R.string.potvrdiAkaunt), kodPotvrda)
                                             startActivity(intentActivity)
                                             finish()
                                         }
