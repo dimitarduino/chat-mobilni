@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginResult
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.protobuf.Value
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
@@ -190,6 +192,7 @@ class WelcomeActivity : AppCompatActivity() {
             userHashMap["gender"] = "Male"
             userHashMap["dostapnost"] = 2
             userHashMap["gostin"] = 1
+            userHashMap["kodPotvrda"] = ""
 
             refUsers.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(p0: DataSnapshot) {
@@ -280,6 +283,7 @@ class WelcomeActivity : AppCompatActivity() {
             userHashMap["gender"] = "Male"
             userHashMap["dostapnost"] = 0
             userHashMap["gostin"] = 0
+            userHashMap["kodPotvrda"] = ""
 
             //proveri prvo dali postoi
             refUsers.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -327,11 +331,39 @@ class WelcomeActivity : AppCompatActivity() {
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
         if (firebaseUser != null) {
-            // ako vekje e najaven odi vo MainActivity direktno
-            val intent = Intent(this, MainActivity::class.java)
+            val intentMain = Intent(this, MainActivity::class.java)
+            val intentVerify = Intent(this, VerificationActivity::class.java)
 
-            startActivity(intent)
-            finish()
+            refUsers = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
+                .reference
+                .child("users")
+                .child(firebaseUser!!.uid)
+
+            refUsers.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists()) {
+                        val najavenKorisnik : Users? = p0.getValue(Users::class.java)
+
+                        if (najavenKorisnik!!.getKodPotvrda() == "") {
+                            Log.i("MAINACTIVITY", "kje vlezam")
+                            startActivity(intentMain)
+                            finish()
+                        } else {
+                            Log.i("MAINACTIVITY", "vo verify")
+
+                            startActivity(intentVerify)
+                            finish()
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+            // ako vekje e najaven odi vo MainActivity direktno
+
         }
     }
 }

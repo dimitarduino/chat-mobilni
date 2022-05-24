@@ -181,7 +181,19 @@ class MainActivity : AppCompatActivity() {
 
         val hashMap = HashMap<String, Any>()
         hashMap["status"] = status
-        ref!!.updateChildren(hashMap)
+
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists()) {
+                    ref!!.updateChildren(hashMap)
+                }
+             }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     override fun onResume() {

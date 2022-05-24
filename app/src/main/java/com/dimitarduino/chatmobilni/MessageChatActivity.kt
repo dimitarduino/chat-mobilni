@@ -80,6 +80,10 @@ class MessageChatActivity : AppCompatActivity() {
 
 
         toolbar.setNavigationOnClickListener {
+            if (dbReference != null) {
+                dbReference!!.removeEventListener(seenListener!!)
+            }
+
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
@@ -463,8 +467,8 @@ class MessageChatActivity : AppCompatActivity() {
         })
     }
 
-    override fun onPause() {
-        super.onPause()
-        dbReference!!.removeEventListener(seenListener!!)
-    }
+//    override fun onPause() {
+////        super.onPause()
+////        dbReference!!.removeEventListener(seenListener!!)
+//    }
 }
