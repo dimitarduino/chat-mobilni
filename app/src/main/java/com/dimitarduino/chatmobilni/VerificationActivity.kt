@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ import com.google.firebase.database.*
 class VerificationActivity : AppCompatActivity() {
     private lateinit var potvrdiProfilBtn : Button
     private lateinit var kodVerifikacijaEdit : EditText
+    private lateinit var vratiNazad : ImageView
 
     //
     private lateinit var mAuth: FirebaseAuth
@@ -27,8 +29,19 @@ class VerificationActivity : AppCompatActivity() {
 
         potvrdiProfilBtn = findViewById(R.id.potvrdiProfilBtn)
         kodVerifikacijaEdit = findViewById(R.id.kod_email)
+        vratiNazad = findViewById(R.id.vratiNazad)
 
         mAuth = FirebaseAuth.getInstance()
+
+        //toolbar
+        vratiNazad.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, WelcomeActivity::class.java)
+
+            startActivity(intent)
+            finish()
+        }
+
 
         var intentMain = Intent(this, MainActivity::class.java)
 

@@ -1,5 +1,9 @@
 package com.dimitarduino.chatmobilni.Fragments
 
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,14 +13,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.dimitarduino.chatmobilni.AdapterClasses.UserAdapter
 import com.dimitarduino.chatmobilni.ModelClasses.Users
-import com.dimitarduino.chatmobilni.ModelClasses.Visits
 import com.dimitarduino.chatmobilni.R
+import com.dimitarduino.chatmobilni.database.AppDatabase
+import com.dimitarduino.chatmobilni.database.KorisnikDb
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -25,7 +31,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.protobuf.Value
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -59,7 +64,16 @@ class SearchFragment : Fragment() {
 
         mUsers = ArrayList()
         najdeniBaranja = ArrayList()
-        retrieveAllUsers()
+
+        if (isOnline(requireContext())) {
+            Log.i("ne e online", "e")
+
+            retrieveAllUsers()
+        } else {
+            Log.i("ne e online", "ne e")
+
+            zemiKorisniciLokalno()
+        }
 
         //onchange listener na search edit text
         searchUsersEdit.addTextChangedListener(object : TextWatcher {
@@ -84,6 +98,84 @@ class SearchFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun zemiKorisniciLokalno() {
+        Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+        val roomDb = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "chatx"
+        ).allowMainThreadQueries().build()
+        var k = roomDb.korisnikDao().getAll()
+        (mUsers as ArrayList<String>).clear()
+        for (korisnik in k) {
+            var korisnikM = Users(korisnik.uid, korisnik.username, korisnik.fullname, korisnik.profile, korisnik.cover, korisnik.status, korisnik.search, korisnik.facebook, korisnik.instagram, korisnik.website, korisnik.gender, korisnik.dostapnost, korisnik.gostin, korisnik.kodPotvrda, korisnik.timestamp)
+
+            (mUsers as ArrayList<Users>).add(korisnikM)
+
+        }
+
+        if (context!= null) {
+            userAdapter = UserAdapter(requireContext(), mUsers!!, false)
+
+            //vrzvanje na recyclerview vo ui so userAdapter
+            recyclerView!!.adapter = userAdapter
+        }
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun dodajVoLokalna(korisnik : Users) {
+        val roomDb = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "chatx"
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+
+        if (korisnik.getUID() != null) {
+            var k = roomDb.korisnikDao().getAll()
+            Log.i("DATABAZA_NAJDEN", k.toString())
+//            for (korisnikLokalno in k) {
+                Log.i("DATABAZA_NAJDEN", "vrtam")
+                var najden = roomDb.korisnikDao().searchFor(korisnik.getUID()!!)
+                Log.i("DATABAZA_NAJDEN", najden.toString())
+                if (najden.size == 0) {
+                    korisnik.getUID()?.let {
+                        roomDb.korisnikDao().insertAll(KorisnikDb(it, korisnik.getUsername(), korisnik.getFullname(), korisnik.getProfile(), korisnik.getCover(), korisnik.getStatus(), korisnik.getSearch(), korisnik.getFacebook(), korisnik.getInstagram(), korisnik.getWebsite(), korisnik.getGender(), korisnik.getTimestamp(), korisnik.getDostapnost(), korisnik.getGostin(), korisnik.getKodPotvrda()))
+                    }
+                } else {
+                    Log.i("DATABAZA", "vekje postoi")
+                }
+//            }
+
+            if (k.size == 0) {
+                korisnik.getUID()?.let {
+                    roomDb.korisnikDao().insertAll(KorisnikDb(it, korisnik.getUsername(), korisnik.getFullname(), korisnik.getProfile(), korisnik.getCover(), korisnik.getStatus(), korisnik.getSearch(), korisnik.getFacebook(), korisnik.getInstagram(), korisnik.getWebsite(), korisnik.getGender(), korisnik.getTimestamp(), korisnik.getDostapnost(), korisnik.getGostin(), korisnik.getKodPotvrda()))
+                }
+            }
+        }
+
     }
 
     private fun izbrisiIstorijaBaranja() {
@@ -144,6 +236,8 @@ class SearchFragment : Fragment() {
 
                                             if (najden == false) {
                                                 (mUsers as ArrayList<Users>).add(otvorenProfilDb)
+
+                                                dodajVoLokalna(otvorenProfilDb)
                                             }
                                         }
 
@@ -184,6 +278,7 @@ class SearchFragment : Fragment() {
                                             for (snapshot in p0.children) {
                                                 val user = snapshot.getValue(Users::class.java)
 
+
                                                 // ako ne sum jas dodaj vo userLista za search
                                                 if (!(user!!.getUID()).equals(firebaseUserId)) {
                                                     //ako e privaten profil ne prikazvaj
@@ -195,6 +290,7 @@ class SearchFragment : Fragment() {
                                                             }
                                                         } else {
                                                             (mUsers as ArrayList<Users>).add(user)
+
                                                         }
                                                     }
                                                 }

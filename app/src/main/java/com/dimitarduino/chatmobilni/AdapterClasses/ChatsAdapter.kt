@@ -22,12 +22,14 @@ import de.hdodenhof.circleimageview.CircleImageView
 class ChatsAdapter(
     mContext: Context,
     mChatList: List<Chat>,
-    imageUrl: String
+    imageUrl: String,
+    isOnline: Boolean
 ) : RecyclerView.Adapter<ChatsAdapter.ViewHolder?>()
 {
     private val mContext: Context
     private val mChatList: List<Chat>
     private val imageUrl: String
+    private val isOnline: Boolean
 
     var firebaseKorisnik: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
 
@@ -35,6 +37,7 @@ class ChatsAdapter(
         this.mChatList = mChatList
         this.mContext = mContext
         this.imageUrl = imageUrl
+        this.isOnline = isOnline
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -52,6 +55,11 @@ class ChatsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val poraka = mChatList[position]
+
+        val porakaId = poraka.getPorakaId()
+        val porakaIme = poraka.getPoraka()
+
+        Log.i("PORAKA_LOCAL", "$porakaId -,p $porakaIme")
 
         if (this.imageUrl.toString() != "") {
             Picasso.get().load(this.imageUrl).into(holder.profilnaSlika)
@@ -114,8 +122,15 @@ class ChatsAdapter(
                 }
         }
 
+        if (poraka.getPrateno() == false) {
+            holder.tekstPoraka!!.background.alpha = 128
+        }
+
         if (position == mChatList.size-1)
         {
+            if (!this.isOnline) {
+                holder.porakaSeen!!.text = ""
+            } else
             if (poraka.getSeen())
             {
                 holder.porakaSeen!!.text = mContext.getString(R.string.procitano)

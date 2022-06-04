@@ -1,5 +1,8 @@
 package com.dimitarduino.chatmobilni.Fragments
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,12 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.dimitarduino.chatmobilni.AdapterClasses.UserAdapter
 import com.dimitarduino.chatmobilni.Izvestuvanja.Token
 import com.dimitarduino.chatmobilni.Izvestuvanja.firebaseInstanceId
 import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
+import com.dimitarduino.chatmobilni.database.AppDatabase
+import com.dimitarduino.chatmobilni.database.KorisnikDb
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 
 class ChatsFragment : Fragment() {
     private var userAdapter : UserAdapter? = null
@@ -45,6 +52,8 @@ class ChatsFragment : Fragment() {
 //        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         korisniciChatList = ArrayList()
 
+
+        //firebase db
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chatList").child(firebaseKorisnik!!.uid)
 
         ref.addValueEventListener(object : ValueEventListener {
@@ -55,8 +64,6 @@ class ChatsFragment : Fragment() {
                 {
                     val korisnik = dataSnapshot.getValue(Chatlist::class.java)
 
-
-                    Log.i("korisnikChatList", korisnik.toString())
                     (korisniciChatList as ArrayList).add(korisnik!!)
                     popolniChatlist()
                 }
@@ -76,9 +83,11 @@ class ChatsFragment : Fragment() {
     }
 
     private fun updateToken(token: String?) {
-        val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("tokens")
-        val token1 = Token(token!!)
-        ref.child(firebaseKorisnik!!.uid).setValue(token1)
+        if (token != null) {
+            val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("tokens")
+            val token1 = Token(token!!)
+            ref.child(firebaseKorisnik!!.uid).setValue(token1)
+        }
     }
 
     private fun popolniChatlist() {

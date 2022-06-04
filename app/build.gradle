@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.firebase.crashlytics'
+    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp' version "$ksp_version"
 }
 
 android {
@@ -9,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.dimitarduino.chatmobilni"
-        minSdk 19
+        minSdk 23
         targetSdk 32
         versionCode 1
         multiDexEnabled = true
@@ -72,6 +74,31 @@ dependencies {
     implementation files('libs/mail.jar')
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("com.android.support:multidex:1.0.3")
+
+    //room
+    implementation("androidx.room:room-runtime:2.4.2")
+    annotationProcessor("androidx.room:room-compiler:2.4.2")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:2.4.2")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:2.4.2")
+
+    // optional - RxJava2 support for Room
+    implementation("androidx.room:room-rxjava2:2.4.2")
+
+    // optional - RxJava3 support for Room
+    implementation("androidx.room:room-rxjava3:2.4.2")
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation("androidx.room:room-guava:2.4.2")
+
+    // optional - Test helpers
+    testImplementation("androidx.room:room-testing:2.4.2")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:2.5.0-alpha01")
 
 }
 

@@ -6,12 +6,13 @@ import com.dimitarduino.chatmobilni.Enkripcija
 
 @Keep
 public class Chat {
-    private var isprakjac: String = ""
-    private var poraka: String = ""
-    private var primac: String = ""
+    private var isprakjac: String? = ""
+    private var poraka: String? = ""
+    private var primac: String? = ""
     private var seen : Boolean = false
-    private var url: String = ""
-    private var porakaId: String = ""
+    private var url: String? = ""
+    private var porakaId: String? = ""
+    private var prateno : Boolean = true
 
     constructor()
 
@@ -22,7 +23,8 @@ public class Chat {
         primac: String,
         seen: Boolean,
         url: String,
-        porakaId: String
+        porakaId: String,
+        prateno: Boolean = true
     ) {
 
         this.isprakjac = isprakjac
@@ -31,6 +33,7 @@ public class Chat {
         this.seen = seen
         this.url = url
         this.porakaId = porakaId
+        this.prateno = prateno
     }
 
 
@@ -43,11 +46,17 @@ public class Chat {
         this.isprakjac = isprakjac!!
     }
 
+    fun getPrateno(): Boolean {
+        return prateno
+    }
+
+    fun setPrateno(prateno: Boolean?) {
+        this.prateno = prateno!!
+    }
+
     fun getPoraka(): String? {
         val enkripcijaDek = Enkripcija()
-        Log.i("ENKRIPCIJA", poraka)
-        Log.i("ENKRIPCIJA", enkripcijaDek.decrypt(poraka).toString())
-        return enkripcijaDek.decrypt(poraka)
+        return poraka?.let { enkripcijaDek.decrypt(it) }
     }
 
     fun setPoraka(poraka: String?) {
@@ -78,7 +87,7 @@ public class Chat {
         this.url = url!!
     }
 
-    fun getPorakaId(): String {
+    fun getPorakaId(): String? {
         return porakaId
     }
 

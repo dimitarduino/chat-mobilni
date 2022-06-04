@@ -1,23 +1,27 @@
 package com.dimitarduino.chatmobilni
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
+import android.net.*
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.dimitarduino.chatmobilni.AdapterClasses.ChatsAdapter
 import com.dimitarduino.chatmobilni.Fragments.APIService
 import com.dimitarduino.chatmobilni.Izvestuvanja.*
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
+import com.dimitarduino.chatmobilni.database.AppDatabase
+import com.dimitarduino.chatmobilni.database.PorakaDb
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.android.material.appbar.AppBarLayout
@@ -36,6 +40,9 @@ import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Response
 import java.sql.Timestamp
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MessageChatActivity : AppCompatActivity() {
     var idNaDrugiot : String = ""
@@ -76,9 +83,6 @@ class MessageChatActivity : AppCompatActivity() {
 
 
         //custom event firebase
-
-
-
         toolbar.setNavigationOnClickListener {
             if (dbReference != null) {
                 dbReference!!.removeEventListener(seenListener!!)
@@ -108,7 +112,6 @@ class MessageChatActivity : AppCompatActivity() {
 
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference
             .child("users").child(idNaDrugiot)
-
         //
         storageReference = FirebaseStorage.getInstance().reference.child("chat_images")
         //definiraj ui komponenti
@@ -123,6 +126,42 @@ class MessageChatActivity : AppCompatActivity() {
 
         //listeners
         //        --listener baza vlecenje na informacii za drugiot korisnik
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            // network is available for use
+            override fun onAvailable(network: Network) {
+                Log.i("KONEKCIJA", "available")
+
+                super.onAvailable(network)
+
+                ispratiNeisprateniPoraki()
+            }
+
+            // Network capabilities have changed for the network
+            override fun onCapabilitiesChanged(
+                network: Network,
+                networkCapabilities: NetworkCapabilities
+            ) {
+                super.onCapabilitiesChanged(network, networkCapabilities)
+                val unmetered = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+            }
+
+            // lost network connection
+            override fun onLost(network: Network) {
+                Log.i("KONEKCIJA", "lost")
+                super.onLost(network)
+            }
+        }
+
+        val connectivityManager = getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+        connectivityManager.requestNetwork(networkRequest, networkCallback)
+
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 val korisnik : Users? = p0.getValue(Users::class.java)
@@ -168,13 +207,99 @@ class MessageChatActivity : AppCompatActivity() {
         seenPoraka(idNaDrugiot)
     }
 
+    private fun ispratiNeisprateniPoraki() {
+        val roomDb = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "chatx"
+        ).allowMainThreadQueries().build()
+
+        var k = roomDb.porakaDao().najdiPorakiChat(idNaDrugiot, FirebaseAuth.getInstance().currentUser!!.uid)
+
+        for (porakaLokalno in k) {
+            Log.i("PORAKA_LOKALNO", porakaLokalno.isprateno.toString())
+            if (porakaLokalno.isprateno == false) {
+                //hashmap prateno = true
+                Log.i("PORAKA_LOKALNO", porakaLokalno.poraka.toString())
+
+                val neispratenaPorakaRef = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats").child(porakaLokalno.porakaId)
+                val porakaIsprateno = HashMap<String, Boolean>()
+                porakaIsprateno["prateno"] = true
+                neispratenaPorakaRef.setValue(porakaIsprateno)
+            }
+        }
+    }
+
+    private fun dodajVoLokalna(poraka : Chat, isprateno: Boolean) {
+        val roomDb = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "chatx"
+        ).allowMainThreadQueries().build()
+
+        Log.i("PORAKADB_NAJDEN1", poraka.getPoraka().toString())
+        Log.i("PORAKADB_NAJDEN1", poraka.getPorakaId().toString())
+
+        if (poraka.getPorakaId() != null) {
+            var k = roomDb.porakaDao().getAll()
+            Log.i("PORAKADB_NAJDEN22", k.toString())
+//            for (porakaLokalno in k) {
+                Log.i("PORAKADB_NAJDEN", "vrtam")
+                var najden = roomDb.porakaDao().searchFor(poraka.getPorakaId().toString())
+                Log.i("PORAKADB_NAJDEN", najden.toString())
+                Log.i("PORAKADB_NAJDEN", isprateno.toString())
+                if (najden.size == 0) {
+                    poraka.getPorakaId()?.let {
+                        roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), isprateno))
+                    }
+                } else {
+                    Log.i("PORAKADB", "vekje postoi")
+                    var d = roomDb.porakaDao().namestiIsprateno(PorakaDb(poraka.getPorakaId()!!, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), isprateno))
+                    Log.i("PORAKADB", "smenav")
+                    Log.i("SMENATO_S", d.toString())
+                }
+//            }
+
+            if (k.size == 0) {
+                poraka.getPorakaId()?.let {
+                    roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), false))
+                }
+            }
+        }
+
+    }
+
     private fun otvoriProfilActivity(idNaDrugiot: String) {
         val intent = Intent(this, VisitUserActivity::class.java)
         intent.putExtra("profilZaOtvoranje", idNaDrugiot)
         startActivity(intent)
     }
 
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     private fun popolniPoraki(isprakjacId: String, primacId: String?, primacSlikaUrl: String?) {
+        Log.i("PORAKA_LOCAL", "polnam")
         porakiLista = ArrayList()
         val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
 
@@ -191,9 +316,22 @@ class MessageChatActivity : AppCompatActivity() {
                     if ((poraka!!.getPrimac().equals(isprakjacId) && poraka.getIsprakjac().equals(primacId))
                         || poraka.getPrimac().equals(primacId) && poraka.getIsprakjac().equals(isprakjacId))
                     {
+
+                        if (poraka.getPrateno() == false) {
+                            val porakaIsprateno = HashMap<String, Boolean>()
+                            porakaIsprateno["prateno"] = true
+
+                            val neispratenaPorakaRef = poraka!!.getPorakaId()?.let {
+                                FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats").child(it).setValue(porakaIsprateno)
+
+                            }
+                        }
                         (porakiLista as ArrayList<Chat>).add(poraka)
+
+                        dodajVoLokalna(poraka, poraka.getPrateno())
+
                     }
-                    chatsAdapter = ChatsAdapter(this@MessageChatActivity, (porakiLista as ArrayList<Chat>), primacSlikaUrl!!)
+                    chatsAdapter = ChatsAdapter(this@MessageChatActivity, (porakiLista as ArrayList<Chat>), primacSlikaUrl!!, isOnline(this@MessageChatActivity))
                     recyclerPoraki.adapter = chatsAdapter
                 }
             }
@@ -253,11 +391,14 @@ class MessageChatActivity : AppCompatActivity() {
                     porakaSlikaHash["url"] = url
                     porakaSlikaHash["porakaId"] = porakaId
 
+                    dodajVoLokalna(Chat(porakaSlikaHash["isprakjac"].toString(), porakaSlikaHash["poraka"].toString(), porakaSlikaHash["primac"].toString(), false, porakaSlikaHash["url"].toString(), porakaSlikaHash["porakaId"].toString()), false)
 
                     Log.i("slika", url)
 
                     ref.child("chats").child(porakaId!!).setValue(porakaSlikaHash).addOnCompleteListener {task ->
                         if (task.isSuccessful) {
+                            dodajVoLokalna(Chat(porakaSlikaHash["isprakjac"].toString(), porakaSlikaHash["poraka"].toString(), porakaSlikaHash["primac"].toString(), false, porakaSlikaHash["url"].toString(), porakaSlikaHash["porakaId"].toString()), true)
+
                             progressBar.visibility = View.INVISIBLE
 
                             firebaseAnalytics.logEvent("pratil_slika") {
@@ -306,10 +447,22 @@ class MessageChatActivity : AppCompatActivity() {
         porakaHashMap["seen"] = false
         porakaHashMap["url"] = ""
         porakaHashMap["porakaId"] = porakaKey
+        porakaHashMap["prateno"] = true
+
+        if (isOnline(applicationContext)) {
+            porakaHashMap["prateno"] = true
+        } else {
+            porakaHashMap["prateno"] = false
+        }
+
+        dodajVoLokalna(Chat(porakaHashMap["isprakjac"].toString(), porakaHashMap["poraka"].toString(), porakaHashMap["primac"].toString(), false, porakaHashMap["url"].toString(), porakaHashMap["porakaId"].toString()), false)
+
 
         ref.child("chats").child(porakaKey!!).setValue(porakaHashMap)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    dodajVoLokalna(Chat(porakaHashMap["isprakjac"].toString(), porakaHashMap["poraka"].toString(), porakaHashMap["primac"].toString(), false, porakaHashMap["url"].toString(), porakaHashMap["porakaId"].toString()), true)
+
                     firebaseAnalytics.logEvent("pratil_tekst") {
                         param("pratil", FirebaseAuth.getInstance().currentUser!!.uid)
                         param("pratil_na", idNaDrugiot)
@@ -382,12 +535,10 @@ class MessageChatActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot)
             {
-                Log.i("notifikacii", "kje prakam 2")
-
                 for (dataSnapshot in p0.children)
                 {
                     val token: Token? = dataSnapshot.getValue(Token::class.java)
-                            Log.i("notifikacii", "kje prakam 3")
+
                     val data = Data(
                         firebaseKorisnik!!.uid,
                         R.mipmap.ic_launcher,
@@ -395,11 +546,6 @@ class MessageChatActivity : AppCompatActivity() {
                         "New Message",
                         idNaDrugiot
                     )
-
-                    Log.i("notifikacii", poraka)
-                    Log.i("notifikacii", username!!.toString())
-                    Log.i("notifikacii", idNaDrugiot.toString())
-                    Log.i("notifikacii", firebaseKorisnik!!.uid.toString())
 
                     val isprakjac = Isprakjac(data!!, token!!.getToken().toString())
 
@@ -442,7 +588,7 @@ class MessageChatActivity : AppCompatActivity() {
 
     private fun seenPoraka(korisnikId: String)
     {
-        Log.i("seen ke napram", "seeen")
+        Log.i("seen ke napram", "seen")
         val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
 
         seenListener = reference!!.addValueEventListener(object : ValueEventListener{

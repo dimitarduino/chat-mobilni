@@ -1,42 +1,42 @@
 package com.dimitarduino.chatmobilni.ModelClasses
 
 class Users {
-    private var uid : String = ""
-    private var username : String = ""
-    private var fullname : String = ""
-    private var profile : String = ""
-    private var cover : String = ""
-    private var status : String = ""
-    private var search : String = ""
-    private var facebook : String = ""
-    private var instagram : String = ""
-    private var website : String = ""
-    private var gender : String = ""
+    private var uid : String? = ""
+    private var username : String? = ""
+    private var fullname : String? = ""
+    private var profile : String? = ""
+    private var cover : String? = ""
+    private var status : String? = ""
+    private var search : String? = ""
+    private var facebook : String? = ""
+    private var instagram : String? = ""
+    private var website : String? = ""
+    private var gender : String? = ""
     private var timestamp : Long? = 0
-    private var dostapnost : Int = 0
-    private var gostin : Int = 0
-    private var kodPotvrda : String = ""
+    private var dostapnost : Int? = 0
+    private var gostin : Int? = 0
+    private var kodPotvrda : String? = ""
 
     constructor() {
 
     }
 
     constructor(
-        uid: String,
-        username: String,
-        fullname: String,
-        profile: String,
-        cover: String,
-        status: String,
-        search: String,
-        facebook: String,
-        instagram: String,
-        website: String,
-        gender: String,
-        dostapnost: Int,
-        gostin: Int,
-        kodPotvrda: String = "",
-        timestamp : Long = 0
+        uid: String?,
+        username: String?,
+        fullname: String?,
+        profile: String?,
+        cover: String?,
+        status: String?,
+        search: String?,
+        facebook: String?,
+        instagram: String?,
+        website: String?,
+        gender: String?,
+        dostapnost: Int?,
+        gostin: Int?,
+        kodPotvrda: String? = "",
+        timestamp : Long? = 0
     ) {
         this.uid = uid
         this.username = username
@@ -79,7 +79,7 @@ class Users {
         this.kodPotvrda = kodPotvrda
     }
 
-    fun getFullname() : String {
+    fun getFullname() : String? {
         return fullname
     }
 
@@ -145,7 +145,7 @@ class Users {
 
 
 
-    fun getGender() : String {
+    fun getGender() : String? {
         return gender
     }
 
@@ -153,7 +153,7 @@ class Users {
         this.gender = gender
     }
 
-    fun getDostapnost() : Int {
+    fun getDostapnost() : Int? {
         return dostapnost
     }
 
@@ -161,7 +161,7 @@ class Users {
         this.dostapnost = dostapnost
     }
 
-    fun getGostin() : Int {
+    fun getGostin() : Int? {
         return gostin
     }
 

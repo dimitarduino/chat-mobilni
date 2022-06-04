@@ -69,7 +69,6 @@ class SettingsFragment : Fragment() {
 
         progressBar.visibility = View.INVISIBLE
 
-
         najavenKorisnik = FirebaseAuth.getInstance().currentUser
         korisniciReference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(najavenKorisnik!!.uid)
         storageReference = FirebaseStorage.getInstance().reference.child("user_images")
@@ -104,7 +103,7 @@ class SettingsFragment : Fragment() {
                         Log.i("proverkaDostapnost", dostapnostSpinner.selectedItemPosition.toString())
                         Log.i("proverkaDostapnost", user.getDostapnost().toString())
                         if (dostapnostSpinner.selectedItemPosition != user.getDostapnost()) {
-                            dostapnostSpinner.setSelection(user.getDostapnost())
+                            user.getDostapnost()?.let { dostapnostSpinner.setSelection(it) }
                         }
 
                         nacrtanoDostapnost = true
