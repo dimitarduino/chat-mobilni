@@ -5,14 +5,19 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.opengl.Visibility
+import android.os.Message
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.dimitarduino.chatmobilni.Fragments.ChatsFragment
+import com.dimitarduino.chatmobilni.Fragments.MessageChatFragment
 import com.dimitarduino.chatmobilni.Fragments.SearchFragment
+import com.dimitarduino.chatmobilni.IListener
 import com.dimitarduino.chatmobilni.MessageChatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Users
@@ -36,14 +41,16 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
-class UserAdapter (
-    mContext : Context,
-    mUsers : List<Users>,
-    isChatCheck : Boolean
+class UserAdapter(
+    mContext: Context,
+    mUsers: List<Users>,
+    isChatCheck: Boolean,
+    listerKlik: IListener
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder?>() {
     private val mContext : Context = mContext
     private val mUsers : List<Users> = mUsers.sortedBy { it.getTimestamp() }.reversed()
     private val isChatCheck : Boolean = isChatCheck
+    private val listerKlik : IListener = listerKlik
     var poslednaPorakaVar : String = ""
     var procitanoPosledna : Boolean = true
     private var firestoreDb : FirebaseFirestore? = null
@@ -131,12 +138,12 @@ class UserAdapter (
         holder.itemView.setOnClickListener{
 
             if (isChatCheck) {
-
-                val intent = Intent(mContext, MessageChatActivity::class.java)
-                intent.putExtra("idNaDrugiot", user.getUID())
-                intent.putExtra("username", user.getUsername())
-                intent.putExtra("profile", user.getProfile())
-                mContext.startActivity(intent)
+                listerKlik.onUserClickListener(user)
+//                val intent = Intent(mContext, MessageChatActivity::class.java)
+//                intent.putExtra("idNaDrugiot", user.getUID())
+//                intent.putExtra("username", user.getUsername())
+//                intent.putExtra("profile", user.getProfile())
+//                mContext.startActivity(intent)
             } else {
 
                 val intent = Intent(mContext, VisitUserActivity::class.java)

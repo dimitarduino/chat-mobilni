@@ -1,15 +1,19 @@
 package com.dimitarduino.chatmobilni
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.ui.AppBarConfiguration
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.viewpager.widget.ViewPager
 import com.dimitarduino.chatmobilni.Fragments.ChatsFragment
+import com.dimitarduino.chatmobilni.Fragments.MessageChatFragment
 import com.dimitarduino.chatmobilni.Fragments.SearchFragment
 import com.dimitarduino.chatmobilni.Fragments.SettingsFragment
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
@@ -23,7 +27,7 @@ import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IListener {
     //varijabli firebase
     var refUsers : DatabaseReference? = null
     var firebaseUser : FirebaseUser? = null
@@ -55,9 +59,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         supportActionBar!!.title = ""
+        var tabLayout : TabLayout? = null
+        var viewPager : ViewPager? = null
 
-        val tabLayout : TabLayout = findViewById(R.id.tabLayout)
-        val viewPager : androidx.viewpager.widget.ViewPager = findViewById(R.id.viewPager)
+        if (isTablet(applicationContext) == false) {
+            tabLayout = findViewById(R.id.tabLayout)
+            viewPager = findViewById(R.id.viewPager)
+        }
 
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
 
@@ -85,8 +93,14 @@ class MainActivity : AppCompatActivity() {
 
                 viewPagerAdapter.addFragment(SearchFragment(), "Search")
                 viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
-                viewPager.adapter = viewPagerAdapter
-                tabLayout.setupWithViewPager(viewPager)
+                if (isTablet(applicationContext) == false) {
+                    if (viewPager != null) {
+                        viewPager.adapter = viewPagerAdapter
+                    }
+                    if (tabLayout != null) {
+                        tabLayout.setupWithViewPager(viewPager)
+                    }
+                }
             }
 
             override fun onCancelled(p0: DatabaseError) {
@@ -140,6 +154,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    fun isTablet(ctx: Context): Boolean {
+        return ctx.getResources()
+            .getConfiguration().screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
     }
 
 //    override fun onSupportNavigateUp(): Boolean {
@@ -206,5 +225,17 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
 
         namestiStatus("offline")
+    }
+
+    override fun onUserClickListener(user : Users?) {
+        Log.i("BASHDAVIDAM", "vlegva")
+        val fragmentPoraka = supportFragmentManager.findFragmentById(R.id.detail_container) as MessageChatFragment?
+        if (user != null) {
+            user.getUID()?.let {
+                if (fragmentPoraka != null) {
+                    fragmentPoraka.kreirajViewPorakiChat(it)
+                }
+            }
+        }
     }
 }

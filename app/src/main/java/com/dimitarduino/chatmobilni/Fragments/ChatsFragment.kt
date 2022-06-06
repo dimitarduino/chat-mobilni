@@ -1,8 +1,8 @@
 package com.dimitarduino.chatmobilni.Fragments
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,16 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.dimitarduino.chatmobilni.AdapterClasses.UserAdapter
+import com.dimitarduino.chatmobilni.IListener
 import com.dimitarduino.chatmobilni.Izvestuvanja.Token
-import com.dimitarduino.chatmobilni.Izvestuvanja.firebaseInstanceId
+import com.dimitarduino.chatmobilni.MessageChatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
-import com.dimitarduino.chatmobilni.database.AppDatabase
-import com.dimitarduino.chatmobilni.database.KorisnikDb
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -28,10 +25,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
 
-class ChatsFragment : Fragment() {
+class ChatsFragment : Fragment(), IListener {
     private var userAdapter : UserAdapter? = null
     private var korisnici : List<Users>? = null
     private var korisniciChatList : List<Chatlist>? = null
@@ -44,7 +39,7 @@ class ChatsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_chats, container, false)
 
-        chatListRecycler = view.findViewById(R.id.chatLista_recycler)
+       chatListRecycler = view.findViewById(R.id.chatLista_recycler)
         chatListRecycler.setHasFixedSize(true)
         chatListRecycler.layoutManager = LinearLayoutManager(context)
 
@@ -111,7 +106,7 @@ class ChatsFragment : Fragment() {
                 }
 
                 if (context != null) {
-                    userAdapter = UserAdapter(context!!, (korisnici as ArrayList<Users>), true)
+                    userAdapter = UserAdapter(context!!, (korisnici as ArrayList<Users>), true, this@ChatsFragment)
 
                     chatListRecycler.adapter = userAdapter
                 }
@@ -124,5 +119,29 @@ class ChatsFragment : Fragment() {
 
         })
 
+    }
+
+    fun isTablet(ctx: Context): Boolean {
+        return ctx.getResources()
+            .getConfiguration().screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
+    }
+
+    override fun onUserClickListener(user: Users?) {
+        if (context?.let { isTablet(it) } == false) {
+            val intent = Intent(context, MessageChatActivity::class.java)
+                intent.putExtra("idNaDrugiot", user!!.getUID())
+                intent.putExtra("user!!name", user!!.getUsername())
+                intent.putExtra("profile", user!!.getProfile())
+                requireContext().startActivity(intent)
+        } else {
+            val fragmentPoraka = parentFragmentManager.findFragmentById(R.id.detail_container) as MessageChatFragment?
+            if (user != null) {
+                user.getUID()?.let {
+                    if (fragmentPoraka != null) {
+                        fragmentPoraka.kreirajViewPorakiChat(it)
+                    }
+                }
+            }
+        }
     }
 }

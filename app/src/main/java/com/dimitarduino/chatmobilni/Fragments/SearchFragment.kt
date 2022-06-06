@@ -1,7 +1,6 @@
 package com.dimitarduino.chatmobilni.Fragments
 
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -19,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.dimitarduino.chatmobilni.AdapterClasses.UserAdapter
+import com.dimitarduino.chatmobilni.IListener
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
 import com.dimitarduino.chatmobilni.database.AppDatabase
@@ -34,7 +34,7 @@ import com.google.firebase.ktx.Firebase
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), IListener {
     private var userAdapter : UserAdapter? = null
     private var mUsers : List<Users>? = null
     private var najdeniBaranja : List<String>? = ArrayList()
@@ -117,7 +117,7 @@ class SearchFragment : Fragment() {
         }
 
         if (context!= null) {
-            userAdapter = UserAdapter(requireContext(), mUsers!!, false)
+            userAdapter = UserAdapter(requireContext(), mUsers!!, false, this)
 
             //vrzvanje na recyclerview vo ui so userAdapter
             recyclerView!!.adapter = userAdapter
@@ -243,7 +243,7 @@ class SearchFragment : Fragment() {
 
                                         if (context != null) {
                                             Log.i("SEARCH", "context ne e null")
-                                            userAdapter = UserAdapter(requireContext(), mUsers!!, false)
+                                            userAdapter = UserAdapter(requireContext(), mUsers!!, false, this@SearchFragment)
 
                                             //vrzvanje na recyclerview vo ui so userAdapter
                                             recyclerView!!.adapter = userAdapter
@@ -299,7 +299,7 @@ class SearchFragment : Fragment() {
 
                                             if (context != null) {
 
-                                                userAdapter = UserAdapter(context!!, mUsers!!, false)
+                                                userAdapter = UserAdapter(context!!, mUsers!!, false, this@SearchFragment)
 
                                                 //vrzvanje na recyclerview vo ui so userAdapter
                                                 recyclerView!!.adapter = userAdapter
@@ -360,7 +360,7 @@ class SearchFragment : Fragment() {
                 }
                 //daj mu vrednost na najdeni korisnici vo userAdapter
                 if (context != null) {
-                    userAdapter = UserAdapter(context!!, mUsers!!, false)
+                    userAdapter = UserAdapter(context!!, mUsers!!, false, this@SearchFragment)
                     //vrzvanje na recyclerview vo ui so userAdapter
                     recyclerView!!.adapter = userAdapter
                 }
@@ -372,6 +372,10 @@ class SearchFragment : Fragment() {
 
         })
         }
+
+    }
+
+    override fun onUserClickListener(user: Users?) {
 
     }
 }
