@@ -36,6 +36,7 @@ import java.util.*
 
 class WelcomeActivity : AppCompatActivity() {
     var firebaseUser : FirebaseUser? = null
+
     private lateinit var registerWelcomeBtn : Button
     private lateinit var loginWelcomeBtn : Button
     private lateinit var googleSignInBtn : Button
@@ -49,6 +50,8 @@ class WelcomeActivity : AppCompatActivity() {
     private lateinit var refUsers : DatabaseReference
     private lateinit var callbackManager: CallbackManager
     private var loginSo : String = ""
+    lateinit var locale: Locale
+    private var currentLanguage = "en"
     companion object {
         const val RC_SIGN_IN = 1001
     }
@@ -61,6 +64,22 @@ class WelcomeActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
         firebaseAnalytics = Firebase.analytics
+
+        intent = intent
+
+        if (intent.getStringExtra("jazik") != null) {
+            currentLanguage = intent.getStringExtra("jazik").toString()
+        }
+
+
+        val sharedPreference =  getSharedPreferences("CHATX",Context.MODE_PRIVATE)
+        val momJazik = sharedPreference.getString("jazik", "en").toString()
+
+        setLocale(momJazik)
+
+
+        Log.i("WELCOME_JAZIK", momJazik)
+
 
         //definiraj ui komponenti
         registerWelcomeBtn = findViewById<Button>(R.id.register_welcome_btn)
@@ -323,6 +342,36 @@ class WelcomeActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         finish()
+    }
+
+
+    private fun setLocale(localeName: String) {
+        Log.i("PROMENIV_JAZIK33", localeName)
+        Log.i("PROMENIV_JAZIK44", currentLanguage)
+        if (localeName != currentLanguage) {
+            Log.i("PROMENIV_JAZIK1", localeName)
+            locale = Locale(localeName)
+            val sharedPreference =  getSharedPreferences("CHATX",Context.MODE_PRIVATE)
+            var editor = sharedPreference.edit()
+            editor.putString("jazik",localeName)
+            editor.commit()
+
+            val res = resources
+            val dm = res.displayMetrics
+            val conf = res.configuration
+            conf.locale = locale
+            res.updateConfiguration(conf, dm)
+            val refresh = Intent(
+                this,
+                WelcomeActivity::class.java
+            )
+            refresh.putExtra("jazik", localeName)
+            currentLanguage = localeName
+            startActivity(refresh)
+        } else {
+//            Toast.makeText(
+//                this@MainActivity, "Language, , already, , selected)!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     override fun onStart() {

@@ -2,6 +2,7 @@ package com.dimitarduino.chatmobilni
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +30,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), IListener {
     //varijabli firebase
@@ -38,6 +43,8 @@ class MainActivity : AppCompatActivity(), IListener {
     //varijabli ui komponenti
     private lateinit var usernameText : TextView
     private lateinit var profileImage : de.hdodenhof.circleimageview.CircleImageView
+    lateinit var locale: Locale
+    private var currentLanguage = "en"
     private var promeniHome : ImageView? = null
     private var promeniSearch : ImageView? = null
     private var promeniProfil : ImageView? = null
@@ -61,6 +68,20 @@ class MainActivity : AppCompatActivity(), IListener {
         usernameText = findViewById(R.id.username_text)
         profileImage = findViewById(R.id.profile_image)
 
+        intent = intent
+
+        if (intent.getStringExtra("jazik") != null) {
+            currentLanguage = intent.getStringExtra("jazik").toString()
+        }
+
+        val sharedPreference =  getSharedPreferences("CHATX",Context.MODE_PRIVATE)
+
+        val momJazik = sharedPreference.getString("jazik", "en").toString()
+//        currentLanguage = momJazik
+        setLocale(momJazik)
+
+
+        Log.i("JAZIK", currentLanguage)
 
         //zemi korisnik firebase
         firebaseUser = FirebaseAuth.getInstance().currentUser
@@ -158,13 +179,13 @@ class MainActivity : AppCompatActivity(), IListener {
                 }
 
                 if (brojNeProcitaniPoraki == 0) {
-                    viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
+                    viewPagerAdapter.addFragment(ChatsFragment(), getString(R.string.chats))
                 } else {
-                    viewPagerAdapter.addFragment(ChatsFragment(), "Chats ($brojNeProcitaniPoraki)")
+                    viewPagerAdapter.addFragment(ChatsFragment(), "${getString(R.string.chats)} ($brojNeProcitaniPoraki)")
                 }
 
-                viewPagerAdapter.addFragment(SearchFragment(), "Search")
-                viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
+                viewPagerAdapter.addFragment(SearchFragment(), getString(R.string.search))
+                viewPagerAdapter.addFragment(SettingsFragment(), getString(R.string.account_settings))
                 if (isTablet(applicationContext) == false) {
                     if (viewPager != null) {
                         viewPager.adapter = viewPagerAdapter
@@ -204,12 +225,29 @@ class MainActivity : AppCompatActivity(), IListener {
                 TODO("Not yet implemented")
             }
         })
+
+//        setLocale(momJazik)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val angliskoPromena = menu!!.findItem(R.id.promeniJazikEn)
+        val makedonskoPromena = menu!!.findItem(R.id.promeniJazikMk)
+
+        if (currentLanguage == "mk") {
+            angliskoPromena.setVisible(true)
+            makedonskoPromena.setVisible(false)
+        } else {
+            makedonskoPromena.setVisible(true)
+            angliskoPromena.setVisible(false)
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -228,9 +266,55 @@ class MainActivity : AppCompatActivity(), IListener {
 
                 return true
             }
+
+            R.id.promeniJazikMk -> {
+                setLocale("mk")
+            }
+
+            R.id.promeniJazikEn -> {
+                setLocale("en")
+            }
         }
 
         return false
+    }
+
+
+    private fun setLocale(localeName: String) {
+        Log.i("PROMENIV_JAZIK33", localeName)
+        Log.i("PROMENIV_JAZIK44", currentLanguage)
+        if (localeName != currentLanguage) {
+            Log.i("PROMENIV_JAZIK1", localeName)
+            locale = Locale(localeName)
+            val sharedPreference =  getSharedPreferences("CHATX",Context.MODE_PRIVATE)
+            var editor = sharedPreference.edit()
+            editor.putString("jazik",localeName)
+            editor.commit()
+
+            val res = resources
+            val dm = res.displayMetrics
+            val conf = res.configuration
+            conf.locale = locale
+            res.updateConfiguration(conf, dm)
+            val refresh = Intent(
+                this,
+                MainActivity::class.java
+            )
+            refresh.putExtra("jazik", localeName)
+            currentLanguage = localeName
+            startActivity(refresh)
+        } else {
+//            Toast.makeText(
+//                this@MainActivity, "Language, , already, , selected)!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    override fun onBackPressed() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        finish()
+        exitProcess(0)
     }
 
     fun isTablet(ctx: Context): Boolean {
