@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.MessageChatFragment">
 
+    <RelativeLayout
+        android:id="@+id/porakiFragmentTablet"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/barLayout_conv"
         android:layout_width="match_parent"
@@ -107,6 +114,7 @@
             android:layout_marginHorizontal="6dp"
             />
 
+    </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

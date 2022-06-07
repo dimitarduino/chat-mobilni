@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.*
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -58,6 +59,7 @@ class MessageChatFragment : Fragment() {
     var notify = false
     var apiService : APIService? = null
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var porakiFragmentTablet : RelativeLayout
 
     //deklariraj ui komponenti
     private lateinit var barLayout : AppBarLayout
@@ -91,15 +93,25 @@ class MessageChatFragment : Fragment() {
         prikaciFajlBtn = view.findViewById(R.id.prikaci_fajl_conv)
         progressBar = view.findViewById(R.id.progressbar)
         recyclerPoraki = view.findViewById(R.id.poraki_lista_recycler)
+        porakiFragmentTablet = view.findViewById(R.id.porakiFragmentTablet)
 
-        kreirajViewPorakiChat("BfPeDdunoeV3hsZSz3EVvf2faLf1")
+
+        porakiFragmentTablet.visibility = View.INVISIBLE
+//        kreirajViewPorakiChat("BfPeDdunoeV3hsZSz3EVvf2faLf1")
+
+
 
         return view
     }
 
     fun kreirajViewPorakiChat(idNaDrugiot: String) {
+        this.idNaDrugiot = idNaDrugiot
         Log.i("kreiram", "kreiram novo so id na drugiot $idNaDrugiot")
 //        val view = layoutInflater.inflate(R.layout.fragment_message_chat, ViewGroup!!, false)
+
+        if (idNaDrugiot != "") {
+            porakiFragmentTablet.visibility = View.VISIBLE
+        }
 
         firebaseAnalytics = Firebase.analytics
 
@@ -371,6 +383,7 @@ class MessageChatFragment : Fragment() {
     }
 
     private fun prikaciSlikaBaza() {
+        Log.i("SLIKA_PRAKA", "KE PRIKACVAM VBAZA")
         progressBar.visibility = View.VISIBLE
 
         if (slikaUri != null) {
@@ -394,7 +407,7 @@ class MessageChatFragment : Fragment() {
 
                     val porakaSlikaHash = HashMap<String, Any?>()
                     porakaSlikaHash["isprakjac"] = firebaseKorisnik!!.uid
-                    porakaSlikaHash["primac"] = idNaDrugiot
+                    porakaSlikaHash["primac"] = this.idNaDrugiot
                     porakaSlikaHash["poraka"] = "sent you an image."
                     porakaSlikaHash["seen"] = false
                     porakaSlikaHash["url"] = url
@@ -571,7 +584,7 @@ class MessageChatFragment : Fragment() {
                                     Log.i("notifikacii", response.body().toString())
                                     if (response.body()!!.success !== 1)
                                     {
-                                        Toast.makeText(requireContext(), getString(R.string.greskaProbaj), Toast.LENGTH_LONG).show()
+//                                        Toast.makeText(requireContext(), getString(R.string.greskaProbaj), Toast.LENGTH_LONG).show()
                                     } else {
 //                                        Toast.makeText(this@MessageChatActivity, "Sent.", Toast.LENGTH_LONG).show()
 

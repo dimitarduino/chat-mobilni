@@ -562,7 +562,7 @@ class MessageChatActivity : AppCompatActivity() {
                                     Log.i("notifikacii", response.body().toString())
                                     if (response.body()!!.success !== 1)
                                     {
-                                        Toast.makeText(this@MessageChatActivity, getString(R.string.greskaProbaj), Toast.LENGTH_LONG).show()
+//                                        Toast.makeText(this@MessageChatActivity, getString(R.string.greskaProbaj), Toast.LENGTH_LONG).show()
                                     } else {
 //                                        Toast.makeText(this@MessageChatActivity, "Sent.", Toast.LENGTH_LONG).show()
 
