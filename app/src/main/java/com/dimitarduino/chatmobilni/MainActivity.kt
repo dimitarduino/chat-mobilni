@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.viewpager.widget.ViewPager
@@ -35,6 +38,15 @@ class MainActivity : AppCompatActivity(), IListener {
     //varijabli ui komponenti
     private lateinit var usernameText : TextView
     private lateinit var profileImage : de.hdodenhof.circleimageview.CircleImageView
+    private var promeniHome : ImageView? = null
+    private var promeniSearch : ImageView? = null
+    private var promeniProfil : ImageView? = null
+    private var promeniHomeAktivno : ImageView? = null
+    private var promeniSearchAktivno : ImageView? = null
+    private var promeniProfilAktivno : ImageView? = null
+    private var fragmentHome : FragmentContainerView? = null
+    private var fragmentSearch : FragmentContainerView? = null
+    private var fragmentProfil : FragmentContainerView? = null
 
     //varijabli funkcionalnosti
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -65,6 +77,66 @@ class MainActivity : AppCompatActivity(), IListener {
         if (isTablet(applicationContext) == false) {
             tabLayout = findViewById(R.id.tabLayout)
             viewPager = findViewById(R.id.viewPager)
+        }
+
+        if (isTablet(applicationContext)) {
+            promeniHome = findViewById(R.id.promeniHome)
+            promeniSearch = findViewById(R.id.promeniSearch)
+            promeniProfil = findViewById(R.id.promeniProfil)
+
+            promeniHomeAktivno = findViewById(R.id.promeniHomeAktivno)
+            promeniSearchAktivno = findViewById(R.id.promeniSearchAktivno)
+            promeniProfilAktivno = findViewById(R.id.promeniProfilAktivno)
+
+            fragmentHome = findViewById(R.id.chats_fragment_tablet)
+            fragmentSearch = findViewById(R.id.search_fragment_tablet)
+            fragmentProfil = findViewById(R.id.settings_fragment_taablet)
+
+            promeniHome!!.setOnClickListener {
+                fragmentHome!!.visibility = View.VISIBLE
+                fragmentSearch!!.visibility = View.GONE
+                fragmentProfil!!.visibility = View.GONE
+
+                promeniHomeAktivno!!.visibility = View.VISIBLE
+                promeniHome!!.visibility = View.GONE
+
+                promeniProfilAktivno!!.visibility = View.GONE
+                promeniProfil!!.visibility = View.VISIBLE
+
+                promeniSearchAktivno!!.visibility = View.GONE
+                promeniSearch!!.visibility = View.VISIBLE
+            }
+
+            promeniSearch!!.setOnClickListener {
+                fragmentHome!!.visibility = View.GONE
+                fragmentSearch!!.visibility = View.VISIBLE
+                fragmentProfil!!.visibility = View.GONE
+
+
+                promeniHomeAktivno!!.visibility = View.GONE
+                promeniHome!!.visibility = View.VISIBLE
+
+                promeniProfilAktivno!!.visibility = View.GONE
+                promeniProfil!!.visibility = View.VISIBLE
+
+                promeniSearchAktivno!!.visibility = View.VISIBLE
+                promeniSearch!!.visibility = View.GONE
+            }
+
+            promeniProfil!!.setOnClickListener {
+                fragmentHome!!.visibility = View.GONE
+                fragmentSearch!!.visibility = View.GONE
+                fragmentProfil!!.visibility = View.VISIBLE
+
+                promeniHomeAktivno!!.visibility = View.GONE
+                promeniHome!!.visibility = View.VISIBLE
+
+                promeniProfilAktivno!!.visibility = View.VISIBLE
+                promeniProfil!!.visibility = View.GONE
+
+                promeniSearchAktivno!!.visibility = View.GONE
+                promeniSearch!!.visibility = View.VISIBLE
+            }
         }
 
         val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
@@ -117,6 +189,11 @@ class MainActivity : AppCompatActivity(), IListener {
                     val user : Users? = p0.getValue(Users::class.java)
                     usernameText.text = user!!.getFullname()
                     Log.i("PROFIL", user.getProfile().toString())
+                    if (isTablet(applicationContext)) {
+                        profileImage.setOnClickListener {
+//                            setContentView()
+                        }
+                    }
                     if (user.getProfile() != "") {
                         Picasso.get().load(user.getProfile()).placeholder(R.drawable.ic_profile).into(profileImage)
                     }

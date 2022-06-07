@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -36,7 +37,67 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            >
+
+        <ImageView
+            android:id="@+id/promeniHome"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/home"
+            android:visibility="gone"
+            />
+
+
+            <ImageView
+                android:id="@+id/promeniHomeAktivno"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                app:tint="@color/purple_500"
+                android:src="@drawable/home"
+                />
+
+        <ImageView
+            android:id="@+id/promeniSearch"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/search"
+            android:layout_marginLeft="20dp" />
+
+            <ImageView
+                android:id="@+id/promeniSearchAktivno"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/search"
+                app:tint="@color/purple_500"
+                android:layout_marginLeft="20dp"
+                android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/promeniProfil"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/profile_nav"
+            android:layout_marginLeft="20dp"
+            />
+
+            <ImageView
+                android:id="@+id/promeniProfilAktivno"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/profile_nav"
+                app:tint="@color/purple_500"
+                android:layout_marginLeft="20dp"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
     </androidx.appcompat.widget.Toolbar>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -49,6 +110,7 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/chats_fragment_tablet"
             android:layout_width="300dp"
+            android:outlineAmbientShadowColor="@color/purple_500"
             android:layout_height="match_parent"
             android:name="com.dimitarduino.chatmobilni.Fragments.ChatsFragment" />
 
@@ -62,6 +124,23 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:name="com.dimitarduino.chatmobilni.Fragments.MessageChatFragment" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/search_fragment_tablet"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:name="com.dimitarduino.chatmobilni.Fragments.SearchFragment"
+            android:visibility="gone"
+            />
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/settings_fragment_taablet"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:name="com.dimitarduino.chatmobilni.Fragments.SettingsFragment"
+            android:visibility="gone"
+            />
     </LinearLayout>
     <!-- The first child view becomes the left pane. When the combined
          desired width (expressed using android:layout_width) would
