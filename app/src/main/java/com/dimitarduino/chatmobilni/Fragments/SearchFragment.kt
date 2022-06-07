@@ -210,6 +210,7 @@ class SearchFragment : Fragment(), IListener {
                     (mUsers as ArrayList<String>).clear()
 
                 if (documents.size() > 0) {
+                    (najdeniBaranja as ArrayList<String>).clear()
                     (mUsers as ArrayList<String>).clear()
 
                     tipRezultati.setText(getString(R.string.prabarani))
@@ -341,14 +342,21 @@ class SearchFragment : Fragment(), IListener {
             Log.i("SEARCH", "KJE BARAM")
         //pri dobivanje na nov podatok od firebase azuriraj najdeni rezultati od searchot
         queryUsers.addValueEventListener(object : ValueEventListener {
+
             override fun onDataChange(p0: DataSnapshot) {
+                (najdeniBaranja as ArrayList<String>).clear()
+                (mUsers as ArrayList<String>).clear()
                 if (p0.exists()) {
-                    tipRezultati.setText(getString(R.string.rezultati))
-                    izbrisiBaranja.visibility = View.GONE
+                    if (context != null) {
+                        tipRezultati.setText(context!!.getString(R.string.rezultati))
+                        izbrisiBaranja.visibility = View.GONE
+                    }
 
                 }else {
-                    tipRezultati.setText(getString(R.string.nemarezultat))
-                    izbrisiBaranja.visibility = View.GONE
+                    if (context != null) {
+                        tipRezultati.setText(context!!.getString(R.string.nemarezultat))
+                        izbrisiBaranja.visibility = View.GONE
+                    }
                 }
                 for (snapshot in p0.children) {
                     val user : Users? = snapshot.getValue(Users::class.java)
