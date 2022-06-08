@@ -2,16 +2,14 @@ package com.dimitarduino.chatmobilni
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.facebook.*
-import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -28,9 +26,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import com.google.protobuf.Value
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 
@@ -71,6 +66,9 @@ class WelcomeActivity : AppCompatActivity() {
             currentLanguage = intent.getStringExtra("jazik").toString()
         }
 
+        val font = Typeface.createFromAsset(assets, "fontawesome-webfont.ttf")
+
+
 
         val sharedPreference =  getSharedPreferences("CHATX",Context.MODE_PRIVATE)
         val momJazik = sharedPreference.getString("jazik", "en").toString()
@@ -88,6 +86,9 @@ class WelcomeActivity : AppCompatActivity() {
         loginX = findViewById(R.id.login_x)
         facebookBtn = findViewById(R.id.facebookLogin)
         facebookLoginBtn = findViewById(R.id.facebookLoginBtn)
+        loginX.setTypeface(font)
+        facebookBtn.setTypeface(font)
+        googleSignInBtn.setTypeface(font)
 
 
         //facebook login

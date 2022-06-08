@@ -30,9 +30,9 @@
     <string name="instagramFollow">Следи ме на Instagram</string>
     <string name="websiteCheck">Види го мојот вебсајт</string>
     <string name="ispratiPoraka">Испрати порака</string>
-    <string name="prodolziFb">Продолжи со Facebook</string>
-    <string name="prodolziGoogle">Продолжи со Google</string>
-    <string name="prodolziGostin">Продолжи како гостин</string>
+    <string name="prodolziFb">&#xf09a;  Продолжи со Facebook</string>
+    <string name="prodolziGoogle">&#xf1a0;  Продолжи со Google</string>
+    <string name="prodolziGostin">&#xf21b;  Продолжи како гостин</string>
     <string name="zacuvaj">Зачувај</string>
     <string name="vidlivost">Видливост:</string>
     <string name="promeniFacebook">Промени Facebook</string>
@@ -73,6 +73,9 @@
         <item>Машко</item>
         <item>Женско</item>
     </string-array>
+
+    <string name="icon_heart">&#xf004;</string>
+
 
     <string-array name="dostapnost_array">
         <item>Јавно</item>

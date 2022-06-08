@@ -55,16 +55,28 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="10dp"
                 android:textSize="28sp" />
-
         </LinearLayout>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/login_x"
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/gostin_bg_btn"
+                android:text="@string/prodolziGostin"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/facebookLoginBtn"
             android:layout_width="400dp"
             android:layout_height="2dp"
             android:paddingTop="15dp"
-            android:layout_marginTop="20dp"
+            android:layout_below="@id/login_x"
+            android:layout_marginTop="60dp"
+
             android:paddingBottom="15dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginHorizontal="10dp"
@@ -77,23 +89,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="60dp"
+            android:layout_below="@id/login_x"
 
-            android:background="@drawable/google_button_bg"
-            android:text="@string/prodolziFb"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login_x"
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/facebookLogin"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/google_button_bg"
-            android:text="@string/prodolziGostin"
+            android:background="@drawable/facebook_bg_btn"
+            android:text="@string/prodolziFb"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />
 
@@ -101,7 +101,7 @@
             android:id="@+id/googleSignIn"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_x"
+            android:layout_below="@id/facebookLogin"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/login_welcome_btn"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/register_btn_bg"
             android:text="@string/signup"
