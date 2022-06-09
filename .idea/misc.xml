@@ -28,7 +28,7 @@
         <entry key="app/src/main/res/layout/activity_chat_content.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/activity_message_chat.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_message_chat.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_poraka_detail.xml" value="0.16354166666666667" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_tablet_main.xml" value="0.16354166666666667" />
@@ -44,11 +44,12 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.375" />
         <entry key="app/src/main/res/layout/pol_spinner.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/received_message.xml" value="0.32708333333333334" />
-        <entry key="app/src/main/res/layout/sent_message.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/sent_message.xml" value="0.165" />
         <entry key="app/src/main/res/layout/user_chat_item_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/user_search_item_layout.xml" value="0.335" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1245" />
+        <entry key="app/src/main/res/xml/fileprovider.xml" value="0.1" />
         <entry key="app/src/main/res/xml/provider_paths.xml" value="0.16893115942028986" />
       </map>
     </option>

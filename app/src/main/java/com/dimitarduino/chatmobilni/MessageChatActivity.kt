@@ -1,16 +1,24 @@
 package com.dimitarduino.chatmobilni
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.net.*
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -39,6 +47,7 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
 import java.sql.Timestamp
 import java.util.*
 import kotlin.collections.ArrayList
@@ -64,6 +73,7 @@ class MessageChatActivity : AppCompatActivity() {
     private lateinit var porakiListaRecycler : RecyclerView
     private lateinit var novaPorakaCelina : RelativeLayout
     private lateinit var prikaciFajlBtn : ImageView
+    private lateinit var slikajBtn : ImageView
     private lateinit var ispratiPorakaBtn : CircleImageView
     private lateinit var novaPorakaEdit : EditText
     private lateinit var progressBar : ProgressBar
@@ -120,9 +130,22 @@ class MessageChatActivity : AppCompatActivity() {
         korisnickoConv = findViewById(R.id.korisnicko_conv)
         profilnaConv = findViewById(R.id.profilna_conv)
         prikaciFajlBtn = findViewById(R.id.prikaci_fajl_conv)
+        slikajBtn = findViewById(R.id.slikaj_conv)
         progressBar = findViewById(R.id.progressbar)
 
         progressBar.visibility = View.INVISIBLE
+
+        slikajBtn.setOnClickListener {
+            //intent to open camera app
+
+            if (allPermissionsGranted()) {
+                startCamera()
+            } else {
+                ActivityCompat.requestPermissions(
+                    this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+            }
+
+        }
 
         //listeners
         //        --listener baza vlecenje na informacii za drugiot korisnik
@@ -205,6 +228,67 @@ class MessageChatActivity : AppCompatActivity() {
         }
 
         seenPoraka(idNaDrugiot)
+    }
+
+    var resultLauncherCamera =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                handleCameraImage(result.data)
+//                    val data: Intent? = result.data
+//                    Log.i("slika", data.toString())
+//                    Log.i("slika", data!!.extras!!.get("data").toString())
+//                    slikaUri = data!!.data
+//
+//                Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
+//                    prikaciSlikaBaza()
+            }
+        }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults:
+        IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
+                startCamera()
+            } else {
+                Toast.makeText(this,
+                    "Permissions not granted by the user.",
+                    Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+    }
+
+    fun startCamera() {
+
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        resultLauncherCamera.launch(cameraIntent)
+    }
+
+
+    fun getImageUri(src: Bitmap, format: CompressFormat?, quality: Int): Uri? {
+        val os = ByteArrayOutputStream()
+        src.compress(format, quality, os)
+        val path = MediaStore.Images.Media.insertImage(contentResolver, src, "title", null)
+        return Uri.parse(path)
+    }
+
+    private fun handleCameraImage(intent: Intent?) {
+        val bitmap = intent?.extras?.get("data") as Bitmap
+//        ivPhoto.setImageBitmap(bitmap)
+
+        slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 100)
+
+        Log.i("SLIKANO", slikaUri.toString())
+
+        prikaciSlikaBaza()
     }
 
     private fun ispratiNeisprateniPoraki() {
@@ -355,7 +439,7 @@ class MessageChatActivity : AppCompatActivity() {
 
             slikaUri = data!!.data
 
-//            Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
 
             prikaciSlikaBaza()
         }
@@ -363,6 +447,8 @@ class MessageChatActivity : AppCompatActivity() {
 
     private fun prikaciSlikaBaza() {
         progressBar.visibility = View.VISIBLE
+
+        Log.i("slika", slikaUri.toString())
 
         if (slikaUri != null) {
             val ref = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference
@@ -611,6 +697,20 @@ class MessageChatActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+    companion object {
+        private const val TAG = "Chatx"
+        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+        const val REQUEST_CODE_PERMISSIONS = 10
+        val REQUIRED_PERMISSIONS =
+            mutableListOf (
+                Manifest.permission.CAMERA
+            ).apply {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+            }.toTypedArray()
     }
 
 //    override fun onPause() {

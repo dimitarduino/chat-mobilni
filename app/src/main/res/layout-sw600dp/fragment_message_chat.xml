@@ -78,12 +78,23 @@
         >
         <ImageView
             android:id="@+id/prikaci_fajl_conv"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:background="@drawable/attachments"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginTop="8dp"
+            />
+
+        <ImageView
+            android:id="@+id/slikaj_conv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/camera"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@id/prikaci_fajl_conv"
             android:layout_marginHorizontal="6dp"
             android:layout_marginTop="8dp"
             />
@@ -95,7 +106,7 @@
             android:maxLines="10"
             android:background="@color/inputBackground"
             android:hint="@string/porakaHint"
-            android:layout_toRightOf="@+id/prikaci_fajl_conv"
+            android:layout_toRightOf="@+id/slikaj_conv"
             android:layout_toLeftOf="@+id/isprati_poraka_button"
             android:minHeight="10dp"
             android:text=""
