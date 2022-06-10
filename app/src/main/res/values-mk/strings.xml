@@ -69,6 +69,8 @@
     <string name="emailKod">Верификациски код</string>
     <string name="submit">Внеси</string>
     <string name="failVerification">Грешка при валидација</string>
+    <string name="skenirajQr">Скенирај QR код</string>
+    <string name="spodeliProfil">Сподели профил</string>
     <string-array name="pol_array">
         <item>Машко</item>
         <item>Женско</item>

@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/facebook_bg_btn.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/google_button_bg.xml" value="0.179" />
         <entry key="app/src/main/res/drawable/gostin_bg_btn.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/ic_close_black_24dp.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/input_send_message_bg.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/register_btn_bg.xml" value="0.194" />
         <entry key="app/src/main/res/drawable/sent_message_bg.xml" value="0.2045" />
@@ -41,13 +42,15 @@
         <entry key="app/src/main/res/layout/fragment_message_chat.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_poraka_detail.xml" value="0.1590678824721378" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.335" />
         <entry key="app/src/main/res/layout/pol_spinner.xml" value="0.32708333333333334" />
+        <entry key="app/src/main/res/layout/qr_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/received_message.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/sent_message.xml" value="0.165" />
         <entry key="app/src/main/res/layout/user_chat_item_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/user_search_item_layout.xml" value="0.335" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/qr_dialog.xml" value="0.26849080803762293" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1245" />
         <entry key="app/src/main/res/xml/fileprovider.xml" value="0.1" />
         <entry key="app/src/main/res/xml/provider_paths.xml" value="0.16893115942028986" />

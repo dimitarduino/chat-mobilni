@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dimitarduino.chatmobilni.MainActivity">
     <item
+        android:id="@+id/skenirajQr"
+        android:orderInCategory="100"
+        android:title="@string/skenirajQr"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+
+    <item
         android:id="@+id/promeniJazikMk"
         android:orderInCategory="100"
         android:title="@string/promeniJazikMk"

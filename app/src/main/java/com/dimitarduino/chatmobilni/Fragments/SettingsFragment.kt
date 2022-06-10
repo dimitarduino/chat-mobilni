@@ -14,6 +14,7 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.dimitarduino.chatmobilni.ModelClasses.Users
+import com.dimitarduino.chatmobilni.QrDialog
 import com.dimitarduino.chatmobilni.R
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -42,6 +43,7 @@ class SettingsFragment : Fragment() {
     private lateinit var korisnickoImeProfil : TextView
     private lateinit var fullnameProfil : TextView
     private lateinit var naslovnaSlikaProfil : ImageView
+    private lateinit var generirajQr : ImageView
     private lateinit var facebookProfil : LinearLayout
     private lateinit var instaProfil : LinearLayout
     private lateinit var websiteProfil : LinearLayout
@@ -66,6 +68,7 @@ class SettingsFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressbar)
         dostapnostSpinner = view.findViewById(R.id.dostapnost_spinner)
         zacuvajDostapnostBtn = view.findViewById(R.id.zacuvajDostapnost)
+        generirajQr = view.findViewById(R.id.generirajQr)
 
         progressBar.visibility = View.INVISIBLE
 
@@ -89,6 +92,11 @@ class SettingsFragment : Fragment() {
 
         zacuvajDostapnostBtn.setOnClickListener {
             zacuvajDostapnost(dostapnostSpinner.selectedItemPosition)
+        }
+
+        generirajQr.setOnClickListener {
+                val link = "https://google.com/" + najavenKorisnik!!.uid.toString()
+            openDialog(link)
         }
 
         korisniciReference!!.addValueEventListener(object : ValueEventListener {
@@ -156,6 +164,12 @@ class SettingsFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun openDialog(link : String) {
+        Log.i("LINK", link)
+        val qrDialog : QrDialog = QrDialog()
+        qrDialog.display(requireActivity().supportFragmentManager)
     }
 
     @SuppressLint("ResourceAsColor", "RestrictedApi")

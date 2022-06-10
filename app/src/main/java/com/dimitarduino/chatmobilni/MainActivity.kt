@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -29,6 +31,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.qrcode.QRCodeWriter
 import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
@@ -48,6 +53,7 @@ class MainActivity : AppCompatActivity(), IListener {
     private var promeniHome : ImageView? = null
     private var promeniSearch : ImageView? = null
     private var promeniProfil : ImageView? = null
+    private var qrCodeSlika : ImageView? = null
     private var promeniHomeAktivno : ImageView? = null
     private var promeniSearchAktivno : ImageView? = null
     private var promeniProfilAktivno : ImageView? = null
@@ -67,6 +73,11 @@ class MainActivity : AppCompatActivity(), IListener {
         //deklariraj ui komponenti
         usernameText = findViewById(R.id.username_text)
         profileImage = findViewById(R.id.profile_image)
+        qrCodeSlika = findViewById(R.id.qrCodeSlika)
+
+//        if (qrCodeSlika != null) {
+//            qrCodeSlika!!.setImageBitmap(getQrCodeBitmap())
+//        }
 
         intent = intent
 
@@ -267,6 +278,10 @@ class MainActivity : AppCompatActivity(), IListener {
                 return true
             }
 
+            R.id.skenirajQr -> {
+
+            }
+
             R.id.promeniJazikMk -> {
                 setLocale("mk")
             }
@@ -395,6 +410,20 @@ class MainActivity : AppCompatActivity(), IListener {
             user.getUID()?.let {
                 if (fragmentPoraka != null) {
                     fragmentPoraka.kreirajViewPorakiChat(it)
+                }
+            }
+        }
+    }
+
+    fun getQrCodeBitmap(): Bitmap {
+        val size = 512 //pixels
+        val qrCodeContent = "https://google.com"
+        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // Make the QR code buffer border narrower
+        val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
+        return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
+            for (x in 0 until size) {
+                for (y in 0 until size) {
+                    it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
                 }
             }
         }
