@@ -64,6 +64,7 @@ class MessageChatActivity : AppCompatActivity() {
     var notify = false
     var apiService : APIService? = null
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private var slikaNaDrugiot = ""
 
     //deklariraj ui komponenti
     private lateinit var barLayout : AppBarLayout
@@ -239,7 +240,7 @@ class MessageChatActivity : AppCompatActivity() {
 //                    Log.i("slika", data!!.extras!!.get("data").toString())
 //                    slikaUri = data!!.data
 //
-//                Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
 //                    prikaciSlikaBaza()
             }
         }
@@ -303,54 +304,137 @@ class MessageChatActivity : AppCompatActivity() {
         for (porakaLokalno in k) {
             Log.i("PORAKA_LOKALNO", porakaLokalno.isprateno.toString())
             if (porakaLokalno.isprateno == false) {
+                //ne samo prateno tuku se update
+
                 //hashmap prateno = true
                 Log.i("PORAKA_LOKALNO", porakaLokalno.poraka.toString())
 
                 val neispratenaPorakaRef = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats").child(porakaLokalno.porakaId)
-                val porakaIsprateno = HashMap<String, Boolean>()
+
+                var enkripcija : Enkripcija
+                enkripcija = Enkripcija()
+                val enkriptiranaPoraka = porakaLokalno.poraka?.let { enkripcija.encrypt(it).toString() }
+
+
+                val porakaIsprateno = HashMap<String, Any>()
                 porakaIsprateno["prateno"] = true
-                neispratenaPorakaRef.setValue(porakaIsprateno)
+                porakaIsprateno["isprakjac"] = porakaLokalno.isprakjac.toString()
+                porakaIsprateno["primac"] = porakaLokalno.primac.toString()
+                porakaIsprateno["seen"] = porakaLokalno.seen!!
+                porakaIsprateno["poraka"] = enkriptiranaPoraka.toString()
+                porakaIsprateno["porakaId"] = porakaLokalno.porakaId
+                porakaIsprateno["url"] = porakaLokalno.url.toString()
+                neispratenaPorakaRef.updateChildren(porakaIsprateno)
             }
         }
+
+        popolniPoraki(FirebaseAuth.getInstance().currentUser!!.uid, idNaDrugiot, slikaNaDrugiot)
     }
 
     private fun dodajVoLokalna(poraka : Chat, isprateno: Boolean) {
+        Log.i("PORAKA_LOKALNO", "kje dodavam so status $isprateno - ${poraka.getPorakaId()}")
+        //ako tuka ja nema vo musers dodaj ja
+
         val roomDb = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java,
             "chatx"
         ).allowMainThreadQueries().build()
 
-        Log.i("PORAKADB_NAJDEN1", poraka.getPoraka().toString())
-        Log.i("PORAKADB_NAJDEN1", poraka.getPorakaId().toString())
+        var ispratenoInternet = isprateno
+
+        if (isOnline(applicationContext)) ispratenoInternet = true
 
         if (poraka.getPorakaId() != null) {
             var k = roomDb.porakaDao().getAll()
-            Log.i("PORAKADB_NAJDEN22", k.toString())
+
 //            for (porakaLokalno in k) {
-                Log.i("PORAKADB_NAJDEN", "vrtam")
                 var najden = roomDb.porakaDao().searchFor(poraka.getPorakaId().toString())
-                Log.i("PORAKADB_NAJDEN", najden.toString())
-                Log.i("PORAKADB_NAJDEN", isprateno.toString())
+
                 if (najden.size == 0) {
                     poraka.getPorakaId()?.let {
-                        roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), isprateno))
+                        roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), ispratenoInternet))
                     }
                 } else {
-                    Log.i("PORAKADB", "vekje postoi")
-                    var d = roomDb.porakaDao().namestiIsprateno(PorakaDb(poraka.getPorakaId()!!, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), isprateno))
-                    Log.i("PORAKADB", "smenav")
-                    Log.i("SMENATO_S", d.toString())
+                        var d = roomDb.porakaDao().namestiIsprateno(PorakaDb(poraka.getPorakaId()!!, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), true))
+
                 }
 //            }
 
             if (k.size == 0) {
                 poraka.getPorakaId()?.let {
-                    roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), false))
+                    roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), ispratenoInternet))
                 }
+            }
+
+            if (isOnline(applicationContext) == false) {
+                Log.i("CITANJE_PORAKI", "offline e")
+                //
+                popolniPorakiLokalno(poraka.getIsprakjac()!!, poraka.getPrimac()!!, slikaNaDrugiot)
             }
         }
 
+    }
+
+    private fun popolniPorakiLokalno(isprakjac: String, primac: String, primacSlikaUrl: String?) {
+//        if (primacSlikaUrl != null) {
+//            slikaNaDrugiot = primacSlikaUrl
+//        }
+
+        Log.i("PORAKI_LOKALNO", "lokalno polnam")
+
+        if (isOnline(applicationContext)) {
+            Log.i("PORAKI_LOKALNO", "neam lokalno polnam")
+
+            popolniPoraki(isprakjac, primac, primacSlikaUrl)
+        } else {
+            if (isprakjac != null && primac != null) {
+                (porakiLista as ArrayList<Chat>).clear()
+
+                val roomDb = Room.databaseBuilder(
+                    applicationContext,
+                    AppDatabase::class.java,
+                    "chatx"
+                ).allowMainThreadQueries().build()
+                var k = roomDb.porakaDao().getAll()
+
+
+                for (p in k) {
+    //                val poraka = p.getValue(Chat::class.java)
+
+                    val poraka =
+                        p.isprakjac?.let { p.poraka?.let { it1 ->
+                            p.primac?.let { it2 ->
+                                p.seen?.let { it3 ->
+                                    p.url?.let { it4 ->
+                                        p.isprateno?.let { it5 ->
+                                            Chat(it,
+                                                it1, it2, it3, it4, p.porakaId, it5
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        } }
+
+                    if (poraka != null) {
+
+                        Log.i("DATA", poraka.toString())
+
+                        if ((poraka!!.getPrimac().equals(isprakjac) && poraka.getIsprakjac().equals(primac))
+                            || poraka.getPrimac().equals(primac) && poraka.getIsprakjac().equals(isprakjac))
+                        {
+                            Log.i("PORAKA_POLNENJE", "polnam poraka ${poraka.getPoraka()} i pratena: ${poraka.getPrateno()} - ${poraka.getPorakaId()}")
+                            (porakiLista as ArrayList<Chat>).add(poraka)
+                        }
+                        if (chatsAdapter != null) {
+                            chatsAdapter!!.notifyDataSetChanged()
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     private fun otvoriProfilActivity(idNaDrugiot: String) {
@@ -383,48 +467,60 @@ class MessageChatActivity : AppCompatActivity() {
     }
 
     private fun popolniPoraki(isprakjacId: String, primacId: String?, primacSlikaUrl: String?) {
+        if (primacSlikaUrl != null) slikaNaDrugiot = primacSlikaUrl
         Log.i("PORAKA_LOCAL", "polnam")
         porakiLista = ArrayList()
         val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats")
 
-        reference.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(p0: DataSnapshot)
-            {
-                (porakiLista as ArrayList<Chat>).clear()
-                for (snapshot in p0.children)
+        if (isOnline(applicationContext)) {
+            reference.addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(p0: DataSnapshot)
                 {
-                    val poraka = snapshot.getValue(Chat::class.java)
+                    if (isOnline(applicationContext)) {
+                        (porakiLista as ArrayList<Chat>).clear()
+                        for (snapshot in p0.children)
+                        {
+                            val poraka = snapshot.getValue(Chat::class.java)
 
-                    Log.i("DATA", poraka.toString())
+                            Log.i("DATA", poraka.toString())
 
-                    if ((poraka!!.getPrimac().equals(isprakjacId) && poraka.getIsprakjac().equals(primacId))
-                        || poraka.getPrimac().equals(primacId) && poraka.getIsprakjac().equals(isprakjacId))
-                    {
+                            if ((poraka!!.getPrimac().equals(isprakjacId) && poraka.getIsprakjac().equals(primacId))
+                                || poraka.getPrimac().equals(primacId) && poraka.getIsprakjac().equals(isprakjacId))
+                            {
 
-                        if (poraka.getPrateno() == false) {
-                            val porakaIsprateno = HashMap<String, Boolean>()
-                            porakaIsprateno["prateno"] = true
+                                if (poraka.getPrateno() == false) {
+//                                    val porakaIsprateno = HashMap<String, Any>()
+//                                    porakaIsprateno["prateno"] = true
+//
+//                                    val neispratenaPorakaRef = poraka!!.getPorakaId()?.let {
+//                                        FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats").child(it).updateChildren(porakaIsprateno)
+//
+//                                    }
+                                }
+                                (porakiLista as ArrayList<Chat>).add(poraka)
 
-                            val neispratenaPorakaRef = poraka!!.getPorakaId()?.let {
-                                FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("chats").child(it).setValue(porakaIsprateno)
+                                dodajVoLokalna(poraka, true)
 
                             }
+                            chatsAdapter = ChatsAdapter(this@MessageChatActivity, (porakiLista as ArrayList<Chat>), primacSlikaUrl!!, isOnline(this@MessageChatActivity))
+                            recyclerPoraki.adapter = chatsAdapter
                         }
-                        (porakiLista as ArrayList<Chat>).add(poraka)
-
-                        dodajVoLokalna(poraka, poraka.getPrateno())
-
+                    } else {
+                        if (primacId != null) {
+                            popolniPorakiLokalno(isprakjacId, primacId, primacSlikaUrl)
+                        }
                     }
-                    chatsAdapter = ChatsAdapter(this@MessageChatActivity, (porakiLista as ArrayList<Chat>), primacSlikaUrl!!, isOnline(this@MessageChatActivity))
-                    recyclerPoraki.adapter = chatsAdapter
+
                 }
-            }
 
-            override fun onCancelled(p0: DatabaseError) {
+                override fun onCancelled(p0: DatabaseError) {
 
-            }
-        })
-    }
+                }
+            })
+        } else {
+            popolniPorakiLokalno(isprakjacId, primacId!!, primacSlikaUrl!!)
+        }
+}
 
     private fun pickImage() {
         val intent = Intent()
@@ -543,53 +639,67 @@ class MessageChatActivity : AppCompatActivity() {
 
         dodajVoLokalna(Chat(porakaHashMap["isprakjac"].toString(), porakaHashMap["poraka"].toString(), porakaHashMap["primac"].toString(), false, porakaHashMap["url"].toString(), porakaHashMap["porakaId"].toString()), false)
 
+        if (isOnline(applicationContext)) {
 
-        ref.child("chats").child(porakaKey!!).setValue(porakaHashMap)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    dodajVoLokalna(Chat(porakaHashMap["isprakjac"].toString(), porakaHashMap["poraka"].toString(), porakaHashMap["primac"].toString(), false, porakaHashMap["url"].toString(), porakaHashMap["porakaId"].toString()), true)
+            ref.child("chats").child(porakaKey!!).setValue(porakaHashMap)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        dodajVoLokalna(
+                            Chat(
+                                porakaHashMap["isprakjac"].toString(),
+                                porakaHashMap["poraka"].toString(),
+                                porakaHashMap["primac"].toString(),
+                                false,
+                                porakaHashMap["url"].toString(),
+                                porakaHashMap["porakaId"].toString()
+                            ), true
+                        )
 
-                    firebaseAnalytics.logEvent("pratil_tekst") {
-                        param("pratil", FirebaseAuth.getInstance().currentUser!!.uid)
-                        param("pratil_na", idNaDrugiot)
-                    }
+                        firebaseAnalytics.logEvent("pratil_tekst") {
+                            param("pratil", FirebaseAuth.getInstance().currentUser!!.uid)
+                            param("pratil_na", idNaDrugiot)
+                        }
 
-                    val chatsListReference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
-                        .reference
-                        .child("chatList")
-                        .child(firebaseKorisnik!!.uid)
-                        .child(idNaDrugiot)
-
-                    val momTimestamp = Timestamp(System.currentTimeMillis()).time
-
-                    val chatListTvoj = Chatlist(idNaDrugiot, momTimestamp)
-                    val chatListNadrug = Chatlist(firebaseKorisnik!!.uid, momTimestamp)
-
-                    chatsListReference.addListenerForSingleValueEvent(object : ValueEventListener{
-                        override fun onDataChange(p0: DataSnapshot) {
-                            if (!p0.exists())
-                            {
-                                chatsListReference.setValue(chatListTvoj)
-                            } else {
-                                chatsListReference.child("timestamp").setValue(momTimestamp)
-                            }
-
-                            val chatlistaNaDrugiotRef = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
+                        val chatsListReference =
+                            FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
                                 .reference
                                 .child("chatList")
-                                .child(idNaDrugiot)
                                 .child(firebaseKorisnik!!.uid)
+                                .child(idNaDrugiot)
 
-                            chatlistaNaDrugiotRef.setValue(chatListNadrug)
-                        }
+                        val momTimestamp = Timestamp(System.currentTimeMillis()).time
 
-                        override fun onCancelled(p0: DatabaseError) {
+                        val chatListTvoj = Chatlist(idNaDrugiot, momTimestamp)
+                        val chatListNadrug = Chatlist(firebaseKorisnik!!.uid, momTimestamp)
 
-                        }
-                    })
+                        chatsListReference.addListenerForSingleValueEvent(object :
+                            ValueEventListener {
+                            override fun onDataChange(p0: DataSnapshot) {
+                                if (!p0.exists()) {
+                                    chatsListReference.setValue(chatListTvoj)
+                                } else {
+                                    chatsListReference.child("timestamp").setValue(momTimestamp)
+                                }
+
+                                val chatlistaNaDrugiotRef =
+                                    FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/")
+                                        .reference
+                                        .child("chatList")
+                                        .child(idNaDrugiot)
+                                        .child(firebaseKorisnik!!.uid)
+
+                                chatlistaNaDrugiotRef.setValue(chatListNadrug)
+                            }
+
+                            override fun onCancelled(p0: DatabaseError) {
+
+                            }
+                        })
+                    }
                 }
+        } else {
+            popolniPorakiLokalno(najavenKorisnik, idNaDrugiot, slikaNaDrugiot)
         }
-
         //push notifikacii
         val reference = FirebaseDatabase.getInstance("https://chatmobilni-default-rtdb.firebaseio.com/").reference.child("users").child(firebaseKorisnik!!.uid)
 

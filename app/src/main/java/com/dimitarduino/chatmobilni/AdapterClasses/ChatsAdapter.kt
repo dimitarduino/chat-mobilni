@@ -124,6 +124,8 @@ class ChatsAdapter(
 
         if (poraka.getPrateno() == false) {
             holder.tekstPoraka!!.background.alpha = 128
+        } else {
+            holder.tekstPoraka!!.background.alpha = 255
         }
 
         if (position == mChatList.size-1)

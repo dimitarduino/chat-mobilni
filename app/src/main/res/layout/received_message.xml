@@ -34,7 +34,7 @@
             android:id="@+id/primenaSlika"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_toRightOf="@+id/profilnaDrug"
+            android:layout_toRightOf="@+id/profilnaKorisnik"
             android:layout_marginLeft="6dp"
             android:visibility="gone"
             />
