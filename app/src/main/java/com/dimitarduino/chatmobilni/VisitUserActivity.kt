@@ -1,6 +1,8 @@
 package com.dimitarduino.chatmobilni
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -130,10 +132,23 @@ class VisitUserActivity : AppCompatActivity() {
         }
 
         ispratiPorakaProfil.setOnClickListener {
-            val intent = Intent(this, MessageChatActivity::class.java)
-            intent.putExtra("idNaDrugiot", korisnik!!.getUID())
-            startActivity(intent)
+            if (isTablet(applicationContext) == false) {
+                val intent = Intent(this, MessageChatActivity::class.java)
+                intent.putExtra("idNaDrugiot", korisnik!!.getUID())
+                startActivity(intent)
+            } else {
+                val intentMain = Intent(this, MainActivity::class.java)
+
+                intentMain.putExtra("idChat", korisnik!!.getUID())
+                startActivity(intentMain)
+                finish()
+            }
         }
+    }
+
+    fun isTablet(ctx: Context): Boolean {
+        return ctx.getResources()
+            .getConfiguration().screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
     }
 
 }

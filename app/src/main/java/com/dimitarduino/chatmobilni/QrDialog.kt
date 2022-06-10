@@ -20,7 +20,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 
 
 class QrDialog : DialogFragment() {
-    private var link = "https://dimitar40.com" + FirebaseAuth.getInstance().currentUser!!.uid
+    private var link = "https://chatmobilni.com/user/" + FirebaseAuth.getInstance().currentUser!!.uid
     val TAG = "qr_dialog"
 
     private var toolbar: Toolbar? = null

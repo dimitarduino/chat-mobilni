@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -241,6 +242,7 @@ class MainActivity : AppCompatActivity(), IListener {
 
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -279,7 +281,9 @@ class MainActivity : AppCompatActivity(), IListener {
             }
 
             R.id.skenirajQr -> {
-
+                val intent = Intent(this, SkenirajQRActivity::class.java)
+                startActivity(intent)
+                finish()
             }
 
             R.id.promeniJazikMk -> {
@@ -330,6 +334,15 @@ class MainActivity : AppCompatActivity(), IListener {
         startActivity(intent)
         finish()
         exitProcess(0)
+    }
+
+    fun odberiChatTablet() {
+        if (intent.getStringExtra("idChat") != null) {
+            val fragmentPoraka = supportFragmentManager.findFragmentById(R.id.detail_container) as MessageChatFragment?
+            if (fragmentPoraka != null) {
+                fragmentPoraka.kreirajViewPorakiChat(intent.getStringExtra("idChat").toString())
+            }
+        }
     }
 
     fun isTablet(ctx: Context): Boolean {

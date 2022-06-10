@@ -7,7 +7,6 @@
         android:orderInCategory="100"
         android:title="@string/skenirajQr"
         app:showAsAction="never"
-        android:visible="false"
         />
 
     <item

@@ -25,15 +25,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.dimitarduino.chatmobilni.*
 import com.dimitarduino.chatmobilni.AdapterClasses.ChatsAdapter
-import com.dimitarduino.chatmobilni.Enkripcija
 import com.dimitarduino.chatmobilni.Izvestuvanja.*
-import com.dimitarduino.chatmobilni.MessageChatActivity
 import com.dimitarduino.chatmobilni.ModelClasses.Chat
 import com.dimitarduino.chatmobilni.ModelClasses.Chatlist
 import com.dimitarduino.chatmobilni.ModelClasses.Users
 import com.dimitarduino.chatmobilni.R
-import com.dimitarduino.chatmobilni.VisitUserActivity
 import com.dimitarduino.chatmobilni.database.AppDatabase
 import com.dimitarduino.chatmobilni.database.PorakaDb
 import com.google.android.gms.tasks.Continuation
@@ -143,13 +141,23 @@ class MessageChatFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity as MainActivity).odberiChatTablet()
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     fun kreirajViewPorakiChat(idNaDrugiot: String) {
         this.idNaDrugiot = idNaDrugiot
         Log.i("kreiram", "kreiram novo so id na drugiot $idNaDrugiot")
 //        val view = layoutInflater.inflate(R.layout.fragment_message_chat, ViewGroup!!, false)
 
-        if (idNaDrugiot != "") {
-            porakiFragmentTablet.visibility = View.VISIBLE
+        try {
+        if (idNaDrugiot != "" && porakiFragmentTablet != null) {
+            porakiFragmentTablet!!.visibility = View.VISIBLE
+        }
+
+        } catch (err : Error) {
+
         }
 
         firebaseAnalytics = Firebase.analytics
@@ -368,27 +376,29 @@ class MessageChatFragment : Fragment() {
 
     private fun dodajVoLokalna(poraka : Chat, isprateno: Boolean) {
         //ako tuka ja nema vo musers dodaj ja
-        val roomDb = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "chatx"
-        ).allowMainThreadQueries().build()
+        val roomDb = context?.let {
+            Room.databaseBuilder(
+                it,
+                AppDatabase::class.java,
+                "chatx"
+            ).allowMainThreadQueries().build()
+        }
 
         var ispratenoInternet = isprateno
 
         if (isOnline(requireContext())) ispratenoInternet = true
 
         if (poraka.getPorakaId() != null) {
-            var k = roomDb.porakaDao().getAll()
-            var najden = roomDb.porakaDao().searchFor(poraka.getPorakaId().toString())
+            var k = roomDb!!.porakaDao().getAll()
+            var najden = roomDb!!.porakaDao().searchFor(poraka.getPorakaId().toString())
 
             if (najden.size == 0) {
                 poraka.getPorakaId()?.let {
-                    roomDb.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), ispratenoInternet))
+                    roomDb!!.porakaDao().insertAll(PorakaDb(it, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), ispratenoInternet))
                 }
             } else {
 
-                var d = roomDb.porakaDao().namestiIsprateno(PorakaDb(poraka.getPorakaId()!!, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), true))
+                var d = roomDb!!.porakaDao().namestiIsprateno(PorakaDb(poraka.getPorakaId()!!, poraka.getIsprakjac(), poraka.getPoraka(), poraka.getPrimac(), poraka.getSeen(), poraka.getUrl(), true))
 
             }
 //            }

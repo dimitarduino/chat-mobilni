@@ -86,12 +86,10 @@ class MessageChatActivity : AppCompatActivity() {
 
         firebaseAnalytics = Firebase.analytics
 
-
         val toolbar : Toolbar = findViewById(R.id.toolbar_chatlist)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = ""
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
 
         //custom event firebase
         toolbar.setNavigationOnClickListener {
