@@ -51,6 +51,7 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_height="wrap_content"
+            android:textAlignment="center"
             android:text="@string/potvrdiAkaunt"
             />
 

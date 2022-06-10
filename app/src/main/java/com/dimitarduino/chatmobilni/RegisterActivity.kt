@@ -148,7 +148,7 @@ class RegisterActivity : AppCompatActivity() {
                                 userHashMap["dostapnost"] = 0
                                 userHashMap["gostin"] = 0
 
-                                if (odbranPol == "Male") {
+                                if (odbranPol == "Male" || odbranPol == "Машко") {
                                     userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/m1.jpg?alt=media&token=14b1ea15-8f83-46ff-8edb-9e25b3060a38"
                                 } else {
                                     userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/chatmobilni.appspot.com/o/f1.jpg?alt=media&token=5ef51edc-66fa-4a99-9cd7-5c443ab48e6e"
