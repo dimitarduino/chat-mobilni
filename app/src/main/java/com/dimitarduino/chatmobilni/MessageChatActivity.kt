@@ -260,7 +260,7 @@ class MessageChatActivity : AppCompatActivity() {
                 Toast.makeText(this,
                     "Permissions not granted by the user.",
                     Toast.LENGTH_SHORT).show()
-                finish()
+//                finish()
             }
         }
     }
