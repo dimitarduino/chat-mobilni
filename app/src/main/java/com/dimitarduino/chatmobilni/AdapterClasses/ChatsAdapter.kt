@@ -130,7 +130,7 @@ class ChatsAdapter(
 
         if (position == mChatList.size-1)
         {
-            if (!this.isOnline) {
+            if (poraka.getPrateno() == false) {
                 holder.porakaSeen!!.text = ""
             } else
             if (poraka.getSeen())

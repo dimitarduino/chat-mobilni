@@ -274,7 +274,9 @@ class MessageChatActivity : AppCompatActivity() {
 
     fun getImageUri(src: Bitmap, format: CompressFormat?, quality: Int): Uri? {
         val os = ByteArrayOutputStream()
-        src.compress(format, quality, os)
+
+
+//        src.compress(format, quality, os)
         val path = MediaStore.Images.Media.insertImage(contentResolver, src, "title", null)
         return Uri.parse(path)
     }
@@ -282,6 +284,8 @@ class MessageChatActivity : AppCompatActivity() {
     private fun handleCameraImage(intent: Intent?) {
         val bitmap = intent?.extras?.get("data") as Bitmap
 //        ivPhoto.setImageBitmap(bitmap)
+        Log.i("Before Compress Dimension", bitmap.width.toString());
+        Log.i("Before Compress Dimension", bitmap.height.toString());
 
         slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 100)
 

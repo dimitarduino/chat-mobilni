@@ -28,14 +28,19 @@
             android:maxWidth="300dp"
             android:textColor="@color/black"
             android:lineHeight="23dp"
-            android:textSize="16sp" />
-
+            android:textSize="16sp"
+            android:visibility="gone"
+            />
+§
         <ImageView
             android:id="@+id/primenaSlika"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:maxWidth="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             android:layout_toRightOf="@+id/profilnaKorisnik"
-            android:layout_marginLeft="6dp"
+            android:src="@drawable/close"
+            android:layout_marginLeft="12dp"
             android:visibility="gone"
             />
 
