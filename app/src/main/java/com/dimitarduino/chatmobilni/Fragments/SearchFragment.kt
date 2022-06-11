@@ -147,13 +147,15 @@ class SearchFragment : Fragment(), IListener {
     }
 
     private fun dodajVoLokalna(korisnik : Users) {
-        val roomDb = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "chatx"
-        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+        val roomDb = context?.let {
+            Room.databaseBuilder(
+                it,
+                AppDatabase::class.java,
+                "chatx"
+            ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
+        }
 
-        if (korisnik.getUID() != null) {
+        if (korisnik.getUID() != null && roomDb != null) {
             var k = roomDb.korisnikDao().getAll()
             Log.i("DATABAZA_NAJDEN", k.toString())
 //            for (korisnikLokalno in k) {

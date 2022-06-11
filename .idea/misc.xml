@@ -46,7 +46,9 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.335" />
         <entry key="app/src/main/res/layout/pol_spinner.xml" value="0.32708333333333334" />
         <entry key="app/src/main/res/layout/qr_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/received_image.xml" value="0.26849080803762293" />
         <entry key="app/src/main/res/layout/received_message.xml" value="0.32708333333333334" />
+        <entry key="app/src/main/res/layout/sent_image.xml" value="0.1" />
         <entry key="app/src/main/res/layout/sent_message.xml" value="0.165" />
         <entry key="app/src/main/res/layout/user_chat_item_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/user_search_item_layout.xml" value="0.335" />

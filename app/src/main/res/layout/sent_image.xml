@@ -25,23 +25,20 @@
             android:id="@+id/sodrzinaRelative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tekstPoraka"
+
+            <ImageView
+                android:id="@+id/pratenaSlika"
+                android:maxWidth="200dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minWidth="100dp"
+                android:minHeight="100dp"
+                android:adjustViewBounds="true"
+                android:background="@color/inputBackground"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/sent_message_bg"
-                android:lineHeight="23dp"
-                android:maxWidth="300dp"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="8dp"
-                android:text="Hello friend!"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
+                ></ImageView>
         </RelativeLayout>
-
-
+        
         <TextView
             android:id="@+id/seen"
             android:layout_width="wrap_content"

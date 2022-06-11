@@ -241,7 +241,7 @@ class MessageChatActivity : AppCompatActivity() {
             val imgFile: File = File(slikaPath)
             if (imgFile.exists()) {
                 val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 100)
+                slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 70)
 
                 prikaciSlikaBaza()
             }
@@ -310,9 +310,7 @@ class MessageChatActivity : AppCompatActivity() {
 
     fun getImageUri(src: Bitmap, format: CompressFormat?, quality: Int): Uri? {
         val os = ByteArrayOutputStream()
-
-
-//        src.compress(format, quality, os)
+        src.compress(format, quality, os)
         val path = MediaStore.Images.Media.insertImage(contentResolver, src, "title", null)
         return Uri.parse(path)
     }
@@ -323,7 +321,7 @@ class MessageChatActivity : AppCompatActivity() {
         Log.i("Before Compress Dimension", bitmap.width.toString());
         Log.i("Before Compress Dimension", bitmap.height.toString());
 
-        slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 100)
+        slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 70)
 
         Log.i("SLIKANO", slikaUri.toString())
 

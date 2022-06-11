@@ -46,9 +46,15 @@ class ChatsAdapter(
             val view: View = LayoutInflater.from(mContext).inflate(com.dimitarduino.chatmobilni.R.layout.sent_message, parent, false)
             ViewHolder(view)
         }
-        else
+        else if (viewType == 0)
         {
             val view: View = LayoutInflater.from(mContext).inflate(com.dimitarduino.chatmobilni.R.layout.received_message, parent, false)
+            ViewHolder(view)
+        } else if (viewType == 2) {
+            val view: View = LayoutInflater.from(mContext).inflate(com.dimitarduino.chatmobilni.R.layout.received_image, parent, false)
+            ViewHolder(view)
+        } else {
+            val view: View = LayoutInflater.from(mContext).inflate(com.dimitarduino.chatmobilni.R.layout.sent_image, parent, false)
             ViewHolder(view)
         }
     }
@@ -71,9 +77,9 @@ class ChatsAdapter(
             //pratena slika
             if (poraka.getIsprakjac().equals(firebaseKorisnik!!.uid))
             {
-                holder.tekstPoraka!!.visibility = View.GONE
+//                holder.tekstPoraka!!.visibility = View.GONE
                 Log.i("PORAKA_PRATENA", poraka.getUrl().toString())
-                holder.pratenaSlika!!.visibility = View.VISIBLE
+//                holder.pratenaSlika!!.visibility = View.VISIBLE
                 Picasso.get().load(poraka.getUrl()).into(holder.pratenaSlika)
 
                 holder.pratenaSlika!!.setOnClickListener {
@@ -85,8 +91,8 @@ class ChatsAdapter(
             //primena slika
             else if (!poraka.getIsprakjac().equals(firebaseKorisnik!!.uid))
             {
-                holder.tekstPoraka!!.visibility = View.GONE
-                holder.primenaSlika!!.visibility = View.VISIBLE
+//                holder.tekstPoraka!!.visibility = View.GONE
+//                holder.primenaSlika!!.visibility = View.VISIBLE
                 Log.i("PORAKA_PRIMENA", poraka.getUrl().toString())
                 Picasso.get().load(poraka.getUrl()).into(holder.primenaSlika)
 
@@ -105,7 +111,7 @@ class ChatsAdapter(
 
                 if (firebaseKorisnik!!.uid == poraka.getIsprakjac())
                 {
-                    holder.pratenaSlika!!.visibility = View.GONE
+//                    holder.pratenaSlika!!.visibility = View.GONE
 
                     holder.tekstPoraka!!.setOnClickListener {
                         val options = arrayOf<CharSequence>(
@@ -126,15 +132,20 @@ class ChatsAdapter(
                         builder.show()
                     }
                 } else {
-                    holder.primenaSlika!!.visibility = View.GONE
+//                    holder.primenaSlika!!.visibility = View.GONE
 
                 }
         }
 
         if (poraka.getPrateno() == false) {
+            if (poraka.getUrl() == "") {
             holder.tekstPoraka!!.background.alpha = 128
+
+            }
         } else {
-            holder.tekstPoraka!!.background.alpha = 255
+            if (poraka.getUrl() == "") {
+                holder.tekstPoraka!!.background.alpha = 255
+            }
         }
 
         if (position == mChatList.size-1)
@@ -194,14 +205,32 @@ class ChatsAdapter(
 
     override fun getItemViewType(position: Int): Int
     {
-        return if (mChatList[position].getIsprakjac().equals(firebaseKorisnik!!.uid))
+        var tipNaPoraka = 0
+        // 0 - primen tekst
+        //1 - ispraten tekst
+        //2 - primena slika
+        //3 - ispratena slika
+        if (mChatList[position].getIsprakjac().equals(firebaseKorisnik!!.uid))
         {
-            1
+            if (mChatList[position].getUrl() == "") {
+                //tekst praten
+                tipNaPoraka = 1
+            } else {
+                //slika pratena
+            tipNaPoraka = 3
+            }
         }
         else
         {
-            0
-        }
+            if (mChatList[position].getUrl() == "") {
+                tipNaPoraka = 0
+            } else {
+                tipNaPoraka = 2
+            }
+
+            }
+
+        return tipNaPoraka
     }
 
 
