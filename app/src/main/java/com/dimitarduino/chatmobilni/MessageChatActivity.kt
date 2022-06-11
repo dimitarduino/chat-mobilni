@@ -120,6 +120,7 @@ class MessageChatActivity : AppCompatActivity() {
 
         recyclerPoraki = findViewById(R.id.poraki_lista_recycler)
         recyclerPoraki.setHasFixedSize(true)
+        recyclerPoraki.recycledViewPool.setMaxRecycledViews(0,0)
         var linearLayoutManager = LinearLayoutManager(applicationContext)
         linearLayoutManager.stackFromEnd = true
         recyclerPoraki.layoutManager = linearLayoutManager
@@ -240,13 +241,7 @@ class MessageChatActivity : AppCompatActivity() {
             val imgFile: File = File(slikaPath)
             if (imgFile.exists()) {
                 val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-
-                Log.i("Before Compress Dimension", bitmap.width.toString());
-                Log.i("Before Compress Dimension", bitmap.height.toString());
-
                 slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 100)
-
-                Log.i("SLIKANO", slikaUri.toString())
 
                 prikaciSlikaBaza()
             }

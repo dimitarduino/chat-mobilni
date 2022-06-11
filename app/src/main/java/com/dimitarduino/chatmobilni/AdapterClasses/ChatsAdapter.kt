@@ -72,6 +72,7 @@ class ChatsAdapter(
             if (poraka.getIsprakjac().equals(firebaseKorisnik!!.uid))
             {
                 holder.tekstPoraka!!.visibility = View.GONE
+                Log.i("PORAKA_PRATENA", poraka.getUrl().toString())
                 holder.pratenaSlika!!.visibility = View.VISIBLE
                 Picasso.get().load(poraka.getUrl()).into(holder.pratenaSlika)
 
@@ -86,6 +87,7 @@ class ChatsAdapter(
             {
                 holder.tekstPoraka!!.visibility = View.GONE
                 holder.primenaSlika!!.visibility = View.VISIBLE
+                Log.i("PORAKA_PRIMENA", poraka.getUrl().toString())
                 Picasso.get().load(poraka.getUrl()).into(holder.primenaSlika)
 
                 holder.primenaSlika!!.setOnClickListener {
@@ -97,10 +99,14 @@ class ChatsAdapter(
         } else {
             //tekst vo poraka‘
                 holder.tekstPoraka!!.visibility = View.VISIBLE
-                holder.tekstPoraka!!.text = poraka.getPoraka()
+
+
+            holder.tekstPoraka!!.text = poraka.getPoraka()
 
                 if (firebaseKorisnik!!.uid == poraka.getIsprakjac())
                 {
+                    holder.pratenaSlika!!.visibility = View.GONE
+
                     holder.tekstPoraka!!.setOnClickListener {
                         val options = arrayOf<CharSequence>(
                             mContext.getString(R.string.izbrisiPoraka),
@@ -119,6 +125,9 @@ class ChatsAdapter(
                         })
                         builder.show()
                     }
+                } else {
+                    holder.primenaSlika!!.visibility = View.GONE
+
                 }
         }
 
@@ -140,7 +149,7 @@ class ChatsAdapter(
                 if (poraka.getPoraka().equals("sent you an image.") && !poraka.getUrl().equals(""))
                 {
                     val porakaSeenElement: RelativeLayout.LayoutParams? = holder.porakaSeen!!.layoutParams as RelativeLayout.LayoutParams?
-                    porakaSeenElement!!.setMargins(0, 10, 10, 0)
+                    porakaSeenElement!!.setMargins(0, 3, 10, 0)
                     holder.porakaSeen!!.layoutParams = porakaSeenElement
                 }
             }
@@ -151,7 +160,7 @@ class ChatsAdapter(
                 if (poraka.getPoraka().equals("sent you an image.") && !poraka.getUrl().equals(""))
                 {
                     val porakaSeenElement: RelativeLayout.LayoutParams? = holder.porakaSeen!!.layoutParams as RelativeLayout.LayoutParams?
-                    porakaSeenElement!!.setMargins(0, 10, 10, 0)
+                    porakaSeenElement!!.setMargins(0, 3, 10, 0)
                     holder.porakaSeen!!.layoutParams = porakaSeenElement
                 }
             }
