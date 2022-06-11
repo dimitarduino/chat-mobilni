@@ -343,6 +343,8 @@ class MessageChatFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 291) {
             val imgFile: File = File(slikaPath)
+            Toast.makeText(context, "Uploading...", Toast.LENGTH_LONG).show()
+
             if (imgFile.exists()) {
                 val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
                 slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 70)

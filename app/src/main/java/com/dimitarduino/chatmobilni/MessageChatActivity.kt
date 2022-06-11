@@ -240,8 +240,6 @@ class MessageChatActivity : AppCompatActivity() {
         if (requestCode == 291) {
             val imgFile: File = File(slikaPath)
             Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
-            Toast.makeText(this@MessageChatActivity, slikaPath.toString(), Toast.LENGTH_LONG).show()
-            Toast.makeText(this@MessageChatActivity, imgFile.toString(), Toast.LENGTH_LONG).show()
 
             if (imgFile.exists()) {
                 Toast.makeText(this@MessageChatActivity, "Uploading 1...", Toast.LENGTH_LONG).show()
