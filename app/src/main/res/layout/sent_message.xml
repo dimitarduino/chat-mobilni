@@ -36,11 +36,10 @@
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="8dp"
                 android:text="Hello friend!"
-                android:textColor="@color/white"
+                android:textColor="@color/whiteFixed"
                 android:textSize="16sp" />
 
         </RelativeLayout>
-
 
         <TextView
             android:id="@+id/seen"

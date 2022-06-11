@@ -71,6 +71,8 @@
     <string name="failVerification">Verification Failed</string>
     <string name="skenirajQr">Scan QR Code</string>
     <string name="spodeliProfil">Share your profile</string>
+    <string name="barajKorisnici">Search users...</string>
+
     <string-array name="pol_array">
         <item>Male</item>
         <item>Female</item>

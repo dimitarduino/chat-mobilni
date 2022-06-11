@@ -28,6 +28,8 @@
         android:id="@+id/cardView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/cardViewBackground"
+        android:backgroundTint="@color/cardViewBackground"
         android:layout_marginTop="10dp"
     >
 
@@ -103,36 +105,36 @@
                 android:textAlignment="textEnd"
                 android:layout_height="20dp"
                 android:shadowColor="@color/white"
-                android:background="@color/white"
+                android:background="@color/zacuvajVidlivostBg"
                 android:textColor="@color/purple_700"
                 android:text="@string/zacuvaj"
                 style="?android:attr/borderlessButtonStyle"
 
                 />
+
             <LinearLayout
                 android:id="@+id/dostapenProfil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cardView1"
                 android:layout_marginTop="5dp"
-                android:paddingVertical="8dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingVertical="8dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/vidlivost" />
-
+                    android:text="@string/vidlivost"
+                    android:textSize="12sp" />
 
 
                 <Spinner
                     android:id="@+id/dostapnost_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown"
                     android:background="@drawable/spinner_bg"
-                    />
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
 

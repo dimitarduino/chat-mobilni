@@ -16,7 +16,7 @@
     <string name="settings">Подесувања</string>
     <string name="account_settings">Профил</string>
     <string name="logout">Одјави се</string>
-
+    <string name="barajKorisnici">Пребарувај...</string>
     <string name="logirajSeProfil">Најави се </string>
     <string name="emailadresa">Е-пошта</string>
     <string name="password">Лозинка</string>
@@ -82,7 +82,7 @@
     <string-array name="dostapnost_array">
         <item>Јавно</item>
         <item>Само верифицирани корисници</item>
-        <item>Приватнос</item>
+        <item>Приватен</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

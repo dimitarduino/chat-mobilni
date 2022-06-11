@@ -14,7 +14,7 @@
         android:paddingVertical="6dp"
         android:paddingHorizontal="5dp"
         android:background="@drawable/account_input_bg"
-        android:hint="Search users..." />
+        android:hint="@string/barajKorisnici" />
 
 
     <TextView

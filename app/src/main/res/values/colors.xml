@@ -15,4 +15,7 @@
     <color name="inputBackgroundDark">#edebeb</color>
     <color name="colorLight">#bdc3c7</color>
     <color name="facebookColor">#4064AD</color>
+    <color name="cardViewBackground">#fafafa</color>
+    <color name="zacuvajVidlivostBg">#ffffff</color>
+    <color name="whiteFixed">#ffffff</color>
 </resources>
