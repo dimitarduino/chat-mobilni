@@ -242,7 +242,7 @@ class MessageChatActivity : AppCompatActivity() {
             Toast.makeText(this@MessageChatActivity, "Uploading...", Toast.LENGTH_LONG).show()
 
             if (imgFile.exists()) {
-                Toast.makeText(this@MessageChatActivity, "Uploading 1...", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this@MessageChatActivity, "Uploading 1...", Toast.LENGTH_LONG).show()
 
                 val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
                 slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 70)
