@@ -538,8 +538,11 @@ class MessageChatActivity : AppCompatActivity() {
                                 dodajVoLokalna(poraka, true)
 
                             }
-                            chatsAdapter = ChatsAdapter(this@MessageChatActivity, (porakiLista as ArrayList<Chat>), primacSlikaUrl!!, isOnline(this@MessageChatActivity))
+                            if (slikaNaDrugiot != null) {
+                            chatsAdapter = ChatsAdapter(this@MessageChatActivity, (porakiLista as ArrayList<Chat>), slikaNaDrugiot!!, isOnline(this@MessageChatActivity))
                             recyclerPoraki.adapter = chatsAdapter
+
+                            }
                         }
                     } else {
                         if (primacId != null) {

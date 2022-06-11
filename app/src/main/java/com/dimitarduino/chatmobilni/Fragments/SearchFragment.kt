@@ -102,25 +102,30 @@ class SearchFragment : Fragment(), IListener {
 
     private fun zemiKorisniciLokalno() {
         Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
-        val roomDb = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "chatx"
-        ).allowMainThreadQueries().build()
-        var k = roomDb.korisnikDao().getAll()
-        (mUsers as ArrayList<String>).clear()
-        for (korisnik in k) {
-            var korisnikM = Users(korisnik.uid, korisnik.username, korisnik.fullname, korisnik.profile, korisnik.cover, korisnik.status, korisnik.search, korisnik.facebook, korisnik.instagram, korisnik.website, korisnik.gender, korisnik.dostapnost, korisnik.gostin, korisnik.kodPotvrda, korisnik.timestamp)
-
-            (mUsers as ArrayList<Users>).add(korisnikM)
-
+        val roomDb = context?.let {
+            Room.databaseBuilder(
+                it,
+                AppDatabase::class.java,
+                "chatx"
+            ).allowMainThreadQueries().build()
         }
+        if (roomDb != null) {
+            var k = roomDb.korisnikDao().getAll()
+            (mUsers as ArrayList<String>).clear()
+            for (korisnik in k) {
+                var korisnikM = Users(korisnik.uid, korisnik.username, korisnik.fullname, korisnik.profile, korisnik.cover, korisnik.status, korisnik.search, korisnik.facebook, korisnik.instagram, korisnik.website, korisnik.gender, korisnik.dostapnost, korisnik.gostin, korisnik.kodPotvrda, korisnik.timestamp)
 
-        if (context!= null) {
-            userAdapter = UserAdapter(requireContext(), mUsers!!, false, this)
+                (mUsers as ArrayList<Users>).add(korisnikM)
 
-            //vrzvanje na recyclerview vo ui so userAdapter
-            recyclerView!!.adapter = userAdapter
+            }
+
+            if (context!= null) {
+                userAdapter = UserAdapter(requireContext(), mUsers!!, false, this)
+
+                //vrzvanje na recyclerview vo ui so userAdapter
+                recyclerView!!.adapter = userAdapter
+            }
+
         }
     }
 

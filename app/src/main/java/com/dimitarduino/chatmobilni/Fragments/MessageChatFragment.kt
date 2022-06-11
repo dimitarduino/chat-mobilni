@@ -7,10 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.*
 import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,13 +55,20 @@ import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class MessageChatFragment : Fragment() {
     var idNaDrugiot : String = ""
     var firebaseKorisnik : FirebaseUser? = null
     private var slikaUri : Uri? = null
+    private var slikaPath : String? = null
+
     var chatsAdapter: ChatsAdapter? = null
     var porakiLista: List<Chat>? = null
     private var dbReference : DatabaseReference? = null
@@ -308,9 +318,38 @@ class MessageChatFragment : Fragment() {
     }
 
     fun startCamera() {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "$timeStamp.jpg"
+        val storageDir: File = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES
+        )
+        slikaPath = storageDir.getAbsolutePath().toString() + "/" + imageFileName
+        val file = File(slikaPath)
+//        val outputFileUri = Uri.fromFile(file)
+        val outputFileUri = FileProvider.getUriForFile(
+            requireContext(),
+            "com.dimitarduino.chatmobilni.fileprovider",  //(use your app signature + ".provider" )
+            file
+        )
 
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        resultLauncherCamera.launch(cameraIntent)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri)
+        startActivityForResult(cameraIntent, 291)
+
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 291) {
+            val imgFile: File = File(slikaPath)
+            if (imgFile.exists()) {
+                val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+                slikaUri = getImageUri(bitmap, Bitmap.CompressFormat.JPEG, 70)
+
+                prikaciSlikaBaza()
+            }
+        }
     }
 
     private fun getSystemService(java: Class<ConnectivityManager>) {
@@ -546,13 +585,15 @@ class MessageChatFragment : Fragment() {
                             dodajVoLokalna(poraka, poraka.getPrateno())
 
                         }
-                        chatsAdapter = ChatsAdapter(
-                            context!!,
-                            (porakiLista as ArrayList<Chat>),
-                            primacSlikaUrl!!,
-                            isOnline(requireContext())
-                        )
-                        recyclerPoraki.adapter = chatsAdapter
+                        if (context != null && slikaNaDrugiot != null) {
+                            chatsAdapter = ChatsAdapter(
+                                context!!,
+                                (porakiLista as ArrayList<Chat>),
+                                slikaNaDrugiot!!,
+                                isOnline(requireContext())
+                            )
+                            recyclerPoraki.adapter = chatsAdapter
+                        }
                     }
                 }
 
