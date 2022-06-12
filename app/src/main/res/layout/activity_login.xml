@@ -106,8 +106,8 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/button_radius_bg"
             android:text="@string/login"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/whiteFixed"
+            android:textColorHint="@color/whiteFixed"
             />
 
     </LinearLayout>

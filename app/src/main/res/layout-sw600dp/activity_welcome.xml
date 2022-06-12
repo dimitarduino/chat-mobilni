@@ -94,8 +94,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/facebook_bg_btn"
             android:text="@string/prodolziFb"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
+            android:textColor="@color/whiteFixed"
+            android:textColorHint="@color/whiteFixed" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/googleSignIn"
@@ -123,8 +123,8 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/button_radius_bg"
             android:text="@string/login"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
+            android:textColor="@color/whiteFixed"
+            android:textColorHint="@color/whiteFixed" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/register_welcome_btn"

@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.*
 import android.os.Build
 import android.os.Bundle
@@ -95,6 +97,7 @@ class MessageChatActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.title = ""
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationIcon(R.drawable.left_arrow)
 
         //custom event firebase
         toolbar.setNavigationOnClickListener {

@@ -1,18 +1,17 @@
 package com.dimitarduino.chatmobilni
 
-import android.app.Dialog;
+import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Bundle;
-import android.util.Log
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import com.dimitarduino.chatmobilni.R
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -53,12 +52,26 @@ class QrDialog : DialogFragment() {
         val size = 1024 //pixels
         var qrCodeContent = this.link
 
+        var blackColor = Color.BLACK
+        var whiteColor = Color.WHITE
+
+        if (context != null) {
+            var nightModeFlags = Configuration.UI_MODE_NIGHT_NO
+            nightModeFlags = requireContext().resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK
+
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+                blackColor = Color.WHITE
+                whiteColor = Color.TRANSPARENT
+            }
+        }
+
         val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // Make the QR code buffer border narrower
         val bits = QRCodeWriter().encode(qrCodeContent, BarcodeFormat.QR_CODE, size, size)
         return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
             for (x in 0 until size) {
                 for (y in 0 until size) {
-                    it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
+                    it.setPixel(x, y, if (bits[x, y]) blackColor else whiteColor)
                 }
             }
         }
