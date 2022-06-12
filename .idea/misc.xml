@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/register_btn_bg.xml" value="0.194" />
         <entry key="app/src/main/res/drawable/sent_message_bg.xml" value="0.2045" />
         <entry key="app/src/main/res/drawable/spinner_bg.xml" value="0.17" />
+        <entry key="app/src/main/res/layout-land/activity_welcome.xml" value="0.2768959435626102" />
         <entry key="app/src/main/res/layout-sw600dp/activity_main.xml" value="0.27424242424242423" />
         <entry key="app/src/main/res/layout-sw600dp/activity_visit_user.xml" value="0.16354166666666667" />
         <entry key="app/src/main/res/layout-sw600dp/activity_welcome.xml" value="0.335" />
